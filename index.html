@@ -594,42 +594,42 @@ async function spin(){
   const rand=Math.random()*100;
   let cum=0,winner=selectedCaseItems[0];
   for(const it of selectedCaseItems){cum+=parseFloat(it.chance)||0;if(rand<=cum){winner=it;break;}}
-  const ITEM_W=84,GAP=6,STEP=ITEM_W+GAP,WIN_IDX=34,POOL_SIZE=48;
-const pool=[];
-for(let i=0;i<POOL_SIZE;i++)pool.push(selectedCaseItems[Math.floor(Math.random()*selectedCaseItems.length)]);
-pool[WIN_IDX]=winner;
-const track=document.getElementById('rou-items');
-track.innerHTML='';
-track.style.transition='none';
-track.style.left='0px';
-pool.forEach(it=>{
-  const d=document.createElement('div');
-  d.className='r-item '+(it.rarity==='vr'?'vr':it.rarity);
-  if(it.image_url){d.innerHTML=`<img src="${it.image_url}" style="width:100%;height:100%;object-fit:cover;border-radius:11px"><span class="r-label">${RN[it.rarity]||it.rarity}</span>`;}
-  else{d.innerHTML=`<span style="font-size:24px">${it.item_emoji||'❓'}</span><span class="r-label">${RN[it.rarity]||it.rarity}</span>`;}
-  track.appendChild(d);
-});
-const trackEl=document.getElementById('rou-track');
-const trackCenter=Math.floor(trackEl.offsetWidth/2);
-const itemCenter=Math.floor(ITEM_W/2);
-const finalLeft=trackCenter-itemCenter-(WIN_IDX*STEP);
-requestAnimationFrame(()=>{
-  requestAnimationFrame(()=>{
-    track.style.transition='left 4s cubic-bezier(0.25,0.1,0.1,1)';
-    track.style.left=finalLeft+'px';
+  const ITEM_W=84,GAP=6,STEP=ITEM_W+GAP,WIN_IDX=30,POOL_SIZE=44;
+  const pool=[];
+  for(let i=0;i<POOL_SIZE;i++)pool.push(selectedCaseItems[Math.floor(Math.random()*selectedCaseItems.length)]);
+  pool[WIN_IDX]=winner;
+  const track=document.getElementById('rou-items');
+  const trackEl=document.getElementById('rou-track');
+  track.innerHTML='';
+  track.style.transition='none';
+  pool.forEach(it=>{
+    const d=document.createElement('div');
+    d.className='r-item '+(it.rarity==='vr'?'vr':it.rarity);
+    if(it.image_url){d.innerHTML=`<img src="${it.image_url}" style="width:100%;height:100%;object-fit:cover;border-radius:11px"><span class="r-label">${RN[it.rarity]||it.rarity}</span>`;}
+    else{d.innerHTML=`<span style="font-size:24px">${it.item_emoji||'❓'}</span><span class="r-label">${RN[it.rarity]||it.rarity}</span>`;}
+    track.appendChild(d);
+  });
+  const trackWidth=trackEl.offsetWidth||300;
+  const pointerPos=Math.floor(trackWidth/2);
+  const startPos=pointerPos-Math.floor(ITEM_W/2);
+  track.style.left=startPos+'px';
+  const finalPos=startPos-(WIN_IDX*STEP);
+  setTimeout(()=>{
+    track.style.transition='left 4s cubic-bezier(0.17,0.67,0.12,0.99)';
+    track.style.left=finalPos+'px';
     setTimeout(async()=>{
       spinning=false;
+      const actualItem=pool[WIN_IDX];
       document.getElementById('rou-title').textContent='Вы получили:';
       const wv=document.getElementById('won-visual');
-      wv.innerHTML=winner.image_url?`<img src="${winner.image_url}" class="won-img">`:`<div class="won-emoji">${winner.item_emoji||'❓'}</div>`;
-      document.getElementById('won-rarity').textContent=RN[winner.rarity]||winner.rarity;
-      document.getElementById('won-rarity').style.color=RCOL[winner.rarity]||'#888';
+      wv.innerHTML=actualItem.image_url?`<img src="${actualItem.image_url}" class="won-img">`:`<div class="won-emoji">${actualItem.item_emoji||'❓'}</div>`;
+      document.getElementById('won-rarity').textContent=RN[actualItem.rarity]||actualItem.rarity;
+      document.getElementById('won-rarity').style.color=RCOL[actualItem.rarity]||'#888';
       document.getElementById('won-box').style.display='block';
       await saveUser({balance:bal-cost});
-      await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0});
-    },4200);
-  });
-});
+      await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:actualItem.item_name,item_type:actualItem.item_emoji||'❓',item_image:actualItem.image_url||null,rarity:actualItem.rarity,base_price:RC[actualItem.rarity]||0});
+    },4100);
+  },50);
 }
 
   
