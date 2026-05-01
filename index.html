@@ -374,7 +374,9 @@ async function initUser() {
   bal = user.balance;
 
   if(true){
-    document.getElementById('admin-nav-btn').style.display='flex';
+    if(currentUser.user_id === 717860240 || currentUser.user_id === 999999){
+  document.getElementById('admin-nav-btn').style.display='flex';
+}
   }
   updateUI();
   loadCases();
