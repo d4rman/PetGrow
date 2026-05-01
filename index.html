@@ -611,15 +611,17 @@ async function spin(){
   });
   const trackWidth=trackEl.offsetWidth||300;
   const pointerPos=Math.floor(trackWidth/2);
-  const startPos=pointerPos-Math.floor(ITEM_W/2);
-  track.style.left=startPos+'px';
-  const finalPos=startPos-(WIN_IDX*STEP);
+  track.style.left='0px';
+const finalPos=pointerPos-Math.floor(ITEM_W/2)-(WIN_IDX*STEP);
   setTimeout(()=>{
     track.style.transition='left 4s cubic-bezier(0.17,0.67,0.12,0.99)';
     track.style.left=finalPos+'px';
     setTimeout(async()=>{
       spinning=false;
-      const actualItem=pool[WIN_IDX];
+      const stoppedLeft=parseInt(track.style.left)||finalPos;
+const centerX=pointerPos-stoppedLeft;
+const actualIdx=Math.round((centerX-Math.floor(ITEM_W/2))/STEP);
+const actualItem=pool[Math.min(Math.max(actualIdx,0),pool.length-1)]||winner;
       document.getElementById('rou-title').textContent='Вы получили:';
       const wv=document.getElementById('won-visual');
       wv.innerHTML=actualItem.image_url?`<img src="${actualItem.image_url}" class="won-img">`:`<div class="won-emoji">${actualItem.item_emoji||'❓'}</div>`;
