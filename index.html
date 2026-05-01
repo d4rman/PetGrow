@@ -525,7 +525,10 @@ async function spin(){
 
   setTimeout(()=>{
     track.style.transition='left 3.5s cubic-bezier(0.12,0.8,0.18,1)';
-    track.style.left=-(34*82-150)+'px';
+    const itemWidth = 82;
+const targetIndex = 34;
+const trackOffset = Math.floor(document.querySelector('.rou-track').offsetWidth / 2) - Math.floor(itemWidth / 2);
+track.style.left = -(targetIndex * itemWidth - trackOffset) + 'px';
     setTimeout(async()=>{
       spinning=false;
       document.getElementById('rou-title').textContent='Вы получили:';
