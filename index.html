@@ -5,6 +5,104 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PetGrow</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://tlrrbahllgrynhpgwcax.supabase.co/rest/v1/';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRscnJiYWhsbGdyeW5ocGd3Y2F4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NDQ3MDYsImV4cCI6MjA5MzIyMDcwNn0.f9Qnunl1GjF8sj_iT3YoZOLESHya_P38H4RL7eAzDSU';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+
+async function initUser() {
+  const tg = window.Telegram?.WebApp;
+  const tgUser = tg?.initDataUnsafe?.user;
+  const userId = tgUser?.id || 999999;
+  const username = tgUser?.first_name || 'Игрок';
+
+  const { data: existing } = await sb
+    .from('users')
+    .select('*')
+    .eq('user_id', userId)
+    .single();
+
+  if (!existing) {
+    await sb.from('users').insert({
+      user_id: userId,
+      username: username
+    });
+    const { data: newUser } = await sb
+      .from('users')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+    currentUser = newUser;
+  } else {
+    currentUser = existing;
+  }
+
+  updateUI();
+}
+
+function updateUI() {
+  if (!currentUser) return;
+  bal = currentUser.balance;
+  document.querySelectorAll('[id^="bal"]').forEach(el => {
+    el.textContent = bal.toLocaleString('ru');
+  });
+  document.getElementById('u-speed').textContent = 'ур. ' + currentUser.pet_speed;
+  document.getElementById('u-agility').textContent = 'ур. ' + currentUser.pet_agility;
+  document.getElementById('u-charm').textContent = 'ур. ' + currentUser.pet_charm;
+  document.getElementById('p-speed').textContent = currentUser.pet_speed;
+  document.getElementById('p-agility').textContent = currentUser.pet_agility;
+  document.getElementById('p-charm').textContent = currentUser.pet_charm;
+}
+
+async function saveBalance() {
+  if (!currentUser) return;
+  await sb.from('users').update({ balance: bal }).eq('user_id', currentUser.user_id);
+  currentUser.balance = bal;
+}
+
+async function savePetStat(stat, val) {
+  if (!currentUser) return;
+  const update = { balance: bal };
+  update['pet_' + stat] = val;
+  await sb.from('users').update(update).eq('user_id', currentUser.user_id);
+  currentUser['pet_' + stat] = val;
+  currentUser.balance = bal;
+}
+
+async function saveItemToInventory(item) {
+  if (!currentUser) return;
+  await sb.from('inventory').insert({
+    user_id: currentUser.user_id,
+    item_name: item.l,
+    item_type: item.e,
+    rarity: item.r
+  });
+}
+
+async function loadInventory() {
+  if (!currentUser) return [];
+  const { data } = await sb
+    .from('inventory')
+    .select('*')
+    .eq('user_id', currentUser.user_id)
+    .order('obtained_at', { ascending: false });
+  return data || [];
+}
+
+async function loadLeaderboard() {
+  const { data } = await sb
+    .from('users')
+    .select('username, balance')
+    .order('balance', { ascending: false })
+    .limit(10);
+  return data || [];
+}
+
+window.addEventListener('load', initUser);
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh}
@@ -277,6 +375,25 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   </div>
 </div>
 
+<div class="screen" id="s-inventory">
+  <div class="topbar">
+    <div class="balance"><span class="diamond"></span><span class="bal-num" id="bal-inv">2 450</span></div>
+    <div style="font-size:12px;color:#888">★ PetGrow</div>
+  </div>
+  <div class="nav">
+    <button class="nav-btn" onclick="goTo('main',this)"><span class="nav-icon">👤</span>Профиль</button>
+    <button class="nav-btn" onclick="goTo('cases',this)"><span class="nav-icon">📦</span>Кейсы</button>
+    <button class="nav-btn" onclick="goTo('pet',this)"><span class="nav-icon">🐱</span>Питомец</button>
+    <button class="nav-btn active" onclick="goTo('inventory',this)"><span class="nav-icon">🎒</span>Инвентарь</button>
+    <button class="nav-btn" onclick="goTo('top',this)"><span class="nav-icon">🏆</span>Топ</button>
+  </div>
+  <div style="background:#16213e;border:1px solid #2a2a4a;border-radius:16px;padding:14px">
+    <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:12px">🎒 Инвентарь</div>
+    <div id="inv-list"></div>
+  </div>
+</div>
+
+  
 <div class="screen" id="s-top">
   <div class="topbar">
     <div class="balance"><span class="diamond"></span><span class="bal-num" id="bal-top">2 450</span></div>
@@ -314,14 +431,50 @@ function updateBal(){
   document.querySelectorAll('[id^="bal"]').forEach(el=>el.textContent=bal.toLocaleString('ru'));
 }
 
-function goTo(id,btn){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('s-'+id).classList.add('active');
-  if(btn)btn.classList.add('active');
-  document.querySelectorAll('.nav-btn').forEach(b=>{
-    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');
+async function goTo(id, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + id + "'")) b.classList.add('active');
   });
+
+  if (id === 'top') {
+    const top = await loadLeaderboard();
+    const lb = document.querySelector('#s-top .lb-card');
+    const medals = ['🥇','🥈','🥉'];
+    let html = '<div class="lb-title">🏆 Мировой лидерборд</div>';
+    if (top.length === 0) {
+      html += '<div style="color:#888;text-align:center;padding:20px">Пока никого нет — будь первым!</div>';
+    } else {
+      top.forEach((row, i) => {
+        const medal = i < 3 ? medals[i] : (i+1)+'.';
+        html += `<div class="lb-row"><div class="lb-rank">${medal}</div><div class="lb-ava">👤</div><div class="lb-name">${row.username}</div><div class="lb-val">${row.balance.toLocaleString('ru')} 💎</div></div>`;
+      });
+    }
+    html += `<div class="you-tag">Ты: ${currentUser?.username} — ${bal.toLocaleString('ru')} 💎</div>`;
+    lb.innerHTML = html;
+  }
+
+  if (id === 'inventory') {
+    const items = await loadInventory();
+    const inv = document.getElementById('inv-list');
+    if (!inv) return;
+    const rarityColors = { common:'#888', rare:'#378ADD', vr:'#1D9E75', epic:'#a78bfa', legendary:'#EF9F27' };
+    if (items.length === 0) {
+      inv.innerHTML = '<div style="color:#888;text-align:center;padding:20px">Инвентарь пуст — открой кейс!</div>';
+    } else {
+      inv.innerHTML = items.map(it => `
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2a2a4a">
+          <span style="font-size:28px">${it.item_type}</span>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:#fff">${it.item_name}</div>
+            <div style="font-size:12px;color:${rarityColors[it.rarity]||'#888'}">${it.rarity}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+  }
 }
 
 function petTap(el){
@@ -333,15 +486,12 @@ function feedPet(){
   alert('Барсик сыт! Бустер восстановлен 😸');
 }
 
-function upgrade(stat){
-  if(bal<100){alert('Недостаточно ромбиков!');return;}
-  bal-=100;
-  updateBal();
-  const el=document.getElementById('u-'+stat);
-  if(el){
-    const cur=parseInt(el.textContent.replace('ур. ',''))||1;
-    el.textContent='ур. '+(cur+1);
-  }
+async function upgrade(stat) {
+  if (bal < 100) { alert('Недостаточно ромбиков!'); return; }
+  bal -= 100;
+  const newVal = (currentUser['pet_' + stat] || 1) + 1;
+  await savePetStat(stat, newVal);
+  updateUI();
   alert('Прокачано!');
 }
 
@@ -398,6 +548,8 @@ function spin(){
       const colors={common:'#888',rare:'#378ADD',vr:'#1D9E75',epic:'#a78bfa',legendary:'#EF9F27'};
       document.getElementById('won-rarity').textContent=winner.l;
       document.getElementById('won-rarity').style.color=colors[winner.r]||'#888';
+      await saveItemToInventory(winner);
+await saveBalance();
       document.getElementById('rou-title').textContent='Вы получили:';
     },3600);
   },50);
