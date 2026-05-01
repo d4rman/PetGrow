@@ -808,8 +808,7 @@ async function buyItem(listingId, price, itemName, rarity, emoji){
   alert('Куплено! '+itemName);
   await loadMarket();
 }
-  
-window.addEventListener('load',initUser);\
+
 function toggleMenu(){
   const overlay = document.getElementById('menu-overlay');
   const drawer = document.getElementById('menu-drawer');
@@ -817,8 +816,9 @@ function toggleMenu(){
   overlay.style.display = isOpen ? 'none' : 'block';
   drawer.style.display = isOpen ? 'none' : 'block';
 }
-
   
+window.addEventListener('load',initUser);\
+
 </script>
 </body>
 </html>
