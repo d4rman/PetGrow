@@ -202,6 +202,64 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   </div>
 </div>
 
+<div class="screen" id="s-craft">
+  <div class="topbar">
+    <div class="balance"><span class="diamond"></span><span class="bal-num" id="bal-craft">—</span></div>
+    <div style="font-size:12px;color:#888">PetGrow 💜</div>
+  </div>
+  <div class="card">
+    <div class="card-title">⚗️ Крафт предметов</div>
+    <div style="font-size:13px;color:#888;margin-bottom:14px">Скрести 10 предметов одной редкости чтобы получить предмет следующей редкости</div>
+    <div style="display:grid;gap:10px">
+      <div style="background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:14px;color:#888">⚪ 10x Обычный → 🔵 Редкий</div>
+          <span id="count-common" style="font-size:13px;color:#a78bfa">0 шт</span>
+        </div>
+        <button onclick="craft('common','rare')" style="width:100%;padding:10px;background:#7F77DD;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer">Скрестить</button>
+      </div>
+      <div style="background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:14px;color:#888">🔵 10x Редкий → 🟢 Очень редкий</div>
+          <span id="count-rare" style="font-size:13px;color:#a78bfa">0 шт</span>
+        </div>
+        <button onclick="craft('rare','vr')" style="width:100%;padding:10px;background:#7F77DD;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer">Скрестить</button>
+      </div>
+      <div style="background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:14px;color:#888">🟢 10x Очень редкий → 🟣 Эпический</div>
+          <span id="count-vr" style="font-size:13px;color:#a78bfa">0 шт</span>
+        </div>
+        <button onclick="craft('vr','epic')" style="width:100%;padding:10px;background:#7F77DD;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer">Скрестить</button>
+      </div>
+      <div style="background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:14px;color:#888">🟣 10x Эпический → 🟡 Легендарный</div>
+          <span id="count-epic" style="font-size:13px;color:#a78bfa">0 шт</span>
+        </div>
+        <button onclick="craft('epic','legendary')" style="width:100%;padding:10px;background:#7F77DD;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer">Скрестить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="s-market">
+  <div class="topbar">
+    <div class="balance"><span class="diamond"></span><span class="bal-num" id="bal-market">—</span></div>
+    <div style="font-size:12px;color:#888">PetGrow 💜</div>
+  </div>
+  <div class="card">
+    <div class="card-title">🏪 Маркетплейс</div>
+    <div style="font-size:13px;color:#888;margin-bottom:12px">Покупай и продавай предметы. Комиссия 10%</div>
+    <button onclick="showMyListings()" style="width:100%;padding:10px;background:none;border:1px solid #7F77DD;border-radius:10px;color:#a78bfa;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:10px">+ Выставить предмет на продажу</button>
+    <div id="market-list"><div class="loading">Загрузка...</div></div>
+  </div>
+  <div class="card" id="sell-panel" style="display:none">
+    <div class="card-title">Выбери предмет для продажи</div>
+    <div id="sell-inv-list"></div>
+  </div>
+</div>
+  
 <div class="screen" id="s-inv">
   <div class="topbar">
     <div class="balance"><span class="diamond"></span><span class="bal-num" id="bal-inv">—</span></div>
