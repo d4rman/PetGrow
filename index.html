@@ -412,7 +412,11 @@ async function selectCase(caseId,el){
     return;
   }
   const dotColors={common:'#888',rare:'#378ADD',vr:'#1D9E75',epic:'#a78bfa',legendary:'#EF9F27'};
-  chancesList.innerHTML = selectedCaseItems.map(it=>`
+  const sorted = [...selectedCaseItems].sort((a,b)=>{
+  const order={legendary:0,epic:1,vr:2,rare:3,common:4};
+  return (order[a.rarity]||5)-(order[b.rarity]||5);
+});
+chancesList.innerHTML = sorted.map(it=>`
     <div class="chance-row">
       <span><span class="dot" style="background:${dotColors[it.rarity]||'#888'}"></span>${it.item_emoji} ${it.item_name}</span>
       <span style="color:${dotColors[it.rarity]||'#888'}">${it.chance}%</span>
