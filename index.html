@@ -418,7 +418,7 @@ async function selectCase(caseId,el){
 });
 chancesList.innerHTML = sorted.map(it=>`
     <div class="chance-row">
-      <span><span class="dot" style="background:${dotColors[it.rarity]||'#888'}"></span>${it.item_emoji} ${it.item_name}</span>
+      <span style="display:flex;align-items:center;gap:6px">${it.image_url ? `<img src="${it.image_url}" style="width:24px;height:24px;object-fit:contain;border-radius:4px">` : `<span class="dot" style="background:${dotColors[it.rarity]||'#888'}"></span>`} ${it.item_name}</span>
       <span style="color:${dotColors[it.rarity]||'#888'}">${it.chance}%</span>
     </div>`).join('');
 }
