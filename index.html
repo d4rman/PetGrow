@@ -573,6 +573,20 @@ async function goTo(id,btn){
       </div>`).join('');
   }
 
+if(id==='craft'){
+  const {data} = await sb.from('inventory').select('rarity').eq('user_id',currentUser.user_id);
+  const counts = {common:0,rare:0,vr:0,epic:0,legendary:0};
+  (data||[]).forEach(it=>{ if(counts[it.rarity]!==undefined) counts[it.rarity]++; });
+  document.getElementById('count-common').textContent = counts.common+' шт';
+  document.getElementById('count-rare').textContent = counts.rare+' шт';
+  document.getElementById('count-vr').textContent = counts.vr+' шт';
+  document.getElementById('count-epic').textContent = counts.epic+' шт';
+}
+
+if(id==='market'){
+  await loadMarket();
+}
+  
   if(id==='top'){
     const lb=document.getElementById('lb-list');
     lb.innerHTML='<div class="loading">Загрузка...</div>';
@@ -664,6 +678,114 @@ async function adminGiveBalance(){
   }
 }
 
+async function craft(fromRarity, toRarity){
+  const {data:items} = await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('rarity',fromRarity).limit(10);
+  if(!items||items.length<10){
+    alert('Недостаточно предметов! Нужно 10 штук редкости: '+fromRarity);
+    return;
+  }
+  const ids = items.map(i=>i.id);
+  await sb.from('inventory').delete().in('id',ids);
+  const rarityNames2 = {common:'Обычный',rare:'Редкий',vr:'Очень редкий',epic:'Эпический',legendary:'Легендарный'};
+  const prices = {common:50,rare:200,vr:500,epic:1500,legendary:5000};
+  await sb.from('inventory').insert({
+    user_id:currentUser.user_id,
+    item_name:rarityNames2[toRarity]+' предмет (крафт)',
+    item_type:'⚗️',
+    rarity:toRarity,
+    base_price:prices[toRarity]||0
+  });
+  alert('Крафт успешен! Получен предмет: '+rarityNames2[toRarity]);
+  goTo('craft',null);
+}
+
+async function loadMarket(){
+  const list = document.getElementById('market-list');
+  list.innerHTML='<div class="loading">Загрузка...</div>';
+  const {data} = await sb.from('marketplace').select('*').order('listed_at',{ascending:false});
+  const prices2 = {common:50,rare:200,vr:500,epic:1500,legendary:5000};
+  const dotColors2 = {common:'#888',rare:'#378ADD',vr:'#1D9E75',epic:'#a78bfa',legendary:'#EF9F27'};
+  const rarityNames2 = {common:'Обычный',rare:'Редкий',vr:'Очень редкий',epic:'Эпический',legendary:'Легендарный'};
+  if(!data||data.length===0){
+    list.innerHTML='<div class="empty-msg">Рынок пуст — выставь первый предмет!</div>';
+    return;
+  }
+  list.innerHTML=data.map(item=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #2a2a4a">
+      <span style="font-size:28px">${item.item_type||'❓'}</span>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;color:#fff">${item.item_name}</div>
+        <div style="font-size:12px;color:${dotColors2[item.rarity]||'#888'}">${rarityNames2[item.rarity]||item.rarity}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:14px;font-weight:700;color:#a78bfa">${item.price} 💎</div>
+        ${item.seller_id!==currentUser?.user_id?`<button onclick="buyItem(${item.id},${item.price},'${item.item_name}','${item.rarity}','${item.item_type}')" style="margin-top:4px;padding:4px 12px;background:#7F77DD;color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer">Купить</button>`:'<div style="font-size:11px;color:#888">Твой лот</div>'}
+      </div>
+    </div>`).join('');
+}
+
+async function showMyListings(){
+  const panel = document.getElementById('sell-panel');
+  const list = document.getElementById('sell-inv-list');
+  panel.style.display='block';
+  list.innerHTML='<div class="loading">Загрузка...</div>';
+  const {data} = await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).order('rarity');
+  const rarityNames2 = {common:'Обычный',rare:'Редкий',vr:'Очень редкий',epic:'Эпический',legendary:'Легендарный'};
+  const dotColors2 = {common:'#888',rare:'#378ADD',vr:'#1D9E75',epic:'#a78bfa',legendary:'#EF9F27'};
+  if(!data||data.length===0){list.innerHTML='<div class="empty-msg">Инвентарь пуст</div>';return;}
+  list.innerHTML=data.map(it=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2a2a4a">
+      <span style="font-size:24px">${it.item_type||'❓'}</span>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:#fff">${it.item_name}</div>
+        <div style="font-size:11px;color:${dotColors2[it.rarity]||'#888'}">${rarityNames2[it.rarity]||it.rarity}</div>
+      </div>
+      <button onclick="listItem(${it.id},'${it.item_name}','${it.rarity}','${it.item_type}',${it.base_price||0})" style="padding:6px 10px;background:none;border:1px solid #7F77DD;border-radius:8px;color:#a78bfa;font-size:12px;cursor:pointer">Продать</button>
+    </div>`).join('');
+}
+
+async function listItem(itemId, itemName, rarity, emoji, basePrice){
+  const price = prompt(`Цена продажи (рекомендуем от ${basePrice} 💎):`);
+  if(!price||isNaN(price)||parseInt(price)<=0){return;}
+  const {error} = await sb.from('marketplace').insert({
+    seller_id:currentUser.user_id,
+    item_id:itemId,
+    item_name:itemName,
+    item_type:emoji,
+    rarity:rarity,
+    price:parseInt(price)
+  });
+  if(error){alert('Ошибка: '+error.message);return;}
+  await sb.from('inventory').delete().eq('id',itemId);
+  alert('Предмет выставлен на продажу!');
+  document.getElementById('sell-panel').style.display='none';
+  await loadMarket();
+}
+
+async function buyItem(listingId, price, itemName, rarity, emoji){
+  if(bal<price){alert('Недостаточно ромбиков!');return;}
+  const {data:listing} = await sb.from('marketplace').select('*').eq('id',listingId).single();
+  if(!listing){alert('Лот уже куплен!');return;}
+  const commission = Math.floor(price*0.1);
+  const sellerGets = price-commission;
+  await sb.from('users').update({balance:currentUser.balance-price}).eq('user_id',currentUser.user_id);
+  const {data:seller} = await sb.from('users').select('balance').eq('user_id',listing.seller_id).single();
+  if(seller) await sb.from('users').update({balance:seller.balance+sellerGets}).eq('user_id',listing.seller_id);
+  const prices2 = {common:50,rare:200,vr:500,epic:1500,legendary:5000};
+  await sb.from('inventory').insert({
+    user_id:currentUser.user_id,
+    item_name:itemName,
+    item_type:emoji,
+    rarity:rarity,
+    base_price:prices2[rarity]||0
+  });
+  await sb.from('marketplace').delete().eq('id',listingId);
+  currentUser.balance-=price;
+  updateUI();
+  alert('Куплено! '+itemName);
+  await loadMarket();
+}
+  
 window.addEventListener('load',initUser);
 </script>
 </body>
