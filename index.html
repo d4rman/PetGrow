@@ -594,41 +594,42 @@ async function spin(){
   const rand=Math.random()*100;
   let cum=0,winner=selectedCaseItems[0];
   for(const it of selectedCaseItems){cum+=parseFloat(it.chance)||0;if(rand<=cum){winner=it;break;}}
-  const ITEM_W=84,GAP=6,STEP=ITEM_W+GAP,WIN_IDX=32,POOL_SIZE=44;
-  const pool=[];
-  for(let i=0;i<POOL_SIZE;i++)pool.push(selectedCaseItems[Math.floor(Math.random()*selectedCaseItems.length)]);
-  pool[WIN_IDX]=winner;
-  const track=document.getElementById('rou-items');
-  track.innerHTML='';
-  track.style.transition='none';
-  pool.forEach(it=>{
-    const d=document.createElement('div');
-    const rc=it.rarity==='vr'?'vr':it.rarity;
-    d.className='r-item '+rc;
-    if(it.image_url){d.innerHTML=`<img src="${it.image_url}" style="width:100%;height:100%;object-fit:cover;border-radius:11px"><span class="r-label">${RN[it.rarity]||it.rarity}</span>`;}
-    else{d.innerHTML=`<span style="font-size:24px">${it.item_emoji||'❓'}</span><span class="r-label">${RN[it.rarity]||it.rarity}</span>`;}
-    track.appendChild(d);
-  });
-  const trackEl=document.getElementById('rou-track');
-  const center=Math.floor(trackEl.offsetWidth/2);
-  const startLeft=center-Math.floor(ITEM_W/2);
-  track.style.left=startLeft+'px';
+  const ITEM_W=84,GAP=6,STEP=ITEM_W+GAP,WIN_IDX=34,POOL_SIZE=48;
+const pool=[];
+for(let i=0;i<POOL_SIZE;i++)pool.push(selectedCaseItems[Math.floor(Math.random()*selectedCaseItems.length)]);
+pool[WIN_IDX]=winner;
+const track=document.getElementById('rou-items');
+track.innerHTML='';
+track.style.transition='none';
+track.style.left='0px';
+pool.forEach(it=>{
+  const d=document.createElement('div');
+  d.className='r-item '+(it.rarity==='vr'?'vr':it.rarity);
+  if(it.image_url){d.innerHTML=`<img src="${it.image_url}" style="width:100%;height:100%;object-fit:cover;border-radius:11px"><span class="r-label">${RN[it.rarity]||it.rarity}</span>`;}
+  else{d.innerHTML=`<span style="font-size:24px">${it.item_emoji||'❓'}</span><span class="r-label">${RN[it.rarity]||it.rarity}</span>`;}
+  track.appendChild(d);
+});
+const trackEl=document.getElementById('rou-track');
+const trackCenter=Math.floor(trackEl.offsetWidth/2);
+const itemCenter=Math.floor(ITEM_W/2);
+const finalLeft=trackCenter-itemCenter-(WIN_IDX*STEP);
+requestAnimationFrame(()=>{
   requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{
-      const finalLeft=startLeft-(WIN_IDX*STEP);
-      track.style.transition='left 4s cubic-bezier(0.25,0.1,0.1,1)';
-      track.style.left=finalLeft+'px';
-      setTimeout(async()=>{
-        spinning=false;
-        document.getElementById('rou-title').textContent='Вы получили:';
-        const wv=document.getElementById('won-visual');
-        wv.innerHTML=winner.image_url?`<img src="${winner.image_url}" class="won-img">`:`<div class="won-emoji">${winner.item_emoji||'❓'}</div>`;
-        document.getElementById('won-rarity').textContent=RN[winner.rarity]||winner.rarity;
-        document.getElementById('won-rarity').style.color=RCOL[winner.rarity]||'#888';
-        document.getElementById('won-box').style.display='block';
-        await saveUser({balance:bal-cost});
-        await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0});
-      },4100);
+    track.style.transition='left 4s cubic-bezier(0.25,0.1,0.1,1)';
+    track.style.left=finalLeft+'px';
+    setTimeout(async()=>{
+      spinning=false;
+      document.getElementById('rou-title').textContent='Вы получили:';
+      const wv=document.getElementById('won-visual');
+      wv.innerHTML=winner.image_url?`<img src="${winner.image_url}" class="won-img">`:`<div class="won-emoji">${winner.item_emoji||'❓'}</div>`;
+      document.getElementById('won-rarity').textContent=RN[winner.rarity]||winner.rarity;
+      document.getElementById('won-rarity').style.color=RCOL[winner.rarity]||'#888';
+      document.getElementById('won-box').style.display='block';
+      await saveUser({balance:bal-cost});
+      await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0});
+    },4200);
+  });
+});
     });
   });
 }
@@ -809,7 +810,7 @@ async function openShowcaseSelect(slotIndex){
   else{
     list.innerHTML=`<div class="inv-select-item" onclick="setShowcaseSlot(null)"><span style="font-size:28px">✕</span><div style="font-size:14px;color:#888">Очистить слот</div></div>`+
     data.map(it=>`
-      <div class="inv-select-item" onclick="setShowcaseSlot(${JSON.stringify(it).replace(/'/g,'')})">
+      <div class="inv-select-item" onclick='setShowcaseSlot(${JSON.stringify(it).replace(/\\/g,"\\\\").replace(/'/g,"\\'")})'>
         ${it.item_image?`<img src="${it.item_image}" class="inv-img">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
         <div>
           <div style="font-size:14px;font-weight:600">${it.item_name}</div>
@@ -822,7 +823,7 @@ async function openShowcaseSelect(slotIndex){
 }
 
 function setShowcaseSlot(item){
-  showcaseSlots[currentShowcaseSlot]=item;
+  showcaseSlots[currentShowcaseSlot]=typeof item==='string'?JSON.parse(item):item;
   updateShowcase();
   closeModal();
 }
