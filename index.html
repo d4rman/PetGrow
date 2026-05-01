@@ -594,7 +594,7 @@ async function spin(){
   const rand=Math.random()*100;
   let cum=0,winner=selectedCaseItems[0];
   for(const it of selectedCaseItems){cum+=parseFloat(it.chance)||0;if(rand<=cum){winner=it;break;}}
-  const ITEM_W=84,GAP=6,STEP=ITEM_W+GAP,WIN_IDX=30,POOL_SIZE=44;
+  const ITEM_W=78,GAP=6,STEP=ITEM_W+GAP,WIN_IDX=30,POOL_SIZE=44;
   const pool=[];
   for(let i=0;i<POOL_SIZE;i++)pool.push(selectedCaseItems[Math.floor(Math.random()*selectedCaseItems.length)]);
   pool[WIN_IDX]=winner;
@@ -612,7 +612,7 @@ async function spin(){
   const trackWidth=trackEl.offsetWidth||300;
   const pointerPos=Math.floor(trackWidth/2);
   track.style.left='0px';
-const finalPos=pointerPos-Math.floor(ITEM_W/2)-(WIN_IDX*STEP)+(STEP*0);
+const finalPos=pointerPos-Math.floor(ITEM_W/2)-(WIN_IDX*STEP)-(STEP/2);
   setTimeout(()=>{
     track.style.transition='left 4s cubic-bezier(0.17,0.67,0.12,0.99)';
     track.style.left=finalPos+'px';
