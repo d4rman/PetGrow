@@ -450,7 +450,9 @@ async function spin(){
     const d=document.createElement('div');
     const rc=it.rarity==='vr'?'vr':it.rarity;
     d.className='r-item '+rc;
-    d.innerHTML=`<span style="font-size:24px">${it.item_emoji}</span><span class="r-label">${rarityNames[it.rarity]||it.rarity}</span>`;
+    d.innerHTML=it.image_url ? 
+  `<img src="${it.image_url}" style="width:50px;height:50px;object-fit:contain;border-radius:8px"><span class="r-label">${rarityNames[it.rarity]||it.rarity}</span>` :
+  `<span style="font-size:24px">${it.item_emoji}</span><span class="r-label">${rarityNames[it.rarity]||it.rarity}</span>`;
     track.appendChild(d);
   });
   track.style.transition='none';
