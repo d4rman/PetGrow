@@ -413,7 +413,7 @@ async function selectCase(caseId,el){
   }
   const dotColors={common:'#888',rare:'#378ADD',vr:'#1D9E75',epic:'#a78bfa',legendary:'#EF9F27'};
   const sorted = [...selectedCaseItems].sort((a,b)=>{
-  const order={legendary:0,epic:1,vr:2,rare:3,common:4};
+  const order={common:0,rare:1,vr:2,epic:3,legendary:4};
   return (order[a.rarity]||5)-(order[b.rarity]||5);
 });
 chancesList.innerHTML = sorted.map(it=>`
