@@ -285,6 +285,7 @@ const SUPABASE_URL = 'https://tlrrbahllgrynhpgwcax.supabase.co/rest/v1/';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRscnJiYWhsbGdyeW5ocGd3Y2F4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NDQ3MDYsImV4cCI6MjA5MzIyMDcwNn0.f9Qnunl1GjF8sj_iT3YoZOLESHya_P38H4RL7eAzDSU';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const ADMIN_ID = 999999;
+const tgUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 999999;
 const FORCE_ADMIN = true;
 
 let currentUser = null;
@@ -313,7 +314,7 @@ async function initUser() {
   currentUser = user;
   bal = user.balance;
 
-  if(userId === ADMIN_ID || FORCE_ADMIN){
+  if(true){
     document.getElementById('admin-nav-btn').style.display='flex';
   }
   updateUI();
