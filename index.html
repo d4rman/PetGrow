@@ -877,13 +877,17 @@ async function loadMyPets(){
   const {data}=await sb.from('user_pets').select('*,pets(*)').eq('user_id',currentUser.user_id);
   if(!data||!data.length){list.innerHTML='<div class="empty-msg">Нет питомцев</div>';return;}
   list.innerHTML=data.map(up=>`
-    <div class="pet-card ${up.is_active?'active-pet':''}" onclick="setActivePet(${up.id})">
-      <span style="font-size:36px">${up.pets?.emoji||'🐱'}</span>
-      <div style="flex:1">
+    <div class="pet-card ${up.is_active?'active-pet':''}">
+      <span style="font-size:36px" onclick="setActivePet(${up.id})">${up.pets?.emoji||'🐱'}</span>
+      <div style="flex:1" onclick="setActivePet(${up.id})">
         <div style="font-size:14px;font-weight:700">${up.custom_name||up.pets?.name||'Питомец'}</div>
         <div style="font-size:12px;color:#888">⚡${up.speed} 🎯${up.agility} ✨${up.charm} 🔥${up.boost}x</div>
+        <div style="font-size:11px;color:#4fc3f7;margin-top:2px">Бафф аксов: +${up.acc_bonus||0}%</div>
       </div>
-      ${up.is_active?'<span style="font-size:11px;color:#1D9E75;font-weight:700">Активен</span>':''}
+      <div style="display:flex;flex-direction:column;gap:4px">
+        ${up.is_active?'<span style="font-size:11px;color:#1D9E75;font-weight:700">Активен</span>':''}
+        ${up.acc_slot_1||up.acc_slot_2||up.acc_slot_3?`<button onclick="unequipAcc(${up.id})" style="padding:4px 8px;background:none;border:1px solid #993C1D;border-radius:8px;color:#993C1D;font-size:10px;cursor:pointer;font-family:Arial,sans-serif">Снять аксы</button>`:''}
+      </div>
     </div>`).join('');
 }
 
@@ -1220,6 +1224,31 @@ async function loadPlayersList(){
       <div style="font-size:13px;color:#a78bfa;font-weight:700">${u.balance.toLocaleString('ru')} 💜</div>
     </div>`).join('');
 }
+
+
+async function unequipAcc(petId){
+  if(!confirm('Снять все аксессуары с питомца?'))return;
+  const {data:pet}=await sb.from('user_pets').select('*').eq('id',petId).single();
+  if(!pet)return;
+  const slots=['acc_slot_1','acc_slot_2','acc_slot_3'];
+  for(const slot of slots){
+    if(pet[slot]){
+      const {data:item}=await sb.from('inventory').select('*').eq('id',pet[slot]).single();
+      if(!item){
+        await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:'Акс (снят)',item_type:'💍',rarity:'common',base_price:50});
+      }
+    }
+  }
+  await sb.from('user_pets').update({acc_slot_1:null,acc_slot_2:null,acc_slot_3:null,acc_bonus:0}).eq('id',petId);
+  if(activePet&&activePet.id===petId){
+    Object.assign(activePet,{acc_slot_1:null,acc_slot_2:null,acc_slot_3:null,acc_bonus:0});
+    updateUI();
+  }
+  alert('Аксессуары сняты и возвращены в инвентарь');
+  await loadMyPets();
+}
+
+
 
 window.addEventListener('load',initUser);
 </script>
