@@ -218,7 +218,27 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   <div class="card">
     <div class="card-title">🏪 Рынок</div>
     <div style="font-size:12px;color:#888;margin-bottom:10px">Комиссия 10% с каждой продажи</div>
-    <button onclick="showSellPanel()" style="width:100%;padding:10px;background:none;border:1px solid #7F77DD;border-radius:10px;color:#a78bfa;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:12px;font-family:Arial,sans-serif">+ Выставить предмет</button>
+    <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:4px">
+      <button class="tab-btn active" onclick="switchMarketTab('accessory',this)">💍 Аксессуары</button>
+      <button class="tab-btn" onclick="switchMarketTab('seed',this)">🌱 Семена</button>
+      <button class="tab-btn" onclick="switchMarketTab('pet',this)">🐱 Питомцы</button>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <select id="market-sort" onchange="loadMarket()" style="flex:1;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:10px;padding:8px 10px;color:#fff;font-size:13px;font-family:Arial,sans-serif">
+        <option value="price_asc">Цена ↑</option>
+        <option value="price_desc">Цена ↓</option>
+        <option value="newest">Новые</option>
+      </select>
+      <select id="market-rarity" onchange="loadMarket()" style="flex:1;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:10px;padding:8px 10px;color:#fff;font-size:13px;font-family:Arial,sans-serif">
+        <option value="all">Все редкости</option>
+        <option value="common">⚪ Обычный</option>
+        <option value="rare">🔵 Редкий</option>
+        <option value="vr">🟢 Очень редкий</option>
+        <option value="epic">🟣 Эпический</option>
+        <option value="legendary">🟡 Легендарный</option>
+      </select>
+    </div>
+    <button id="sell-btn" onclick="showSellPanel()" style="width:100%;padding:10px;background:none;border:1px solid #7F77DD;border-radius:10px;color:#a78bfa;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:12px;font-family:Arial,sans-serif">+ Выставить предмет</button>
     <div id="market-list"><div class="loading">Загрузка...</div></div>
   </div>
 </div>
@@ -853,17 +873,70 @@ async function sellItem(itemId){
   if(!item)return;
   const price=prompt('Цена продажи (рекомендуем от '+(item.base_price||RC[item.rarity]||0)+' 💜):');
   if(!price||isNaN(price)||parseInt(price)<=0)return;
-  await sb.from('marketplace').insert({seller_id:currentUser.user_id,item_id:itemId,item_name:item.item_name,item_type:item.item_type,item_image:item.item_image||null,rarity:item.rarity,price:parseInt(price)});
+  const cat=item.item_name.includes('Семя')?'seed':'accessory';
+  await sb.from('marketplace').insert({seller_id:currentUser.user_id,item_id:itemId,item_name:item.item_name,item_type:item.item_type,item_image:item.item_image||null,rarity:item.rarity,price:parseInt(price),category:cat});
   await sb.from('inventory').delete().eq('id',itemId);
   alert('Выставлено на продажу!');
   await loadInventory();
 }
 
+let currentMarketTab='accessory';
+
+function switchMarketTab(tab,btn){
+  currentMarketTab=tab;
+  document.querySelectorAll('#s-market .tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const sellBtn=document.getElementById('sell-btn');
+  const raritySelect=document.getElementById('market-rarity');
+  if(tab==='pet'){
+    sellBtn.textContent='+ Продать питомца';
+    sellBtn.onclick=()=>showSellPetPanel();
+    raritySelect.style.display='none';
+  } else if(tab==='seed'){
+    sellBtn.textContent='+ Продать семена';
+    sellBtn.onclick=()=>showSellPanel();
+    raritySelect.style.display='none';
+  } else {
+    sellBtn.textContent='+ Выставить предмет';
+    sellBtn.onclick=()=>showSellPanel();
+    raritySelect.style.display='block';
+  }
+  loadMarket();
+}
+
 async function loadMarket(){
   const list=document.getElementById('market-list');
   list.innerHTML='<div class="loading">Загрузка...</div>';
-  const {data}=await sb.from('marketplace').select('*').order('listed_at',{ascending:false});
-  if(!data||!data.length){list.innerHTML='<div class="empty-msg">Рынок пуст</div>';return;}
+  const sort=document.getElementById('market-sort')?.value||'price_asc';
+  const rarity=document.getElementById('market-rarity')?.value||'all';
+  if(currentMarketTab==='pet'){
+    let q=sb.from('marketplace_pets').select('*');
+    if(sort==='price_asc')q=q.order('price',{ascending:true});
+    else if(sort==='price_desc')q=q.order('price',{ascending:false});
+    else q=q.order('listed_at',{ascending:false});
+    const {data}=await q;
+    if(!data||!data.length){list.innerHTML='<div class="empty-msg">Питомцев нет на продаже</div>';return;}
+    list.innerHTML=data.map(it=>`
+      <div class="mkt-item">
+        <div style="width:50px;height:50px;border-radius:10px;flex-shrink:0;background:#0f0f1e;display:flex;align-items:center;justify-content:center;overflow:hidden">
+          ${it.pet_image?`<img src="${it.pet_image}" style="width:50px;height:50px;object-fit:cover;border-radius:10px">`:`<span style="font-size:30px">${it.pet_emoji||'🐱'}</span>`}
+        </div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:600">${it.pet_name}</div>
+          <div style="font-size:11px;color:#888">⚡${it.speed} 🎯${it.agility} ✨${it.charm} 🔥${it.boost}x</div>
+          <div style="font-size:13px;font-weight:700;color:#a78bfa">${it.price.toLocaleString('ru')} 💜</div>
+        </div>
+        ${it.seller_id!==currentUser?.user_id?`<button class="buy-btn" onclick="buyPet(${it.id},${it.price})">Купить</button>`:`<button class="cancel-btn" onclick="cancelPetListing(${it.id})">Снять</button>`}
+      </div>`).join('');
+    return;
+  }
+  let q=sb.from('marketplace').select('*').eq('category',currentMarketTab==='seed'?'seed':'accessory');
+  if(rarity!=='all')q=q.eq('rarity',rarity);
+  if(sort==='price_asc')q=q.order('price',{ascending:true});
+  else if(sort==='price_desc')q=q.order('price',{ascending:false});
+  else q=q.order('listed_at',{ascending:false});
+  const {data}=await q;
+  if(!data||!data.length){list.innerHTML='<div class="empty-msg">Ничего нет на продаже</div>';return;}
   list.innerHTML=data.map(it=>`
     <div class="mkt-item">
       <div style="width:44px;height:44px;border-radius:8px;flex-shrink:0;background:#0f0f1e;display:flex;align-items:center;justify-content:center;overflow:hidden">
@@ -876,19 +949,6 @@ async function loadMarket(){
       </div>
       ${it.seller_id!==currentUser?.user_id?`<button class="buy-btn" onclick="buyItem(${it.id},${it.price})">Купить</button>`:`<button class="cancel-btn" onclick="cancelListing(${it.id})">Снять</button>`}
     </div>`).join('');
-}
-
-async function showSellPanel(){
-  const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('is_equipped',false);
-  if(!data||!data.length){alert('Инвентарь пуст!');return;}
-  showModal('Выбери предмет для продажи',data.map(it=>`
-    <div class="seed-item" onclick="closeModal();sellItem(${it.id})">
-      ${it.item_image?`<img src="${it.item_image}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
-      <div>
-        <div style="font-size:14px;font-weight:600">${it.item_name}</div>
-        <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div>
-      </div>
-    </div>`).join(''));
 }
 
 async function buyItem(listingId,price){
@@ -1327,6 +1387,62 @@ async function loadPlayersList(){
       <div style="font-size:11px;color:#888">ID: ${u.user_id}</div></div>
       <div style="font-size:13px;color:#a78bfa;font-weight:700">${u.balance.toLocaleString('ru')} 💜</div>
     </div>`).join('');
+}
+async function showSellPetPanel(){
+  const {data:pets}=await sb.from('user_pets').select('*,pets(*)').eq('user_id',currentUser.user_id);
+  if(!pets||pets.length<=1){alert('Нельзя продать единственного питомца!');return;}
+  const sellable=pets.filter(p=>!p.is_active);
+  if(!sellable.length){alert('Нет питомцев для продажи! Нельзя продать активного питомца.');return;}
+  showModal('Выбери питомца для продажи',sellable.map(p=>`
+    <div class="seed-item" onclick="closeModal();listPetForSale(${p.id})">
+      ${p.pets?.image_url?`<img src="${p.pets.image_url}" style="width:44px;height:44px;object-fit:cover;border-radius:10px">`:`<span style="font-size:36px">${p.pets?.emoji||'🐱'}</span>`}
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:700">${p.custom_name||p.pets?.name}</div>
+        <div style="font-size:12px;color:#888">⚡${p.speed} 🎯${p.agility} ✨${p.charm}</div>
+      </div>
+    </div>`).join(''));
+}
+
+async function listPetForSale(userPetId){
+  const {data:pet}=await sb.from('user_pets').select('*,pets(*)').eq('id',userPetId).single();
+  if(!pet)return;
+  const price=prompt('Цена продажи питомца (💜):');
+  if(!price||isNaN(price)||parseInt(price)<=0)return;
+  await sb.from('marketplace_pets').insert({
+    seller_id:currentUser.user_id,
+    user_pet_id:userPetId,
+    pet_name:pet.custom_name||pet.pets?.name,
+    pet_emoji:pet.pets?.emoji||'🐱',
+    pet_image:pet.pets?.image_url||null,
+    speed:pet.speed,agility:pet.agility,charm:pet.charm,
+    boost:pet.boost,acc_bonus:pet.acc_bonus||0,
+    price:parseInt(price)
+  });
+  await sb.from('user_pets').update({is_for_sale:true}).eq('id',userPetId);
+  alert('Питомец выставлен на продажу!');
+  await loadMarket();
+}
+
+async function buyPet(listingId,price){
+  if(bal<price){alert('Нужно '+price+' 💜');return;}
+  const {data:listing}=await sb.from('marketplace_pets').select('*').eq('id',listingId).single();
+  if(!listing){alert('Питомец уже куплен!');await loadMarket();return;}
+  await saveUser({balance:bal-price});
+  const {data:seller}=await sb.from('users').select('balance').eq('user_id',listing.seller_id).single();
+  if(seller)await sb.from('users').update({balance:seller.balance+Math.floor(price*0.9)}).eq('user_id',listing.seller_id);
+  await sb.from('user_pets').update({user_id:currentUser.user_id,is_for_sale:false,is_active:false}).eq('id',listing.user_pet_id);
+  await sb.from('marketplace_pets').delete().eq('id',listingId);
+  alert('Питомец куплен! Найди его в разделе Питомец 🐱');
+  await loadMarket();
+}
+
+async function cancelPetListing(listingId){
+  const {data:listing}=await sb.from('marketplace_pets').select('*').eq('id',listingId).single();
+  if(!listing)return;
+  await sb.from('user_pets').update({is_for_sale:false}).eq('id',listing.user_pet_id);
+  await sb.from('marketplace_pets').delete().eq('id',listingId);
+  alert('Лот снят!');
+  await loadMarket();
 }
 
 window.addEventListener('load',initUser);
