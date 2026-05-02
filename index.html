@@ -862,6 +862,7 @@ async function openItemCard(itemId){
       </div>
     </div>
     <div style="display:grid;gap:8px">
+      ${item.item_name==='🎁 Кейс питомца'?`<button onclick="closeModal();openPetCase(${item.id},${item.source_case_id})" style="width:100%;padding:10px;background:#EF9F27;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🎁 Открыть кейс питомца</button>`:''}
       <button onclick="closeModal();equipAcc(${item.id})" style="width:100%;padding:10px;background:#1D9E75;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🐱 Надеть на питомца</button>
       <button onclick="closeModal();sellItem(${item.id})" style="width:100%;padding:10px;background:none;border:1px solid #7F77DD;border-radius:10px;color:#a78bfa;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🏪 Выставить на рынок</button>
       <button onclick="closeModal();openShowcaseSelect(0)" style="width:100%;padding:10px;background:none;border:1px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🖼️ Поставить на витрину</button>
@@ -1255,10 +1256,34 @@ async function usePromo(){
   if(used){alert('Ты уже использовал этот промокод!');return;}
   await sb.from('promo_uses').insert({user_id:currentUser.user_id,code});
   await sb.from('promocodes').update({used_count:promo.used_count+1}).eq('id',promo.id);
-  await saveUser({balance:bal+promo.reward_diamonds});
-  document.getElementById('promo-input').value='';
-  closeDrawer();
-  alert('Промокод активирован! +'+promo.reward_diamonds+' 💜');
+  if(code==='PETCASE'){
+    const {data:petCase}=await sb.from('cases').select('*').eq('name','🎁 Кейс питомца').single();
+    if(petCase){
+      await sb.from('inventory').insert({
+        user_id:currentUser.user_id,
+        item_name:'🎁 Кейс питомца',
+        item_type:'🎁',
+        rarity:'epic',
+        base_price:0,
+        is_equipped:false,
+        source_case_id:petCase.id
+      });
+      document.getElementById('promo-input').value='';
+      closeDrawer();
+      alert('Промокод активирован!\n🎁 Кейс питомца добавлен в инвентарь!\nОткрой его в разделе Инвентарь');
+      return;
+    }
+  }
+  if(promo.reward_diamonds>0){
+    await saveUser({balance:bal+promo.reward_diamonds});
+    document.getElementById('promo-input').value='';
+    closeDrawer();
+    alert('Промокод активирован! +'+promo.reward_diamonds+' 💜');
+  } else {
+    document.getElementById('promo-input').value='';
+    closeDrawer();
+    alert('Промокод активирован!');
+  }
 }
 
 function switchAdminTab(tabId,btn){
@@ -1443,6 +1468,29 @@ async function cancelPetListing(listingId){
   await sb.from('marketplace_pets').delete().eq('id',listingId);
   alert('Лот снят!');
   await loadMarket();
+}
+
+async function openPetCase(invItemId, caseId){
+  if(!confirm('Открыть кейс питомца?'))return;
+  const {data:items}=await sb.from('case_items').select('*').eq('case_id',caseId);
+  if(!items||!items.length){alert('Кейс пуст!');return;}
+  const winner=items[Math.floor(Math.random()*items.length)];
+  const {data:petData}=await sb.from('pets').select('*').ilike('name',winner.item_name).single();
+  await sb.from('inventory').delete().eq('id',invItemId);
+  if(petData){
+    await sb.from('user_pets').insert({
+      user_id:currentUser.user_id,
+      pet_id:petData.id,
+      custom_name:petData.name,
+      speed:1,agility:1,charm:1,
+      boost:1.0,acc_bonus:0,
+      is_active:false
+    });
+    alert('Поздравляем!\nВы получили питомца: '+winner.item_emoji+' '+winner.item_name+'!\nНайди его в разделе Питомец 🐱');
+  } else {
+    alert('Получен питомец: '+winner.item_emoji+' '+winner.item_name);
+  }
+  await loadInventory();
 }
 
 window.addEventListener('load',initUser);
