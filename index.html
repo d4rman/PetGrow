@@ -772,7 +772,7 @@ async function spin(){
           else{await sb.from('seeds').insert({user_id:currentUser.user_id,plant_id:plant.id,quantity:1});}
         }
       } else {
-        await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0,is_equipped:false});
+        await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0,is_equipped:false,source_case_id:selectedCase});
       }
     },4100);
   },50);
@@ -952,8 +952,19 @@ async function loadCraftCounts(){
 async function craft(from,to){
   const {data:items}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('rarity',from).eq('is_equipped',false).limit(10);
   if(!items||items.length<10){alert('Нужно 10 предметов редкости: '+RN[from]);return;}
+  const sourceCaseId=items[0]?.source_case_id||null;
   await sb.from('inventory').delete().in('id',items.map(i=>i.id));
-  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:RN[to]+' (крафт)',item_type:'⚗️',rarity:to,base_price:RC[to]||0,is_equipped:false});
+  if(sourceCaseId){
+    const {data:caseItems}=await sb.from('case_items').select('*').eq('case_id',sourceCaseId).eq('rarity',to);
+    if(caseItems&&caseItems.length>0){
+      const craftedItem=caseItems[Math.floor(Math.random()*caseItems.length)];
+      await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:craftedItem.item_name,item_type:craftedItem.item_emoji||'❓',item_image:craftedItem.image_url||null,rarity:to,base_price:RC[to]||0,is_equipped:false,source_case_id:sourceCaseId});
+      alert('Получен: '+craftedItem.item_name+'! 🎉');
+      await loadCraftCounts();
+      return;
+    }
+  }
+  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:RN[to]+' предмет',item_type:'⚗️',rarity:to,base_price:RC[to]||0,is_equipped:false});
   alert('Получен: '+RN[to]+'!');
   await loadCraftCounts();
 }
