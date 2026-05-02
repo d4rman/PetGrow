@@ -12,19 +12,15 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .screen{display:none;padding:12px;padding-bottom:80px;min-height:100vh}
 .screen.active{display:block}
 .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.balance{display:flex;align-items:center;gap:6px;background:#16213e;border:1px solid #7F77DD;border-radius:12px;padding:8px 14px;cursor:pointer}
+.balance{display:flex;align-items:center;gap:6px;background:#16213e;border:1px solid #7F77DD;border-radius:12px;padding:8px 14px}
 .diamond{width:12px;height:12px;border:2px solid #7F77DD;transform:rotate(45deg);display:inline-block;flex-shrink:0}
 .bal-num{font-size:15px;font-weight:700;color:#a78bfa}
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;justify-content:space-around;background:#16213e;border-top:1px solid #2a2a4a;padding:6px 4px;z-index:100}
 .nav-btn{background:none;border:none;color:#888;font-size:10px;cursor:pointer;padding:6px 4px;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:52px;font-family:Arial,sans-serif}
 .nav-btn.active{color:#a78bfa}
-.nav-icon{font-size:22px}
+.nav-icon{font-size:20px}
 .card{background:#16213e;border:1px solid #2a2a4a;border-radius:16px;padding:14px;margin-bottom:10px}
 .card-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:10px}
-.pet-area{display:flex;align-items:center;gap:14px}
-.pet-emoji{font-size:64px;cursor:pointer;transition:transform 0.15s;user-select:none;display:block;text-align:center}
-.pet-emoji:active{transform:scale(1.2)}
-.pet-info{flex:1}
 .stat-row{display:flex;justify-content:space-between;margin-bottom:5px;font-size:13px}
 .stat-label{color:#888}
 .stat-val{color:#a78bfa;font-weight:700}
@@ -54,26 +50,24 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .case-price{font-size:12px;color:#a78bfa;display:flex;align-items:center;justify-content:center;gap:4px}
 .free-tag{background:#0d2e1a;color:#1D9E75;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:600}
 .open-btn{width:100%;padding:14px;background:#7F77DD;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;display:none;font-family:Arial,sans-serif}
-.open-btn:active{background:#534AB7}
 .rou-wrap{background:#16213e;border:1px solid #2a2a4a;border-radius:16px;padding:14px;margin-bottom:12px;display:none}
 .rou-track{overflow:hidden;border-radius:12px;height:90px;position:relative;border:1px solid #2a2a4a}
 .rou-pointer{position:absolute;top:0;left:50%;transform:translateX(-50%);width:3px;height:100%;background:#a78bfa;z-index:10}
 .rou-pointer::before{content:'▼';position:absolute;top:-1px;left:50%;transform:translateX(-50%);color:#a78bfa;font-size:10px}
-.rou-items{display:flex;align-items:center;gap:6px;position:absolute;top:50%;transform:translateY(-50%);will-change:left}
+.rou-items{display:flex;align-items:center;gap:6px;position:absolute;top:50%;transform:translateY(-50%)}
 .r-item{min-width:78px;width:78px;height:78px;border-radius:12px;border:1px solid #2a2a4a;background:#0f0f1e;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative}
 .r-item img{width:100%;height:100%;object-fit:cover}
 .r-item.legendary{border-color:#EF9F27}
 .r-item.epic{border-color:#7F77DD}
-.r-item.rare{border-color:#378ADD}
-.r-item.vr{border-color:#1D9E75}
+.r-item.rare,.r-item.vr{border-color:#378ADD}
 .r-item.common{border-color:#444}
-.r-label{font-size:8px;font-weight:700;margin-top:2px;position:absolute;bottom:2px;background:rgba(0,0,0,0.7);padding:1px 4px;border-radius:3px}
+.r-label{font-size:8px;font-weight:700;position:absolute;bottom:2px;background:rgba(0,0,0,0.7);padding:1px 4px;border-radius:3px}
 .r-item.legendary .r-label{color:#EF9F27}
 .r-item.epic .r-label{color:#a78bfa}
 .r-item.rare .r-label,.r-item.vr .r-label{color:#378ADD}
 .r-item.common .r-label{color:#888}
 .won-box{text-align:center;padding:14px;display:none}
-.won-img{width:80px;height:80px;object-fit:contain;border-radius:12px;margin:0 auto}
+.won-img{width:80px;height:80px;object-fit:contain;border-radius:12px;margin:0 auto;display:block}
 .won-emoji{font-size:52px}
 .won-title{font-size:17px;font-weight:700;margin-top:8px}
 .won-rarity{font-size:13px;margin-top:4px}
@@ -86,28 +80,26 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .upgrade-left{display:flex;align-items:center;gap:8px;font-size:14px;color:#fff}
 .upgrade-cost{font-size:13px;color:#a78bfa;font-weight:600}
 .feed-btn{width:100%;padding:14px;background:#1D9E75;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;font-family:Arial,sans-serif}
-.feed-btn:active{background:#0F6E56}
-.lb-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #2a2a4a}
+.lb-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #2a2a4a;cursor:pointer}
 .lb-row:last-child{border:none}
+.lb-row:active{background:#2a2a4a;border-radius:10px}
 .lb-rank{font-size:18px;width:28px;flex-shrink:0}
 .lb-name{flex:1;font-size:13px;font-weight:600;color:#fff}
 .lb-val{font-size:12px;color:#a78bfa;font-weight:700}
 .you-tag{background:#1a1035;border:1px solid #7F77DD;border-radius:10px;padding:8px 14px;text-align:center;margin-top:10px;font-size:13px;color:#a78bfa}
-.inv-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2a2a4a}
+.inv-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2a2a4a;cursor:pointer}
 .inv-item:last-child{border:none}
+.inv-item:active{opacity:0.8}
 .inv-img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0}
 .empty-msg{color:#888;text-align:center;padding:30px 0;font-size:14px}
 .loading{color:#888;text-align:center;padding:20px;font-size:13px}
 .mkt-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #2a2a4a}
 .mkt-item:last-child{border:none}
-.mkt-img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#0f0f1e;display:flex;align-items:center;justify-content:center;font-size:22px}
 .buy-btn{padding:6px 12px;background:#7F77DD;color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;font-family:Arial,sans-serif}
 .cancel-btn{padding:6px 12px;background:none;border:1px solid #993C1D;color:#993C1D;border-radius:8px;font-size:12px;cursor:pointer;font-family:Arial,sans-serif}
 .admin-input{width:100%;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:10px;padding:10px 12px;color:#fff;font-size:14px;margin-bottom:8px;font-family:Arial,sans-serif}
 .admin-input:focus{outline:none;border-color:#7F77DD}
 .admin-btn{width:100%;padding:12px;background:#7F77DD;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;font-family:Arial,sans-serif}
-.admin-btn.green{background:#1D9E75}
-.admin-btn.red{background:#993C1D}
 .tab-bar{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px}
 .tab-btn{padding:8px 16px;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;cursor:pointer;white-space:nowrap;font-family:Arial,sans-serif;flex-shrink:0}
 .tab-btn.active{background:#1a1035;border-color:#7F77DD;color:#a78bfa}
@@ -120,29 +112,37 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .overlay.active{display:block}
 .drawer{display:none;position:fixed;bottom:65px;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#16213e;border-top:1px solid #2a2a4a;border-radius:20px 20px 0 0;z-index:201;padding:16px}
 .drawer.active{display:block}
-.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.menu-item{background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px 8px;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-family:Arial,sans-serif;border:none}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.menu-item{background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px 8px;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-family:Arial,sans-serif}
 .menu-item:active{opacity:0.8}
-.inv-select-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:pointer;margin-bottom:6px}
-.inv-select-item:active{background:#2a2a4a}
-.modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#16213e;border:1px solid #2a2a4a;border-radius:16px;padding:20px;z-index:300;width:90%;max-width:360px}
+.modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#16213e;border:1px solid #2a2a4a;border-radius:16px;padding:20px;z-index:300;width:90%;max-width:360px;max-height:80vh;overflow-y:auto}
 .modal.active{display:block}
+.farm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.farm-slot{aspect-ratio:1;border-radius:12px;border:1px dashed #2a2a4a;background:#0f0f1e;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden}
+.farm-slot:active{opacity:0.8}
+.farm-slot.growing{border-color:#1D9E75}
+.farm-slot.ready{border-color:#EF9F27;animation:pulse 1s infinite}
+.farm-slot.empty{border-style:dashed}
+@keyframes pulse{0%,100%{border-color:#EF9F27}50%{border-color:#fff}}
+.farm-slot img{width:100%;height:100%;object-fit:cover;border-radius:11px}
+.farm-timer{position:absolute;bottom:2px;font-size:8px;background:rgba(0,0,0,0.8);padding:1px 4px;border-radius:3px;color:#fff}
+.seed-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:pointer;margin-bottom:6px;background:#0f0f1e}
+.seed-item:active{background:#2a2a4a}
+.pet-emoji-big{font-size:64px;cursor:pointer;transition:transform 0.15s;user-select:none;display:block;text-align:center}
+.pet-emoji-big:active{transform:scale(1.2)}
 </style>
 </head>
 <body>
 
 <div class="screen active" id="s-main">
   <div class="topbar">
-    <div class="balance" onclick="goTo('main',null)">
-      <span class="diamond"></span>
-      <span class="bal-num" id="bal-main">—</span>
-    </div>
+    <div class="balance"><span class="diamond"></span><span class="bal-num" id="bal-main">—</span></div>
     <div style="font-size:12px;color:#888">PetGrow 💜</div>
   </div>
   <div class="card">
-    <div class="pet-area">
-      <span class="pet-emoji" id="pet-main" onclick="petTap(this)">🐱</span>
-      <div class="pet-info">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span class="pet-emoji-big" id="pet-main" onclick="petTap(this)">🐱</span>
+      <div style="flex:1">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
           <div style="font-size:15px;font-weight:700" id="pet-name-display">Барсик</div>
           <button onclick="renamePet()" style="background:none;border:1px solid #2a2a4a;border-radius:6px;color:#888;font-size:10px;padding:2px 6px;cursor:pointer">✏️</button>
@@ -179,9 +179,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     <div class="balance"><span class="diamond"></span><span class="bal-num" id="bal-cases">—</span></div>
     <div style="font-size:12px;color:#888">PetGrow 💜</div>
   </div>
-  <div class="cases-grid" id="cases-grid">
-    <div class="loading" style="grid-column:span 2">Загрузка...</div>
-  </div>
+  <div class="cases-grid" id="cases-grid"><div class="loading" style="grid-column:span 2">Загрузка...</div></div>
   <button class="open-btn" id="open-btn" onclick="spin()">Открыть кейс</button>
   <div class="rou-wrap" id="roulette">
     <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:10px;text-align:center" id="rou-title">Прокрутка...</div>
@@ -244,7 +242,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     <div style="font-size:12px;color:#888">PetGrow 💜</div>
   </div>
   <div class="card" style="text-align:center">
-    <span class="pet-emoji" id="pet-big" onclick="petTap(this)">🐱</span>
+    <span class="pet-emoji-big" id="pet-big" onclick="petTap(this)">🐱</span>
     <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px">
       <div style="font-size:16px;font-weight:700" id="pet-name-big">Барсик</div>
       <button onclick="renamePet()" style="background:none;border:1px solid #2a2a4a;border-radius:6px;color:#888;font-size:10px;padding:2px 6px;cursor:pointer">✏️</button>
@@ -312,6 +310,24 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   </div>
 </div>
 
+<div class="screen" id="s-farm">
+  <div class="topbar">
+    <div class="balance"><span class="diamond"></span><span class="bal-num" id="bal-farm">—</span></div>
+    <div style="font-size:12px;color:#888">PetGrow 💜</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="card-title" style="margin:0">🌱 Ферма</div>
+      <div style="font-size:12px;color:#888" id="farm-seeds-count">Семян: 0</div>
+    </div>
+    <div class="farm-grid" id="farm-grid"><div class="loading" style="grid-column:span 4">Загрузка...</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Мои семена</div>
+    <div id="seeds-list"><div class="loading">Загрузка...</div></div>
+  </div>
+</div>
+
 <div class="screen" id="s-admin">
   <div class="topbar">
     <div style="font-size:15px;font-weight:700;color:#a78bfa">⚙️ Админ</div>
@@ -322,7 +338,6 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     <button class="tab-btn" onclick="switchAdminTab('pets-tab',this)">🐱 Питомцы</button>
     <button class="tab-btn" onclick="switchAdminTab('players-tab',this)">👥 Игроки</button>
   </div>
-
   <div class="tab-content active" id="cases-tab">
     <div class="card">
       <div class="card-title">➕ Создать кейс</div>
@@ -352,14 +367,13 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
       <div id="admin-cases-list"><div class="loading">Загрузка...</div></div>
     </div>
   </div>
-
   <div class="tab-content" id="pets-tab">
     <div class="card">
       <div class="card-title">➕ Добавить питомца</div>
       <input class="admin-input" id="a-pet-name" placeholder="Имя питомца">
       <input class="admin-input" id="a-pet-emoji" placeholder="Эмодзи 🐱">
       <input class="admin-input" id="a-pet-desc" placeholder="Описание">
-      <input class="admin-input" id="a-pet-price" placeholder="Цена в ромбиках (0 = бесплатно)" type="number">
+      <input class="admin-input" id="a-pet-price" placeholder="Цена в ромбиках" type="number">
       <select class="admin-input" id="a-pet-rarity">
         <option value="">— За ромбики —</option>
         <option value="vr">Нужен Очень редкий предмет</option>
@@ -373,7 +387,6 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
       <div id="admin-pets-list"><div class="loading">Загрузка...</div></div>
     </div>
   </div>
-
   <div class="tab-content" id="players-tab">
     <div class="card">
       <div class="card-title">💜 Выдать ромбики</div>
@@ -387,7 +400,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
       <input class="admin-input" id="a-promo-amount" placeholder="Награда в ромбиках" type="number">
       <input class="admin-input" id="a-promo-uses" placeholder="Кол-во использований" type="number">
       <button class="admin-btn" onclick="adminCreatePromo()">Создать промокод</button>
-      <div class="card-title" style="margin-top:10px">Активные промокоды</div>
+      <div style="font-size:13px;font-weight:700;color:#fff;margin:10px 0 6px">Активные промокоды</div>
       <div id="promo-list"><div class="loading">Загрузка...</div></div>
     </div>
     <div class="card">
@@ -401,21 +414,22 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 <div class="drawer" id="menu-drawer">
   <div style="text-align:center;font-size:13px;color:#888;margin-bottom:14px">Меню</div>
   <div class="menu-grid">
-    <button class="menu-item" style="background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px 8px" onclick="goTo('pet',null);closeDrawer()"><span style="font-size:24px">🐱</span>Питомец</button>
-    <button class="menu-item" style="background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px 8px" onclick="goTo('craft',null);closeDrawer()"><span style="font-size:24px">⚗️</span>Крафт</button>
-    <button class="menu-item" style="background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px 8px" onclick="goTo('inv',null);closeDrawer()"><span style="font-size:24px">🎒</span>Инвентарь</button>
-    <button class="menu-item" id="admin-menu-btn" style="display:none;background:#1a1035;border:1px solid #534AB7;border-radius:12px;padding:14px 8px;color:#a78bfa" onclick="goTo('admin',null);closeDrawer()"><span style="font-size:24px">⚙️</span>Админ</button>
+    <button class="menu-item" onclick="goTo('pet',null);closeDrawer()"><span style="font-size:24px">🐱</span>Питомец</button>
+    <button class="menu-item" onclick="goTo('craft',null);closeDrawer()"><span style="font-size:24px">⚗️</span>Крафт</button>
+    <button class="menu-item" onclick="goTo('inv',null);closeDrawer()"><span style="font-size:24px">🎒</span>Инвентарь</button>
+    <button class="menu-item" onclick="goTo('farm',null);closeDrawer()"><span style="font-size:24px">🌱</span>Ферма</button>
+    <button class="menu-item" id="admin-menu-btn" style="display:none;border:1px solid #534AB7;color:#a78bfa" onclick="goTo('admin',null);closeDrawer()"><span style="font-size:24px">⚙️</span>Админ</button>
   </div>
-  <div style="margin-top:14px">
+  <div style="margin-top:4px">
     <input class="admin-input" id="promo-input" placeholder="Введи промокод...">
     <button onclick="usePromo()" style="width:100%;padding:10px;background:none;border:1px solid #1D9E75;border-radius:10px;color:#1D9E75;font-size:13px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif">Активировать промокод</button>
   </div>
 </div>
 
-<div class="modal" id="showcase-modal">
-  <div style="font-size:14px;font-weight:700;margin-bottom:12px">Выбери предмет для витрины</div>
-  <div id="showcase-select-list" style="max-height:300px;overflow-y:auto"></div>
-  <button onclick="closeModal()" style="width:100%;padding:10px;background:none;border:1px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;cursor:pointer;margin-top:10px;font-family:Arial,sans-serif">Отмена</button>
+<div class="modal" id="main-modal">
+  <div id="modal-title" style="font-size:14px;font-weight:700;margin-bottom:12px"></div>
+  <div id="modal-content"></div>
+  <button onclick="closeModal()" style="width:100%;padding:10px;background:none;border:1px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;cursor:pointer;margin-top:10px;font-family:Arial,sans-serif">Закрыть</button>
 </div>
 <div class="overlay" id="modal-overlay" onclick="closeModal()"></div>
 
@@ -435,8 +449,9 @@ const ADMIN_IDS=[717860240,999999];
 const RC={common:50,rare:200,vr:500,epic:1500,legendary:5000};
 const RN={common:'Обычный',rare:'Редкий',vr:'Очень редкий',epic:'Эпический',legendary:'Легендарный'};
 const RCOL={common:'#888',rare:'#378ADD',vr:'#1D9E75',epic:'#a78bfa',legendary:'#EF9F27'};
+const ACC_BONUS={common:5,rare:10,vr:20,epic:35,legendary:50};
 
-let currentUser=null,bal=0,spinning=false,selectedCase=null,selectedCaseItems=[],showcaseSlots=[null,null,null,null,null,null],currentShowcaseSlot=0,activePet=null;
+let currentUser=null,bal=0,spinning=false,selectedCase=null,selectedCaseItems=[],showcaseSlots=[null,null,null,null,null,null],currentShowcaseSlot=0,activePet=null,farmTimers={};
 
 async function initUser(){
   const tg=window.Telegram?.WebApp;
@@ -464,7 +479,7 @@ async function initUser(){
 async function assignStarterPet(userId){
   const {data:starter}=await sb.from('pets').select('*').eq('is_starter',true).single();
   if(starter){
-    await sb.from('user_pets').insert({user_id:userId,pet_id:starter.id,custom_name:starter.name,is_active:true});
+    await sb.from('user_pets').insert({user_id:userId,pet_id:starter.id,custom_name:starter.name,speed:1,agility:1,charm:1,boost:1.0,is_active:true});
   }
 }
 
@@ -483,6 +498,7 @@ function updateUI(){
   if(!activePet)return;
   const s=activePet.speed||1,a=activePet.agility||1,c=activePet.charm||1;
   const boost=parseFloat(activePet.boost)||1;
+  const accBonus=parseFloat(activePet.acc_bonus)||0;
   document.getElementById('p-speed').textContent=s;
   document.getElementById('p-agility').textContent=a;
   document.getElementById('p-charm').textContent=c;
@@ -494,8 +510,7 @@ function updateUI(){
   document.getElementById('cost-agility').textContent=calcUpgradeCost(a)+' 💜';
   document.getElementById('cost-charm').textContent=calcUpgradeCost(c)+' 💜';
   document.getElementById('boost-bar').style.width=Math.min(boost/5*100,100)+'%';
- const accBonus=parseFloat(activePet.acc_bonus)||0;
-const income=Math.round((s+a+c)*10*boost*(1+accBonus/100));
+  const income=Math.round((s+a+c)*10*boost*(1+accBonus/100));
   document.getElementById('income-badge').textContent='💜 +'+income+' / час';
   document.getElementById('income-big').textContent='💜 +'+income+' / час · Бустер '+boost+'x';
   const name=activePet.custom_name||'Барсик';
@@ -520,6 +535,7 @@ async function savePet(updates){
 function petTap(el){el.style.transform='scale(1.2)';setTimeout(()=>el.style.transform='scale(1)',200);}
 
 async function feedPet(){
+  if(!activePet){alert('Нет активного питомца!');return;}
   await savePet({boost:2.0,last_fed:new Date().toISOString()});
   alert('Питомец сыт! Бустер 2x 😸');
 }
@@ -535,6 +551,7 @@ async function upgrade(stat){
 }
 
 async function renamePet(){
+  if(!activePet){alert('Нет активного питомца!');return;}
   const name=prompt('Новое имя питомца:',activePet?.custom_name||'Барсик');
   if(!name||!name.trim())return;
   await savePet({custom_name:name.trim()});
@@ -544,7 +561,7 @@ async function loadCases(){
   const grid=document.getElementById('cases-grid');
   grid.innerHTML='<div class="loading" style="grid-column:span 2">Загрузка...</div>';
   const {data:cases}=await sb.from('cases').select('*').eq('is_active',true).order('price');
-  if(!cases||cases.length===0){grid.innerHTML='<div class="empty-msg" style="grid-column:span 2">Кейсы не добавлены</div>';return;}
+  if(!cases||!cases.length){grid.innerHTML='<div class="empty-msg" style="grid-column:span 2">Кейсы не добавлены</div>';return;}
   grid.innerHTML=cases.map(c=>`
     <div class="case-card ${c.price===0?'free':''}" onclick="selectCase(${c.id},this)">
       <div class="case-img">${c.image_url||'📦'}</div>
@@ -567,8 +584,7 @@ async function selectCase(caseId,el){
   const {data:items}=await sb.from('case_items').select('*').eq('case_id',caseId);
   selectedCaseItems=items||[];
   const cl=document.getElementById('chances-list');
-  const ch=document.getElementById('chances');
-  ch.style.display='block';
+  document.getElementById('chances').style.display='block';
   if(!selectedCaseItems.length){cl.innerHTML='<div class="empty-msg">Предметы не добавлены</div>';return;}
   const sorted=[...selectedCaseItems].sort((a,b)=>{const o={common:0,rare:1,vr:2,epic:3,legendary:4};return (o[a.rarity]||0)-(o[b.rarity]||0);});
   cl.innerHTML=sorted.map(it=>`
@@ -603,6 +619,7 @@ async function spin(){
   const trackEl=document.getElementById('rou-track');
   track.innerHTML='';
   track.style.transition='none';
+  track.style.left='0px';
   pool.forEach(it=>{
     const d=document.createElement('div');
     d.className='r-item '+(it.rarity==='vr'?'vr':it.rarity);
@@ -611,31 +628,41 @@ async function spin(){
     track.appendChild(d);
   });
   const trackWidth=trackEl.offsetWidth||300;
-  const pointerPos=Math.floor(trackWidth/2);
-  track.style.left='0px';
-const finalPos=pointerPos-Math.floor(ITEM_W/2)-(WIN_IDX*STEP)-(STEP/2);
+  const center=Math.floor(trackWidth/2);
+  const finalLeft=center-Math.floor(ITEM_W/2)-(WIN_IDX*STEP);
   setTimeout(()=>{
     track.style.transition='left 4s cubic-bezier(0.17,0.67,0.12,0.99)';
-    track.style.left=finalPos+'px';
+    track.style.left=finalLeft+'px';
     setTimeout(async()=>{
       spinning=false;
-      const stoppedLeft=parseInt(track.style.left)||finalPos;
-const centerX=pointerPos-stoppedLeft;
-const actualIdx=Math.round((centerX-Math.floor(ITEM_W/2))/STEP);
-const actualItem=winner;
       document.getElementById('rou-title').textContent='Вы получили:';
       const wv=document.getElementById('won-visual');
-      wv.innerHTML=actualItem.image_url?`<img src="${actualItem.image_url}" class="won-img">`:`<div class="won-emoji">${actualItem.item_emoji||'❓'}</div>`;
-      document.getElementById('won-rarity').textContent=RN[actualItem.rarity]||actualItem.rarity;
-      document.getElementById('won-rarity').style.color=RCOL[actualItem.rarity]||'#888';
+      wv.innerHTML=winner.image_url?`<img src="${winner.image_url}" class="won-img">`:`<div class="won-emoji">${winner.item_emoji||'❓'}</div>`;
+      document.getElementById('won-rarity').textContent=RN[winner.rarity]||winner.rarity;
+      document.getElementById('won-rarity').style.color=RCOL[winner.rarity]||'#888';
       document.getElementById('won-box').style.display='block';
       await saveUser({balance:bal-cost});
-      await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:actualItem.item_name,item_type:actualItem.item_emoji||'❓',item_image:actualItem.image_url||null,rarity:actualItem.rarity,base_price:RC[actualItem.rarity]||0});
+      const isSeed=winner.item_name.includes('Семя');
+      if(isSeed){
+        const plantName=winner.item_name.replace('Семя ','');
+        const {data:plant}=await sb.from('plants').select('*').ilike('name',plantName).single();
+        if(plant){
+          const {data:existSeed}=await sb.from('seeds').select('*').eq('user_id',currentUser.user_id).eq('plant_id',plant.id).single();
+          if(existSeed){
+            await sb.from('seeds').update({quantity:existSeed.quantity+1}).eq('id',existSeed.id);
+          } else {
+            await sb.from('seeds').insert({user_id:currentUser.user_id,plant_id:plant.id,quantity:1});
+          }
+        } else {
+          await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0});
+        }
+      } else {
+        await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0});
+      }
     },4100);
   },50);
 }
 
-  
 function resetCase(){
   document.getElementById('roulette').style.display='none';
   document.getElementById('won-box').style.display='none';
@@ -649,51 +676,91 @@ async function goTo(id,btn){
   if(sc)sc.classList.add('active');
   if(btn)btn.classList.add('active');
 
-  if(id==='inv'){
-    const inv=document.getElementById('inv-list');
-    inv.innerHTML='<div class="loading">Загрузка...</div>';
-    const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).order('obtained_at',{ascending:false});
-    if(!data||!data.length){inv.innerHTML='<div class="empty-msg">Инвентарь пуст</div>';return;}
-    inv.innerHTML=data.map(it=>`
-      <div class="inv-item" onclick="openItemCard(${it.id})" style="cursor:pointer">
-        ${it.item_image?`<img src="${it.item_image}" class="inv-img">`:`<span style="font-size:32px;flex-shrink:0">${it.item_type||'❓'}</span>`}
-        <div style="flex:1">
-          <div style="font-size:14px;font-weight:600">${it.item_name}</div>
-          <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div>
-          <div style="font-size:11px;color:#888">~${(it.base_price||RC[it.rarity]||0).toLocaleString('ru')} 💜</div>
-        </div>
-        <span style="color:#444;font-size:18px">›</span>
-      </div>`).join('');
-
-  if(id==='market')await loadMarket();
-
-  if(id==='top'){
-    const lb=document.getElementById('lb-list');
-    lb.innerHTML='<div class="loading">Загрузка...</div>';
-    const {data}=await sb.from('users').select('username,balance').order('balance',{ascending:false}).limit(20);
-    const medals=['🥇','🥈','🥉'];
-    if(!data||!data.length){lb.innerHTML='<div class="empty-msg">Пока никого нет</div>';}
-    else{lb.innerHTML=data.map((r,i)=>`
-      <div class="lb-row">
-        <div class="lb-rank">${i<3?medals[i]:(i+1)+'.'}</div>
-        <div class="lb-name">${r.username}</div>
-        <div class="lb-val">${r.balance.toLocaleString('ru')} 💜</div>
-      </div>`).join('');}
-    document.getElementById('you-tag').textContent=`Ты: ${currentUser.username} — ${bal.toLocaleString('ru')} 💜`;
-  }
-
-  if(id==='craft'){
-    const {data}=await sb.from('inventory').select('rarity').eq('user_id',currentUser.user_id);
-    const cnt={common:0,rare:0,vr:0,epic:0};
-    (data||[]).forEach(it=>{if(cnt[it.rarity]!==undefined)cnt[it.rarity]++;});
-    document.getElementById('cnt-common').textContent=cnt.common+' шт';
-    document.getElementById('cnt-rare').textContent=cnt.rare+' шт';
-    document.getElementById('cnt-vr').textContent=cnt.vr+' шт';
-    document.getElementById('cnt-epic').textContent=cnt.epic+' шт';
-  }
-
-  if(id==='pet')await loadMyPets();
+  if(id==='inv') await loadInventory();
+  if(id==='market') await loadMarket();
+  if(id==='top') await loadLeaderboard();
+  if(id==='craft') await loadCraftCounts();
+  if(id==='pet') await loadMyPets();
+  if(id==='farm') await loadFarm();
   if(id==='admin'){loadAdminCasesList();loadAdminPetsList();loadPlayersList();loadPromoList();}
+}
+
+async function loadInventory(){
+  const inv=document.getElementById('inv-list');
+  inv.innerHTML='<div class="loading">Загрузка...</div>';
+  const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).order('obtained_at',{ascending:false});
+  if(!data||!data.length){inv.innerHTML='<div class="empty-msg">Инвентарь пуст</div>';return;}
+  inv.innerHTML=data.map(it=>`
+    <div class="inv-item" onclick="openItemCard(${it.id})">
+      ${it.item_image?`<img src="${it.item_image}" class="inv-img">`:`<span style="font-size:32px;flex-shrink:0">${it.item_type||'❓'}</span>`}
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600">${it.item_name}</div>
+        <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div>
+        <div style="font-size:11px;color:#888">~${(it.base_price||RC[it.rarity]||0).toLocaleString('ru')} 💜</div>
+      </div>
+      <span style="color:#444;font-size:18px">›</span>
+    </div>`).join('');
+}
+
+async function openItemCard(itemId){
+  const {data:item}=await sb.from('inventory').select('*').eq('id',itemId).single();
+  if(!item)return;
+  const {data:mkt}=await sb.from('marketplace').select('price').eq('item_id',itemId).single();
+  const marketPrice=mkt?.price||null;
+  showModal('Предмет',`
+    <div style="text-align:center;padding:10px 0">
+      ${item.item_image?`<img src="${item.item_image}" style="width:100px;height:100px;object-fit:cover;border-radius:16px;border:2px solid ${RCOL[item.rarity]||'#444'};display:block;margin:0 auto">`:`<div style="font-size:64px">${item.item_type||'❓'}</div>`}
+      <div style="font-size:16px;font-weight:700;margin-top:10px">${item.item_name}</div>
+      <div style="font-size:13px;color:${RCOL[item.rarity]||'#888'};margin-top:4px">${RN[item.rarity]||item.rarity}</div>
+    </div>
+    <div style="background:#0f0f1e;border-radius:12px;padding:12px;margin:10px 0">
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #2a2a4a">
+        <span style="color:#888">Базовая цена</span>
+        <span style="color:#a78bfa;font-weight:700">${(item.base_price||RC[item.rarity]||0).toLocaleString('ru')} 💜</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #2a2a4a">
+        <span style="color:#888">На рынке</span>
+        <span style="color:${marketPrice?'#1D9E75':'#888'};font-weight:700">${marketPrice?marketPrice.toLocaleString('ru')+' 💜':'Не продаётся'}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0">
+        <span style="color:#888">Бафф акса</span>
+        <span style="color:#4fc3f7;font-weight:700">+${ACC_BONUS[item.rarity]||0}% к доходу</span>
+      </div>
+    </div>
+    <div style="display:grid;gap:8px">
+      <button onclick="closeModal();equipAcc(${item.id})" style="width:100%;padding:10px;background:#1D9E75;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🐱 Надеть на питомца</button>
+      <button onclick="closeModal();sellItem(${item.id})" style="width:100%;padding:10px;background:none;border:1px solid #7F77DD;border-radius:10px;color:#a78bfa;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🏪 Выставить на рынок</button>
+      <button onclick="closeModal();openShowcaseSelect(0)" style="width:100%;padding:10px;background:none;border:1px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🖼️ Поставить на витрину</button>
+    </div>`);
+}
+
+async function equipAcc(itemId){
+  if(!activePet){alert('Нет активного питомца!');return;}
+  const {data:item}=await sb.from('inventory').select('*').eq('id',itemId).single();
+  if(!item)return;
+  const bonus=ACC_BONUS[item.rarity]||0;
+  const slots=['acc_slot_1','acc_slot_2','acc_slot_3'];
+  let freeSlot=null;
+  for(const s of slots){if(!activePet[s]){freeSlot=s;break;}}
+  if(!freeSlot){alert('Все слоты заняты! Сними один акс сначала.');return;}
+  const newBonus=(parseFloat(activePet.acc_bonus)||0)+bonus;
+  await sb.from('user_pets').update({[freeSlot]:itemId,acc_bonus:newBonus}).eq('id',activePet.id);
+  await sb.from('inventory').delete().eq('id',itemId);
+  Object.assign(activePet,{[freeSlot]:itemId,acc_bonus:newBonus});
+  updateUI();
+  alert('Акс надет! +'+bonus+'% к доходу 🐱');
+}
+
+async function sellItem(itemId){
+  const {data:item}=await sb.from('inventory').select('*').eq('id',itemId).single();
+  if(!item)return;
+  const basePrice=item.base_price||RC[item.rarity]||0;
+  const price=prompt('Цена продажи (рекомендуем от '+basePrice+' 💜):');
+  if(!price||isNaN(price)||parseInt(price)<=0)return;
+  await sb.from('marketplace').insert({seller_id:currentUser.user_id,item_id:itemId,item_name:item.item_name,item_type:item.item_type,item_image:item.item_image||null,rarity:item.rarity,price:parseInt(price)});
+  await sb.from('inventory').delete().eq('id',itemId);
+  alert('Выставлено на продажу!');
+  await loadInventory();
 }
 
 async function loadMarket(){
@@ -703,49 +770,34 @@ async function loadMarket(){
   if(!data||!data.length){list.innerHTML='<div class="empty-msg">Рынок пуст</div>';return;}
   list.innerHTML=data.map(it=>`
     <div class="mkt-item">
-      <div class="mkt-img">${it.item_image?`<img src="${it.item_image}" style="width:44px;height:44px;object-fit:cover;border-radius:8px">`:(it.item_type||'❓')}</div>
+      <div style="width:44px;height:44px;border-radius:8px;flex-shrink:0;background:#0f0f1e;display:flex;align-items:center;justify-content:center;overflow:hidden">
+        ${it.item_image?`<img src="${it.item_image}" style="width:44px;height:44px;object-fit:cover;border-radius:8px">`:`<span style="font-size:24px">${it.item_type||'❓'}</span>`}
+      </div>
       <div style="flex:1">
         <div style="font-size:14px;font-weight:600">${it.item_name}</div>
         <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div>
         <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-top:2px">${it.price.toLocaleString('ru')} 💜</div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        ${it.seller_id!==currentUser?.user_id?`<button class="buy-btn" onclick="buyItem(${it.id},${it.price},'${it.item_name}','${it.rarity}','${it.item_type||'❓'}','${it.item_image||''}')">Купить</button>`:`<button class="cancel-btn" onclick="cancelListing(${it.id},'${it.item_name}','${it.rarity}','${it.item_type||'❓'}','${it.item_image||''}')">Снять</button>`}
-      </div>
+      ${it.seller_id!==currentUser?.user_id?
+        `<button class="buy-btn" onclick="buyItem(${it.id},${it.price})">Купить</button>`:
+        `<button class="cancel-btn" onclick="cancelListing(${it.id})">Снять</button>`}
     </div>`).join('');
 }
 
 async function showSellPanel(){
   const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).order('rarity');
   if(!data||!data.length){alert('Инвентарь пуст!');return;}
-  const modal=document.getElementById('showcase-modal');
-  const list=document.getElementById('showcase-select-list');
-  modal.querySelector('div').textContent='Выбери предмет для продажи';
-  list.innerHTML=data.map(it=>`
-    <div class="inv-select-item" onclick="selectForSell(${it.id},'${it.item_name}','${it.rarity}','${it.item_type||'❓'}','${it.item_image||''}',${it.base_price||RC[it.rarity]||0})">
-      ${it.item_image?`<img src="${it.item_image}" class="inv-img">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
+  showModal('Выбери предмет для продажи',data.map(it=>`
+    <div class="seed-item" onclick="closeModal();sellItem(${it.id})">
+      ${it.item_image?`<img src="${it.item_image}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
       <div>
         <div style="font-size:14px;font-weight:600">${it.item_name}</div>
         <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity} · ~${(it.base_price||RC[it.rarity]||0).toLocaleString('ru')} 💜</div>
       </div>
-    </div>`).join('');
-  modal.style.zIndex=301;
-  modal.classList.add('active');
-  document.getElementById('modal-overlay').style.zIndex=300;
-  document.getElementById('modal-overlay').classList.add('active');
+    </div>`).join(''));
 }
 
-async function selectForSell(itemId,itemName,rarity,emoji,image,basePrice){
-  closeModal();
-  const price=prompt(`Цена (рекомендуем от ${basePrice} 💜):`);
-  if(!price||isNaN(price)||parseInt(price)<=0)return;
-  await sb.from('marketplace').insert({seller_id:currentUser.user_id,item_id:itemId,item_name:itemName,item_type:emoji,item_image:image||null,rarity,price:parseInt(price)});
-  await sb.from('inventory').delete().eq('id',itemId);
-  alert('Выставлено на продажу!');
-  await loadMarket();
-}
-
-async function buyItem(listingId,price,itemName,rarity,emoji,image){
+async function buyItem(listingId,price){
   if(bal<price){alert('Нужно '+price+' 💜');return;}
   const {data:listing}=await sb.from('marketplace').select('*').eq('id',listingId).single();
   if(!listing){alert('Лот уже куплен!');await loadMarket();return;}
@@ -754,18 +806,60 @@ async function buyItem(listingId,price,itemName,rarity,emoji,image){
   await saveUser({balance:bal-price});
   const {data:seller}=await sb.from('users').select('balance').eq('user_id',listing.seller_id).single();
   if(seller)await sb.from('users').update({balance:seller.balance+sellerGets}).eq('user_id',listing.seller_id);
-  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:itemName,item_type:emoji,item_image:image||null,rarity,base_price:RC[rarity]||0});
+  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:listing.item_name,item_type:listing.item_type,item_image:listing.item_image||null,rarity:listing.rarity,base_price:RC[listing.rarity]||0});
   await sb.from('marketplace').delete().eq('id',listingId);
-  alert('Куплено: '+itemName+'!');
+  alert('Куплено: '+listing.item_name+'!');
   await loadMarket();
 }
 
-async function cancelListing(listingId,itemName,rarity,emoji,image){
-  if(!confirm('Снять лот "'+itemName+'"?'))return;
-  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:itemName,item_type:emoji,item_image:image||null,rarity,base_price:RC[rarity]||0});
+async function cancelListing(listingId){
+  if(!confirm('Снять лот?'))return;
+  const {data:listing}=await sb.from('marketplace').select('*').eq('id',listingId).single();
+  if(!listing)return;
+  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:listing.item_name,item_type:listing.item_type,item_image:listing.item_image||null,rarity:listing.rarity,base_price:RC[listing.rarity]||0});
   await sb.from('marketplace').delete().eq('id',listingId);
   alert('Лот снят, предмет возвращён в инвентарь');
   await loadMarket();
+}
+
+async function loadLeaderboard(){
+  const lb=document.getElementById('lb-list');
+  lb.innerHTML='<div class="loading">Загрузка...</div>';
+  const {data}=await sb.from('users').select('user_id,username,balance').order('balance',{ascending:false}).limit(20);
+  const medals=['🥇','🥈','🥉'];
+  if(!data||!data.length){lb.innerHTML='<div class="empty-msg">Пока никого нет</div>';}
+  else{lb.innerHTML=data.map((r,i)=>`
+    <div class="lb-row" onclick="viewShowcase(${r.user_id},'${r.username}')">
+      <div class="lb-rank">${i<3?medals[i]:(i+1)+'.'}</div>
+      <div class="lb-name">${r.username}</div>
+      <div class="lb-val">${r.balance.toLocaleString('ru')} 💜</div>
+    </div>`).join('');}
+  document.getElementById('you-tag').textContent=`Ты: ${currentUser.username} — ${bal.toLocaleString('ru')} 💜`;
+}
+
+async function viewShowcase(userId,username){
+  const {data:inv}=await sb.from('inventory').select('*').eq('user_id',userId).limit(6);
+  const slots=(inv||[]).slice(0,6);
+  showModal(username+'\'s витрина',`
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+      ${Array(6).fill(0).map((_,i)=>{
+        const it=slots[i];
+        if(!it)return '<div style="aspect-ratio:1;border-radius:12px;border:1px dashed #2a2a4a;background:#0f0f1e;display:flex;align-items:center;justify-content:center;color:#444">+</div>';
+        return `<div style="aspect-ratio:1;border-radius:12px;border:1px solid ${RCOL[it.rarity]||'#444'};background:#0f0f1e;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden">
+          ${it.item_image?`<img src="${it.item_image}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:26px">${it.item_type||'❓'}</span>`}
+        </div>`;
+      }).join('')}
+    </div>`);
+}
+
+async function loadCraftCounts(){
+  const {data}=await sb.from('inventory').select('rarity').eq('user_id',currentUser.user_id);
+  const cnt={common:0,rare:0,vr:0,epic:0};
+  (data||[]).forEach(it=>{if(cnt[it.rarity]!==undefined)cnt[it.rarity]++;});
+  document.getElementById('cnt-common').textContent=cnt.common+' шт';
+  document.getElementById('cnt-rare').textContent=cnt.rare+' шт';
+  document.getElementById('cnt-vr').textContent=cnt.vr+' шт';
+  document.getElementById('cnt-epic').textContent=cnt.epic+' шт';
 }
 
 async function craft(from,to){
@@ -774,15 +868,15 @@ async function craft(from,to){
   await sb.from('inventory').delete().in('id',items.map(i=>i.id));
   await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:RN[to]+' (крафт)',item_type:'⚗️',rarity:to,base_price:RC[to]||0});
   alert('Получен: '+RN[to]+'!');
-  goTo('craft',null);
+  await loadCraftCounts();
 }
 
 async function loadMyPets(){
   const list=document.getElementById('my-pets-list');
   list.innerHTML='<div class="loading">Загрузка...</div>';
-  const {data:userPets}=await sb.from('user_pets').select('*,pets(*)').eq('user_id',currentUser.user_id);
-  if(!userPets||!userPets.length){list.innerHTML='<div class="empty-msg">Нет питомцев</div>';return;}
-  list.innerHTML=userPets.map(up=>`
+  const {data}=await sb.from('user_pets').select('*,pets(*)').eq('user_id',currentUser.user_id);
+  if(!data||!data.length){list.innerHTML='<div class="empty-msg">Нет питомцев</div>';return;}
+  list.innerHTML=data.map(up=>`
     <div class="pet-card ${up.is_active?'active-pet':''}" onclick="setActivePet(${up.id})">
       <span style="font-size:36px">${up.pets?.emoji||'🐱'}</span>
       <div style="flex:1">
@@ -802,30 +896,135 @@ async function setActivePet(petId){
   alert('Питомец активирован!');
 }
 
+async function loadFarm(){
+  const grid=document.getElementById('farm-grid');
+  const seedsList=document.getElementById('seeds-list');
+  grid.innerHTML='<div class="loading" style="grid-column:span 4">Загрузка...</div>';
+  Object.values(farmTimers).forEach(t=>clearInterval(t));
+  farmTimers={};
+  const {data:farmSlots}=await sb.from('farm_slots').select('*,plants(*)').eq('user_id',currentUser.user_id).eq('harvested',false);
+  const {data:seeds}=await sb.from('seeds').select('*,plants(*)').eq('user_id',currentUser.user_id).gt('quantity',0);
+  const seedCount=seeds?.reduce((a,s)=>a+s.quantity,0)||0;
+  document.getElementById('farm-seeds-count').textContent='Семян: '+seedCount;
+  const usedSlots=farmSlots?.length||0;
+  const totalSlots=Math.min(16,Math.max(4,usedSlots+1));
+  let html='';
+  const now=new Date();
+  for(let i=0;i<totalSlots;i++){
+    const slot=farmSlots?.find(s=>s.slot_index===i);
+    if(slot){
+      const plantedAt=new Date(slot.planted_at);
+      const growMs=slot.plants.grow_minutes*60*1000;
+      const endTime=new Date(plantedAt.getTime()+growMs);
+      const isReady=now>=endTime;
+      if(isReady){
+        html+=`<div class="farm-slot ready" onclick="harvest(${slot.id},${slot.plants.reward_diamonds},'${slot.plants.name}','${slot.plants.emoji}','${slot.plants.rarity}')">
+          <span style="font-size:28px">${slot.plants.emoji}</span>
+          <div class="farm-timer" style="color:#EF9F27">Готово!</div>
+        </div>`;
+      } else {
+        html+=`<div class="farm-slot growing" id="fslot-${i}">
+          <span style="font-size:28px">${slot.plants.emoji}</span>
+          <div class="farm-timer" id="ftimer-${i}">...</div>
+        </div>`;
+        farmTimers[i]=setInterval(()=>{
+          const rem=Math.max(0,endTime-new Date());
+          const el=document.getElementById('ftimer-'+i);
+          if(el){
+            if(rem<=0){
+              clearInterval(farmTimers[i]);
+              loadFarm();
+            } else {
+              const h=Math.floor(rem/3600000),m=Math.floor((rem%3600000)/60000),s=Math.floor((rem%60000)/1000);
+              el.textContent=h>0?h+'ч '+m+'м':m>0?m+'м '+s+'с':s+'с';
+            }
+          } else clearInterval(farmTimers[i]);
+        },1000);
+      }
+    } else {
+      html+=`<div class="farm-slot empty" onclick="openPlantSelect(${i})">
+        <span style="color:#444;font-size:22px">+</span>
+        <div class="farm-timer" style="color:#444">Посадить</div>
+      </div>`;
+    }
+  }
+  grid.innerHTML=html;
+  if(!seeds||!seeds.length){seedsList.innerHTML='<div class="empty-msg">Нет семян — открой кейс семян!</div>';return;}
+  seedsList.innerHTML=seeds.map(s=>`
+    <div class="seed-item" onclick="openPlantSelectSeed(${s.plant_id})">
+      <span style="font-size:28px">${s.plants.emoji}</span>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600">${s.plants.name}</div>
+        <div style="font-size:12px;color:${RCOL[s.plants.rarity]||'#888'}">${RN[s.plants.rarity]||s.plants.rarity} · ${s.plants.grow_minutes>=60?Math.floor(s.plants.grow_minutes/60)+'ч':s.plants.grow_minutes+'м'} · +${s.plants.reward_diamonds} 💜</div>
+      </div>
+      <div style="font-size:13px;color:#a78bfa;font-weight:700">x${s.quantity}</div>
+    </div>`).join('');
+}
+
+async function openPlantSelect(slotIndex){
+  const {data:seeds}=await sb.from('seeds').select('*,plants(*)').eq('user_id',currentUser.user_id).gt('quantity',0);
+  if(!seeds||!seeds.length){alert('Нет семян! Открой кейс семян.');return;}
+  showModal('Выбери семя для посадки',seeds.map(s=>`
+    <div class="seed-item" onclick="closeModal();plantSeed(${slotIndex},${s.plant_id},${s.id})">
+      <span style="font-size:28px">${s.plants.emoji}</span>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600">${s.plants.name}</div>
+        <div style="font-size:12px;color:${RCOL[s.plants.rarity]||'#888'}">${RN[s.plants.rarity]||s.plants.rarity} · ${s.plants.grow_minutes>=60?Math.floor(s.plants.grow_minutes/60)+'ч':s.plants.grow_minutes+'м'}</div>
+        <div style="font-size:11px;color:#1D9E75">+${s.plants.reward_diamonds} 💜</div>
+      </div>
+      <div style="font-size:13px;color:#a78bfa;font-weight:700">x${s.quantity}</div>
+    </div>`).join(''));
+}
+
+async function openPlantSelectSeed(plantId){
+  const {data:farmSlots}=await sb.from('farm_slots').select('slot_index').eq('user_id',currentUser.user_id).eq('harvested',false);
+  const usedIdxs=(farmSlots||[]).map(s=>s.slot_index);
+  let freeSlot=-1;
+  for(let i=0;i<16;i++){if(!usedIdxs.includes(i)){freeSlot=i;break;}}
+  if(freeSlot===-1){alert('Нет свободных грядок!');return;}
+  const {data:seed}=await sb.from('seeds').select('*').eq('user_id',currentUser.user_id).eq('plant_id',plantId).single();
+  if(!seed||seed.quantity<1){alert('Нет семян этого растения!');return;}
+  await plantSeed(freeSlot,plantId,seed.id);
+}
+
+async function plantSeed(slotIndex,plantId,seedId){
+  const {data:existing}=await sb.from('farm_slots').select('id').eq('user_id',currentUser.user_id).eq('slot_index',slotIndex).eq('harvested',false).single();
+  if(existing){alert('Эта грядка уже занята!');return;}
+  const {data:seed}=await sb.from('seeds').select('*').eq('id',seedId).single();
+  if(!seed||seed.quantity<1){alert('Нет семян!');return;}
+  await sb.from('farm_slots').insert({user_id:currentUser.user_id,slot_index:slotIndex,plant_id:plantId,planted_at:new Date().toISOString(),harvested:false});
+  if(seed.quantity<=1){await sb.from('seeds').delete().eq('id',seedId);}
+  else{await sb.from('seeds').update({quantity:seed.quantity-1}).eq('id',seedId);}
+  alert('Посажено! Ожидай урожай 🌱');
+  await loadFarm();
+}
+
+async function harvest(slotId,reward,name,emoji,rarity){
+  await sb.from('farm_slots').update({harvested:true}).eq('id',slotId);
+  await saveUser({balance:bal+reward});
+  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:name,item_type:emoji,rarity:rarity||'common',base_price:reward});
+  alert('Урожай собран! +'+reward+' 💜\n'+emoji+' '+name+' добавлен в инвентарь');
+  await loadFarm();
+}
+
 async function openShowcaseSelect(slotIndex){
   currentShowcaseSlot=slotIndex;
   const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id);
-  const modal=document.getElementById('showcase-modal');
-  const list=document.getElementById('showcase-select-list');
-  modal.querySelector('div').textContent='Выбери предмет для витрины';
-  if(!data||!data.length){list.innerHTML='<div class="empty-msg">Инвентарь пуст</div>';}
-  else{
-    list.innerHTML=`<div class="inv-select-item" onclick="setShowcaseSlot(null)"><span style="font-size:28px">✕</span><div style="font-size:14px;color:#888">Очистить слот</div></div>`+
+  const content=(!data||!data.length)?'<div class="empty-msg">Инвентарь пуст</div>':
+    `<div class="seed-item" onclick="setShowcaseSlot(null)"><span style="font-size:28px">✕</span><div style="font-size:14px;color:#888">Очистить слот</div></div>`+
     data.map(it=>`
-      <div class="inv-select-item" onclick='setShowcaseSlot(${JSON.stringify(it).replace(/\\/g,"\\\\").replace(/'/g,"\\'")})'>
-        ${it.item_image?`<img src="${it.item_image}" class="inv-img">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
+      <div class="seed-item" onclick='setShowcaseSlot(${JSON.stringify({id:it.id,item_name:it.item_name,item_type:it.item_type,item_image:it.item_image,rarity:it.rarity,base_price:it.base_price||RC[it.rarity]||0})})'>
+        ${it.item_image?`<img src="${it.item_image}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
         <div>
           <div style="font-size:14px;font-weight:600">${it.item_name}</div>
           <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div>
         </div>
       </div>`).join('');
-  }
-  modal.classList.add('active');
-  document.getElementById('modal-overlay').classList.add('active');
+  showModal('Выбери предмет для витрины',content);
 }
 
 function setShowcaseSlot(item){
-  showcaseSlots[currentShowcaseSlot]=typeof item==='string'?JSON.parse(item):item;
+  showcaseSlots[currentShowcaseSlot]=item;
   updateShowcase();
   closeModal();
 }
@@ -833,27 +1032,32 @@ function setShowcaseSlot(item){
 function updateShowcase(){
   const grid=document.getElementById('showcase-slots');
   const slots=grid.querySelectorAll('.slot');
-  let totalValue=0;
+  let total=0;
   slots.forEach((slot,i)=>{
     const item=showcaseSlots[i];
     slot.className='slot'+(item?' '+item.rarity:'');
     if(item){
-      const price=item.base_price||RC[item.rarity]||0;
-      totalValue+=price;
-      const badge={'common':'C','rare':'R','vr':'VR','epic':'E','legendary':'L'}[item.rarity]||'';
-      if(item.item_image){slot.innerHTML=`<img src="${item.item_image}"><span class="slot-badge">${badge}</span>`;}
-      else{slot.innerHTML=`<span style="font-size:26px">${item.item_type||'❓'}</span><span class="slot-badge">${badge}</span>`;}
+      total+=item.base_price||RC[item.rarity]||0;
+      const badge={common:'C',rare:'R',vr:'VR',epic:'E',legendary:'L'}[item.rarity]||'';
+      slot.innerHTML=item.item_image?`<img src="${item.item_image}"><span class="slot-badge">${badge}</span>`:`<span style="font-size:26px">${item.item_type||'❓'}</span><span class="slot-badge">${badge}</span>`;
       slot.onclick=()=>openShowcaseSelect(i);
     } else {
       slot.innerHTML='<span style="color:#444;font-size:18px">+</span>';
       slot.onclick=()=>openShowcaseSelect(i);
     }
   });
-  document.getElementById('showcase-val').textContent=totalValue.toLocaleString('ru');
+  document.getElementById('showcase-val').textContent=total.toLocaleString('ru');
+}
+
+function showModal(title,content){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-content').innerHTML=content;
+  document.getElementById('main-modal').classList.add('active');
+  document.getElementById('modal-overlay').classList.add('active');
 }
 
 function closeModal(){
-  document.getElementById('showcase-modal').classList.remove('active');
+  document.getElementById('main-modal').classList.remove('active');
   document.getElementById('modal-overlay').classList.remove('active');
 }
 
@@ -952,7 +1156,7 @@ async function loadAdminPetsList(){
   list.innerHTML=data.map(p=>`
     <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2a2a4a">
       <span style="font-size:28px">${p.emoji}</span>
-      <div style="flex:1">
+      <div>
         <div style="font-size:13px;font-weight:600">${p.name}</div>
         <div style="font-size:11px;color:#888">${p.price_diamonds?p.price_diamonds+' 💜':p.price_item_rarity?'Нужен '+RN[p.price_item_rarity]:'Стартовый'}</div>
       </div>
@@ -991,7 +1195,7 @@ async function loadPromoList(){
     <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a2a4a">
       <div>
         <div style="font-size:13px;font-weight:700;color:#a78bfa">${p.code}</div>
-        <div style="font-size:11px;color:#888">+${p.reward_diamonds} 💜 · ${p.used_count}/${p.max_uses} использ.</div>
+        <div style="font-size:11px;color:#888">+${p.reward_diamonds} 💜 · ${p.used_count}/${p.max_uses}</div>
       </div>
       <button onclick="adminTogglePromo(${p.id},${p.is_active})" style="padding:4px 10px;background:none;border:1px solid #2a2a4a;border-radius:8px;color:${p.is_active?'#1D9E75':'#888'};font-size:11px;cursor:pointer;font-family:Arial,sans-serif">${p.is_active?'Выкл':'Вкл'}</button>
     </div>`).join('');
@@ -1005,7 +1209,7 @@ async function adminTogglePromo(id,current){
 async function loadPlayersList(){
   const list=document.getElementById('players-list');
   if(!list)return;
-  const {data}=await sb.from('users').select('user_id,username,balance,created_at').order('balance',{ascending:false}).limit(50);
+  const {data}=await sb.from('users').select('user_id,username,balance').order('balance',{ascending:false}).limit(50);
   if(!data||!data.length){list.innerHTML='<div class="empty-msg">Нет игроков</div>';return;}
   list.innerHTML=data.map(u=>`
     <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a2a4a">
@@ -1015,92 +1219,6 @@ async function loadPlayersList(){
       </div>
       <div style="font-size:13px;color:#a78bfa;font-weight:700">${u.balance.toLocaleString('ru')} 💜</div>
     </div>`).join('');
-}
-
-
-let currentItemCard=null;
-
-async function openItemCard(itemId){
-  const {data:item}=await sb.from('inventory').select('*').eq('id',itemId).single();
-  if(!item)return;
-  currentItemCard=item;
-  const {data:mktItem}=await sb.from('marketplace').select('price').eq('item_id',itemId).single();
-  const marketPrice=mktItem?.price||null;
-  const modal=document.getElementById('showcase-modal');
-  const list=document.getElementById('showcase-select-list');
-  modal.querySelector('div').textContent='';
-  const accBonus={common:5,rare:10,vr:20,epic:35,legendary:50};
-list.innerHTML=`
-    <div style="text-align:center;padding:10px 0">
-      ${item.item_image?`<img src="${item.item_image}" style="width:100px;height:100px;object-fit:cover;border-radius:16px;border:2px solid ${RCOL[item.rarity]||'#444'}">`:`<span style="font-size:64px">${item.item_type||'❓'}</span>`}
-      <div style="font-size:16px;font-weight:700;margin-top:10px">${item.item_name}</div>
-      <div style="font-size:13px;color:${RCOL[item.rarity]||'#888'};margin-top:4px">${RN[item.rarity]||item.rarity}</div>
-    </div>
-    <div style="background:#0f0f1e;border-radius:12px;padding:12px;margin:10px 0">
-      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #2a2a4a">
-        <span style="color:#888">Базовая цена</span>
-        <span style="color:#a78bfa;font-weight:700">${(item.base_price||RC[item.rarity]||0).toLocaleString('ru')} 💜</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #2a2a4a">
-        <span style="color:#888">На рынке</span>
-        <span style="color:${marketPrice?'#1D9E75':'#888'};font-weight:700">${marketPrice?marketPrice.toLocaleString('ru')+' 💜':'Не продаётся'}</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0">
-        <span style="color:#888">Бафф акса</span>
-        <span style="color:#4fc3f7;font-weight:700">+${accBonus[item.rarity]||0}% к доходу</span>
-      </div>
-    </div>
-    <div style="display:grid;gap:8px;margin-top:4px">
-      <button onclick="equipAcc(${item.id})" style="width:100%;padding:10px;background:#1D9E75;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🐱 Надеть на питомца</button>
-      <button onclick="closeModal();setTimeout(()=>showSellPanelItem(${item.id}),100)" style="width:100%;padding:10px;background:none;border:1px solid #7F77DD;border-radius:10px;color:#a78bfa;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🏪 Выставить на рынок</button>
-      <button onclick="closeModal();setTimeout(()=>{openShowcaseSelect(0)},100)" style="width:100%;padding:10px;background:none;border:1px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🖼️ Поставить на витрину</button>
-</div>
-  </div>`;
-  modal.classList.add('active');
-  document.getElementById('modal-overlay').classList.add('active');
-}
-
-async function equipAcc(itemId){
-  if(!activePet){alert('Нет активного питомца!');return;}
-  const {data:item}=await sb.from('inventory').select('*').eq('id',itemId).single();
-  if(!item){alert('Предмет не найден!');return;}
-  const accBonus={common:5,rare:10,vr:20,epic:35,legendary:50};
-  const bonus=accBonus[item.rarity]||0;
-  const slots=['acc_slot_1','acc_slot_2','acc_slot_3'];
-  let freeSlot=null;
-  for(const slot of slots){
-    if(!activePet[slot]){freeSlot=slot;break;}
-  }
-  if(!freeSlot){alert('Все слоты питомца заняты! Сними один акс сначала.');return;}
-  await sb.from('user_pets').update({
-    [freeSlot]:itemId,
-    acc_bonus:(parseFloat(activePet.acc_bonus)||0)+bonus
-  }).eq('id',activePet.id);
-  await sb.from('inventory').update({equipped_to_pet:activePet.id}).eq('id',itemId);
-  Object.assign(activePet,{[freeSlot]:itemId,acc_bonus:(parseFloat(activePet.acc_bonus)||0)+bonus});
-  closeModal();
-  alert('Акс надет! +'+bonus+'% к доходу питомца 🐱');
-  updateUI();
-}
-
-async function showSellPanelItem(itemId){
-  const {data:item}=await sb.from('inventory').select('*').eq('id',itemId).single();
-  if(!item)return;
-  const basePrice=item.base_price||RC[item.rarity]||0;
-  const price=prompt(`Цена продажи (рекомендуем от ${basePrice} 💜):`);
-  if(!price||isNaN(price)||parseInt(price)<=0)return;
-  await sb.from('marketplace').insert({
-    seller_id:currentUser.user_id,
-    item_id:itemId,
-    item_name:item.item_name,
-    item_type:item.item_type,
-    item_image:item.item_image||null,
-    rarity:item.rarity,
-    price:parseInt(price)
-});
-  await sb.from('inventory').delete().eq('id',itemId);
-  alert('Выставлено на продажу!');
-  goTo('inv',null);
 }
 
 window.addEventListener('load',initUser);
