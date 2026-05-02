@@ -1096,7 +1096,7 @@ async function showSellPanelItem(itemId){
     item_image:item.item_image||null,
     rarity:item.rarity,
     price:parseInt(price)
-  });
+});
   await sb.from('inventory').delete().eq('id',itemId);
   alert('Выставлено на продажу!');
   goTo('inv',null);
