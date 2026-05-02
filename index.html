@@ -1030,7 +1030,7 @@ async function openItemCard(itemId){
   const list=document.getElementById('showcase-select-list');
   modal.querySelector('div').textContent='';
   const accBonus={common:5,rare:10,vr:20,epic:35,legendary:50};
-  list.innerHTML=`
+list.innerHTML=`
     <div style="text-align:center;padding:10px 0">
       ${item.item_image?`<img src="${item.item_image}" style="width:100px;height:100px;object-fit:cover;border-radius:16px;border:2px solid ${RCOL[item.rarity]||'#444'}">`:`<span style="font-size:64px">${item.item_type||'❓'}</span>`}
       <div style="font-size:16px;font-weight:700;margin-top:10px">${item.item_name}</div>
@@ -1054,8 +1054,7 @@ async function openItemCard(itemId){
       <button onclick="equipAcc(${item.id})" style="width:100%;padding:10px;background:#1D9E75;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🐱 Надеть на питомца</button>
       <button onclick="closeModal();setTimeout(()=>showSellPanelItem(${item.id}),100)" style="width:100%;padding:10px;background:none;border:1px solid #7F77DD;border-radius:10px;color:#a78bfa;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🏪 Выставить на рынок</button>
       <button onclick="closeModal();setTimeout(()=>{openShowcaseSelect(0)},100)" style="width:100%;padding:10px;background:none;border:1px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🖼️ Поставить на витрину</button>
-    </div>
-  `;
+    </div>`;
   modal.classList.add('active');
   document.getElementById('modal-overlay').classList.add('active');
 }
