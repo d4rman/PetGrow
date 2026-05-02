@@ -80,16 +80,16 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .upgrade-left{display:flex;align-items:center;gap:8px;font-size:14px;color:#fff}
 .upgrade-cost{font-size:13px;color:#a78bfa;font-weight:600}
 .feed-btn{width:100%;padding:14px;background:#1D9E75;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;font-family:Arial,sans-serif}
+.collect-btn{width:100%;padding:14px;background:#EF9F27;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px;font-family:Arial,sans-serif}
+.collect-btn:disabled{background:#2a2a4a;color:#888;cursor:not-allowed}
 .lb-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #2a2a4a;cursor:pointer}
 .lb-row:last-child{border:none}
-.lb-row:active{background:#2a2a4a;border-radius:10px}
 .lb-rank{font-size:18px;width:28px;flex-shrink:0}
 .lb-name{flex:1;font-size:13px;font-weight:600;color:#fff}
 .lb-val{font-size:12px;color:#a78bfa;font-weight:700}
 .you-tag{background:#1a1035;border:1px solid #7F77DD;border-radius:10px;padding:8px 14px;text-align:center;margin-top:10px;font-size:13px;color:#a78bfa}
 .inv-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2a2a4a;cursor:pointer}
 .inv-item:last-child{border:none}
-.inv-item:active{opacity:0.8}
 .inv-img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0}
 .empty-msg{color:#888;text-align:center;padding:30px 0;font-size:14px}
 .loading{color:#888;text-align:center;padding:20px;font-size:13px}
@@ -106,7 +106,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .tab-content{display:none}
 .tab-content.active{display:block}
 .craft-row{background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px;margin-bottom:10px}
-.pet-card{background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.pet-card{background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px}
 .pet-card.active-pet{border-color:#7F77DD;background:#1a1035}
 .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:200}
 .overlay.active{display:block}
@@ -114,22 +114,21 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .drawer.active{display:block}
 .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .menu-item{background:#0f0f1e;border:1px solid #2a2a4a;border-radius:12px;padding:14px 8px;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-family:Arial,sans-serif}
-.menu-item:active{opacity:0.8}
 .modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#16213e;border:1px solid #2a2a4a;border-radius:16px;padding:20px;z-index:300;width:90%;max-width:360px;max-height:80vh;overflow-y:auto}
 .modal.active{display:block}
 .farm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
 .farm-slot{aspect-ratio:1;border-radius:12px;border:1px dashed #2a2a4a;background:#0f0f1e;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden}
-.farm-slot:active{opacity:0.8}
 .farm-slot.growing{border-color:#1D9E75}
-.farm-slot.ready{border-color:#EF9F27;animation:pulse 1s infinite}
-.farm-slot.empty{border-style:dashed}
-@keyframes pulse{0%,100%{border-color:#EF9F27}50%{border-color:#fff}}
-.farm-slot img{width:100%;height:100%;object-fit:cover;border-radius:11px}
+.farm-slot.ready{border-color:#EF9F27;animation:glow 1s infinite}
+@keyframes glow{0%,100%{border-color:#EF9F27}50%{border-color:#fff}}
 .farm-timer{position:absolute;bottom:2px;font-size:8px;background:rgba(0,0,0,0.8);padding:1px 4px;border-radius:3px;color:#fff}
 .seed-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:pointer;margin-bottom:6px;background:#0f0f1e}
 .seed-item:active{background:#2a2a4a}
+.acc-slot{display:flex;align-items:center;gap:6px;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:10px;padding:6px 10px;margin-bottom:6px}
 .pet-emoji-big{font-size:64px;cursor:pointer;transition:transform 0.15s;user-select:none;display:block;text-align:center}
 .pet-emoji-big:active{transform:scale(1.2)}
+.collect-progress{height:8px;background:#2a2a4a;border-radius:8px;margin:8px 0;overflow:hidden}
+.collect-progress-fill{height:8px;background:linear-gradient(90deg,#EF9F27,#a78bfa);border-radius:8px;transition:width 1s}
 </style>
 </head>
 <body>
@@ -249,6 +248,15 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     </div>
     <div class="income-badge" style="margin-top:10px" id="income-big">💜 +0 / час · Бустер 1x</div>
   </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div style="font-size:13px;font-weight:600">💰 Накоплено</div>
+      <div style="font-size:15px;font-weight:700;color:#EF9F27" id="uncollected-amount">0 💜</div>
+    </div>
+    <div class="collect-progress"><div class="collect-progress-fill" id="collect-bar" style="width:0%"></div></div>
+    <div style="font-size:11px;color:#888;margin-bottom:10px;text-align:center" id="collect-info">Прогресс за текущую минуту</div>
+    <button class="collect-btn" id="collect-btn" onclick="collectIncome()">💰 Собрать доход</button>
+  </div>
   <button class="feed-btn" onclick="feedPet()">🐟 Покормить питомца</button>
   <div class="card">
     <div class="card-title">Прокачка</div>
@@ -264,6 +272,11 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
       <div class="upgrade-left">✨ Милость<span style="color:#a78bfa;margin-left:6px" id="u-charm">ур.1</span></div>
       <div class="upgrade-cost" id="cost-charm">100 💜</div>
     </div>
+  </div>
+  <div class="card" id="acc-card">
+    <div class="card-title">🎀 Аксессуары питомца</div>
+    <div id="acc-slots-display"></div>
+    <button onclick="showEquipAcc()" style="width:100%;padding:10px;background:none;border:1px solid #1D9E75;border-radius:10px;color:#1D9E75;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;font-family:Arial,sans-serif">+ Надеть акс из инвентаря</button>
   </div>
   <div class="card">
     <div class="card-title">Мои питомцы</div>
@@ -420,7 +433,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     <button class="menu-item" onclick="goTo('farm',null);closeDrawer()"><span style="font-size:24px">🌱</span>Ферма</button>
     <button class="menu-item" id="admin-menu-btn" style="display:none;border:1px solid #534AB7;color:#a78bfa" onclick="goTo('admin',null);closeDrawer()"><span style="font-size:24px">⚙️</span>Админ</button>
   </div>
-  <div style="margin-top:4px">
+  <div>
     <input class="admin-input" id="promo-input" placeholder="Введи промокод...">
     <button onclick="usePromo()" style="width:100%;padding:10px;background:none;border:1px solid #1D9E75;border-radius:10px;color:#1D9E75;font-size:13px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif">Активировать промокод</button>
   </div>
@@ -451,7 +464,7 @@ const RN={common:'Обычный',rare:'Редкий',vr:'Очень редки�
 const RCOL={common:'#888',rare:'#378ADD',vr:'#1D9E75',epic:'#a78bfa',legendary:'#EF9F27'};
 const ACC_BONUS={common:5,rare:10,vr:20,epic:35,legendary:50};
 
-let currentUser=null,bal=0,spinning=false,selectedCase=null,selectedCaseItems=[],showcaseSlots=[null,null,null,null,null,null],currentShowcaseSlot=0,activePet=null,farmTimers={};
+let currentUser=null,bal=0,spinning=false,selectedCase=null,selectedCaseItems=[],showcaseSlots=[null,null,null,null,null,null],currentShowcaseSlot=0,activePet=null,incomeTimer=null,farmTimers={};
 
 async function initUser(){
   const tg=window.Telegram?.WebApp;
@@ -461,7 +474,7 @@ async function initUser(){
   const username=tgUser?.first_name||'Admin';
   let {data:user}=await sb.from('users').select('*').eq('user_id',userId).single();
   if(!user){
-    await sb.from('users').insert({user_id:userId,username});
+    await sb.from('users').insert({user_id:userId,username,last_collected:new Date().toISOString(),uncollected_income:0});
     const r=await sb.from('users').select('*').eq('user_id',userId).single();
     user=r.data;
     await assignStarterPet(userId);
@@ -473,13 +486,14 @@ async function initUser(){
   }
   await loadActivePet();
   updateUI();
+  startIncomeTimer();
   loadCases();
 }
 
 async function assignStarterPet(userId){
   const {data:starter}=await sb.from('pets').select('*').eq('is_starter',true).single();
   if(starter){
-    await sb.from('user_pets').insert({user_id:userId,pet_id:starter.id,custom_name:starter.name,speed:1,agility:1,charm:1,boost:1.0,is_active:true});
+    await sb.from('user_pets').insert({user_id:userId,pet_id:starter.id,custom_name:starter.name,speed:1,agility:1,charm:1,boost:1.0,is_active:true,acc_bonus:0});
   }
 }
 
@@ -489,7 +503,37 @@ async function loadActivePet(){
   activePet=data||null;
 }
 
+function calcIncome(){
+  if(!activePet)return 0;
+  const s=activePet.speed||1,a=activePet.agility||1,c=activePet.charm||1;
+  const boost=parseFloat(activePet.boost)||1;
+  const accBonus=parseFloat(activePet.acc_bonus)||0;
+  return Math.round((s+a+c)*10*boost*(1+accBonus/100));
+}
+
 function calcUpgradeCost(level){return Math.floor(100*Math.pow(1.5,level-1));}
+
+function startIncomeTimer(){
+  if(incomeTimer)clearInterval(incomeTimer);
+  incomeTimer=setInterval(()=>{
+    if(!currentUser||!activePet)return;
+    const incomePerMin=calcIncome()/60;
+    const lastCollected=new Date(currentUser.last_collected||Date.now());
+    const minutesPassed=(Date.now()-lastCollected.getTime())/60000;
+    const uncollected=Math.floor(minutesPassed*incomePerMin);
+    const el=document.getElementById('uncollected-amount');
+    const bar=document.getElementById('collect-bar');
+    const btn=document.getElementById('collect-btn');
+    const info=document.getElementById('collect-info');
+    if(el){el.textContent=uncollected.toLocaleString('ru')+' 💜';}
+    if(bar){
+      const secInMin=(Date.now()-lastCollected.getTime())/1000%60;
+      bar.style.width=Math.min(secInMin/60*100,100)+'%';
+    }
+    if(info){info.textContent='+'+Math.floor(incomePerMin)+' 💜 каждую минуту';}
+    if(btn){btn.disabled=uncollected<=0;}
+  },1000);
+}
 
 function updateUI(){
   if(!currentUser)return;
@@ -499,6 +543,7 @@ function updateUI(){
   const s=activePet.speed||1,a=activePet.agility||1,c=activePet.charm||1;
   const boost=parseFloat(activePet.boost)||1;
   const accBonus=parseFloat(activePet.acc_bonus)||0;
+  const income=calcIncome();
   document.getElementById('p-speed').textContent=s;
   document.getElementById('p-agility').textContent=a;
   document.getElementById('p-charm').textContent=c;
@@ -510,12 +555,24 @@ function updateUI(){
   document.getElementById('cost-agility').textContent=calcUpgradeCost(a)+' 💜';
   document.getElementById('cost-charm').textContent=calcUpgradeCost(c)+' 💜';
   document.getElementById('boost-bar').style.width=Math.min(boost/5*100,100)+'%';
-  const income=Math.round((s+a+c)*10*boost*(1+accBonus/100));
   document.getElementById('income-badge').textContent='💜 +'+income+' / час';
   document.getElementById('income-big').textContent='💜 +'+income+' / час · Бустер '+boost+'x';
   const name=activePet.custom_name||'Барсик';
   document.getElementById('pet-name-display').textContent=name;
   document.getElementById('pet-name-big').textContent=name;
+  updateAccDisplay();
+}
+
+async function collectIncome(){
+  if(!currentUser||!activePet)return;
+  const incomePerMin=calcIncome()/60;
+  const lastCollected=new Date(currentUser.last_collected||Date.now());
+  const minutesPassed=(Date.now()-lastCollected.getTime())/60000;
+  const uncollected=Math.floor(minutesPassed*incomePerMin);
+  if(uncollected<=0){alert('Ещё не накопилось!');return;}
+  const newBal=bal+uncollected;
+  await saveUser({balance:newBal,last_collected:new Date().toISOString()});
+  alert('Собрано: +'+uncollected+' 💜');
 }
 
 async function saveUser(updates){
@@ -557,6 +614,71 @@ async function renamePet(){
   await savePet({custom_name:name.trim()});
 }
 
+async function updateAccDisplay(){
+  const display=document.getElementById('acc-slots-display');
+  if(!display||!activePet)return;
+  const slots=[activePet.acc_slot_1,activePet.acc_slot_2,activePet.acc_slot_3].filter(Boolean);
+  if(!slots.length){display.innerHTML='<div class="empty-msg" style="padding:10px 0">Нет аксессуаров</div>';return;}
+  const {data:accs}=await sb.from('inventory').select('*').in('id',slots);
+  display.innerHTML=(accs||[]).map(ac=>`
+    <div class="acc-slot">
+      ${ac.item_image?`<img src="${ac.item_image}" style="width:36px;height:36px;object-fit:cover;border-radius:8px;flex-shrink:0">`:`<span style="font-size:24px">${ac.item_type||'❓'}</span>`}
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${ac.item_name}</div>
+        <div style="font-size:11px;color:${RCOL[ac.rarity]||'#888'}">+${ACC_BONUS[ac.rarity]||0}% к доходу</div>
+      </div>
+      <button onclick="unequipOne(${ac.id})" style="padding:4px 8px;background:none;border:1px solid #993C1D;border-radius:8px;color:#993C1D;font-size:10px;cursor:pointer;font-family:Arial,sans-serif">Снять</button>
+    </div>`).join('');
+}
+
+async function showEquipAcc(){
+  const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('is_equipped',false);
+  const accItems=(data||[]).filter(it=>['common','rare','vr','epic','legendary'].includes(it.rarity));
+  if(!accItems.length){alert('Нет предметов для надевания!');return;}
+  showModal('Выбери акс для питомца',accItems.map(it=>`
+    <div class="seed-item" onclick="closeModal();equipAcc(${it.id})">
+      ${it.item_image?`<img src="${it.item_image}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600">${it.item_name}</div>
+        <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div>
+        <div style="font-size:11px;color:#4fc3f7">+${ACC_BONUS[it.rarity]||0}% к доходу</div>
+      </div>
+    </div>`).join(''));
+}
+
+async function equipAcc(itemId){
+  if(!activePet){alert('Нет активного питомца!');return;}
+  const slots=['acc_slot_1','acc_slot_2','acc_slot_3'];
+  let freeSlot=null;
+  for(const s of slots){if(!activePet[s]){freeSlot=s;break;}}
+  if(!freeSlot){alert('Все 3 слота заняты! Сними один акс сначала.');return;}
+  const {data:item}=await sb.from('inventory').select('*').eq('id',itemId).single();
+  if(!item)return;
+  const bonus=ACC_BONUS[item.rarity]||0;
+  const newBonus=(parseFloat(activePet.acc_bonus)||0)+bonus;
+  await sb.from('user_pets').update({[freeSlot]:itemId,acc_bonus:newBonus}).eq('id',activePet.id);
+  await sb.from('inventory').update({is_equipped:true}).eq('id',itemId);
+  Object.assign(activePet,{[freeSlot]:itemId,acc_bonus:newBonus});
+  updateUI();
+  alert('Акс надет! +'+bonus+'% к доходу 🐱');
+}
+
+async function unequipOne(itemId){
+  if(!activePet)return;
+  const slots=['acc_slot_1','acc_slot_2','acc_slot_3'];
+  let slotToRemove=null;
+  for(const s of slots){if(activePet[s]===itemId){slotToRemove=s;break;}}
+  if(!slotToRemove)return;
+  const {data:item}=await sb.from('inventory').select('*').eq('id',itemId).single();
+  const bonus=item?ACC_BONUS[item.rarity]||0:0;
+  const newBonus=Math.max(0,(parseFloat(activePet.acc_bonus)||0)-bonus);
+  await sb.from('user_pets').update({[slotToRemove]:null,acc_bonus:newBonus}).eq('id',activePet.id);
+  await sb.from('inventory').update({is_equipped:false}).eq('id',itemId);
+  Object.assign(activePet,{[slotToRemove]:null,acc_bonus:newBonus});
+  updateUI();
+  alert('Акс снят и возвращён в инвентарь!');
+}
+
 async function loadCases(){
   const grid=document.getElementById('cases-grid');
   grid.innerHTML='<div class="loading" style="grid-column:span 2">Загрузка...</div>';
@@ -583,11 +705,10 @@ async function selectCase(caseId,el){
   document.getElementById('won-box').style.display='none';
   const {data:items}=await sb.from('case_items').select('*').eq('case_id',caseId);
   selectedCaseItems=items||[];
-  const cl=document.getElementById('chances-list');
   document.getElementById('chances').style.display='block';
-  if(!selectedCaseItems.length){cl.innerHTML='<div class="empty-msg">Предметы не добавлены</div>';return;}
+  if(!selectedCaseItems.length){document.getElementById('chances-list').innerHTML='<div class="empty-msg">Предметы не добавлены</div>';return;}
   const sorted=[...selectedCaseItems].sort((a,b)=>{const o={common:0,rare:1,vr:2,epic:3,legendary:4};return (o[a.rarity]||0)-(o[b.rarity]||0);});
-  cl.innerHTML=sorted.map(it=>`
+  document.getElementById('chances-list').innerHTML=sorted.map(it=>`
     <div class="chance-row">
       <span style="display:flex;align-items:center;gap:8px">
         ${it.image_url?`<img src="${it.image_url}" style="width:28px;height:28px;object-fit:cover;border-radius:6px">`:`<span style="font-size:20px">${it.item_emoji||'❓'}</span>`}
@@ -628,8 +749,7 @@ async function spin(){
     track.appendChild(d);
   });
   const trackWidth=trackEl.offsetWidth||300;
-  const center=Math.floor(trackWidth/2);
-  const finalLeft=center-Math.floor(ITEM_W/2)-(WIN_IDX*STEP);
+  const finalLeft=Math.floor(trackWidth/2)-Math.floor(ITEM_W/2)-(WIN_IDX*STEP);
   setTimeout(()=>{
     track.style.transition='left 4s cubic-bezier(0.17,0.67,0.12,0.99)';
     track.style.left=finalLeft+'px';
@@ -648,16 +768,11 @@ async function spin(){
         const {data:plant}=await sb.from('plants').select('*').ilike('name',plantName).single();
         if(plant){
           const {data:existSeed}=await sb.from('seeds').select('*').eq('user_id',currentUser.user_id).eq('plant_id',plant.id).single();
-          if(existSeed){
-            await sb.from('seeds').update({quantity:existSeed.quantity+1}).eq('id',existSeed.id);
-          } else {
-            await sb.from('seeds').insert({user_id:currentUser.user_id,plant_id:plant.id,quantity:1});
-          }
-        } else {
-          await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0});
+          if(existSeed){await sb.from('seeds').update({quantity:existSeed.quantity+1}).eq('id',existSeed.id);}
+          else{await sb.from('seeds').insert({user_id:currentUser.user_id,plant_id:plant.id,quantity:1});}
         }
       } else {
-        await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0});
+        await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0,is_equipped:false});
       }
     },4100);
   },50);
@@ -675,13 +790,12 @@ async function goTo(id,btn){
   const sc=document.getElementById('s-'+id);
   if(sc)sc.classList.add('active');
   if(btn)btn.classList.add('active');
-
-  if(id==='inv') await loadInventory();
-  if(id==='market') await loadMarket();
-  if(id==='top') await loadLeaderboard();
-  if(id==='craft') await loadCraftCounts();
-  if(id==='pet') await loadMyPets();
-  if(id==='farm') await loadFarm();
+  if(id==='inv')await loadInventory();
+  if(id==='market')await loadMarket();
+  if(id==='top')await loadLeaderboard();
+  if(id==='craft')await loadCraftCounts();
+  if(id==='pet'){await loadMyPets();updateAccDisplay();}
+  if(id==='farm')await loadFarm();
   if(id==='admin'){loadAdminCasesList();loadAdminPetsList();loadPlayersList();loadPromoList();}
 }
 
@@ -706,7 +820,6 @@ async function openItemCard(itemId){
   const {data:item}=await sb.from('inventory').select('*').eq('id',itemId).single();
   if(!item)return;
   const {data:mkt}=await sb.from('marketplace').select('price').eq('item_id',itemId).single();
-  const marketPrice=mkt?.price||null;
   showModal('Предмет',`
     <div style="text-align:center;padding:10px 0">
       ${item.item_image?`<img src="${item.item_image}" style="width:100px;height:100px;object-fit:cover;border-radius:16px;border:2px solid ${RCOL[item.rarity]||'#444'};display:block;margin:0 auto">`:`<div style="font-size:64px">${item.item_type||'❓'}</div>`}
@@ -720,7 +833,7 @@ async function openItemCard(itemId){
       </div>
       <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #2a2a4a">
         <span style="color:#888">На рынке</span>
-        <span style="color:${marketPrice?'#1D9E75':'#888'};font-weight:700">${marketPrice?marketPrice.toLocaleString('ru')+' 💜':'Не продаётся'}</span>
+        <span style="color:${mkt?.price?'#1D9E75':'#888'};font-weight:700">${mkt?.price?mkt.price.toLocaleString('ru')+' 💜':'Не продаётся'}</span>
       </div>
       <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0">
         <span style="color:#888">Бафф акса</span>
@@ -734,28 +847,10 @@ async function openItemCard(itemId){
     </div>`);
 }
 
-async function equipAcc(itemId){
-  if(!activePet){alert('Нет активного питомца!');return;}
-  const {data:item}=await sb.from('inventory').select('*').eq('id',itemId).single();
-  if(!item)return;
-  const bonus=ACC_BONUS[item.rarity]||0;
-  const slots=['acc_slot_1','acc_slot_2','acc_slot_3'];
-  let freeSlot=null;
-  for(const s of slots){if(!activePet[s]){freeSlot=s;break;}}
-  if(!freeSlot){alert('Все слоты заняты! Сними один акс сначала.');return;}
-  const newBonus=(parseFloat(activePet.acc_bonus)||0)+bonus;
-  await sb.from('user_pets').update({[freeSlot]:itemId,acc_bonus:newBonus}).eq('id',activePet.id);
-  await sb.from('inventory').update({is_equipped:true}).eq('id',itemId);
-  Object.assign(activePet,{[freeSlot]:itemId,acc_bonus:newBonus});
-  updateUI();
-  alert('Акс надет! +'+bonus+'% к доходу 🐱');
-}
-
 async function sellItem(itemId){
   const {data:item}=await sb.from('inventory').select('*').eq('id',itemId).single();
   if(!item)return;
-  const basePrice=item.base_price||RC[item.rarity]||0;
-  const price=prompt('Цена продажи (рекомендуем от '+basePrice+' 💜):');
+  const price=prompt('Цена продажи (рекомендуем от '+(item.base_price||RC[item.rarity]||0)+' 💜):');
   if(!price||isNaN(price)||parseInt(price)<=0)return;
   await sb.from('marketplace').insert({seller_id:currentUser.user_id,item_id:itemId,item_name:item.item_name,item_type:item.item_type,item_image:item.item_image||null,rarity:item.rarity,price:parseInt(price)});
   await sb.from('inventory').delete().eq('id',itemId);
@@ -776,23 +871,21 @@ async function loadMarket(){
       <div style="flex:1">
         <div style="font-size:14px;font-weight:600">${it.item_name}</div>
         <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div>
-        <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-top:2px">${it.price.toLocaleString('ru')} 💜</div>
+        <div style="font-size:13px;font-weight:700;color:#a78bfa">${it.price.toLocaleString('ru')} 💜</div>
       </div>
-      ${it.seller_id!==currentUser?.user_id?
-        `<button class="buy-btn" onclick="buyItem(${it.id},${it.price})">Купить</button>`:
-        `<button class="cancel-btn" onclick="cancelListing(${it.id})">Снять</button>`}
+      ${it.seller_id!==currentUser?.user_id?`<button class="buy-btn" onclick="buyItem(${it.id},${it.price})">Купить</button>`:`<button class="cancel-btn" onclick="cancelListing(${it.id})">Снять</button>`}
     </div>`).join('');
 }
 
 async function showSellPanel(){
-  const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).order('rarity');
+  const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('is_equipped',false);
   if(!data||!data.length){alert('Инвентарь пуст!');return;}
   showModal('Выбери предмет для продажи',data.map(it=>`
     <div class="seed-item" onclick="closeModal();sellItem(${it.id})">
       ${it.item_image?`<img src="${it.item_image}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
       <div>
         <div style="font-size:14px;font-weight:600">${it.item_name}</div>
-        <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity} · ~${(it.base_price||RC[it.rarity]||0).toLocaleString('ru')} 💜</div>
+        <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div>
       </div>
     </div>`).join(''));
 }
@@ -801,24 +894,21 @@ async function buyItem(listingId,price){
   if(bal<price){alert('Нужно '+price+' 💜');return;}
   const {data:listing}=await sb.from('marketplace').select('*').eq('id',listingId).single();
   if(!listing){alert('Лот уже куплен!');await loadMarket();return;}
-  const commission=Math.floor(price*0.1);
-  const sellerGets=price-commission;
   await saveUser({balance:bal-price});
   const {data:seller}=await sb.from('users').select('balance').eq('user_id',listing.seller_id).single();
-  if(seller)await sb.from('users').update({balance:seller.balance+sellerGets}).eq('user_id',listing.seller_id);
-  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:listing.item_name,item_type:listing.item_type,item_image:listing.item_image||null,rarity:listing.rarity,base_price:RC[listing.rarity]||0});
+  if(seller)await sb.from('users').update({balance:seller.balance+Math.floor(price*0.9)}).eq('user_id',listing.seller_id);
+  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:listing.item_name,item_type:listing.item_type,item_image:listing.item_image||null,rarity:listing.rarity,base_price:RC[listing.rarity]||0,is_equipped:false});
   await sb.from('marketplace').delete().eq('id',listingId);
   alert('Куплено: '+listing.item_name+'!');
   await loadMarket();
 }
 
 async function cancelListing(listingId){
-  if(!confirm('Снять лот?'))return;
   const {data:listing}=await sb.from('marketplace').select('*').eq('id',listingId).single();
   if(!listing)return;
-  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:listing.item_name,item_type:listing.item_type,item_image:listing.item_image||null,rarity:listing.rarity,base_price:RC[listing.rarity]||0});
+  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:listing.item_name,item_type:listing.item_type,item_image:listing.item_image||null,rarity:listing.rarity,base_price:RC[listing.rarity]||0,is_equipped:false});
   await sb.from('marketplace').delete().eq('id',listingId);
-  alert('Лот снят, предмет возвращён в инвентарь');
+  alert('Лот снят!');
   await loadMarket();
 }
 
@@ -839,21 +929,18 @@ async function loadLeaderboard(){
 
 async function viewShowcase(userId,username){
   const {data:inv}=await sb.from('inventory').select('*').eq('user_id',userId).limit(6);
-  const slots=(inv||[]).slice(0,6);
   showModal(username+'\'s витрина',`
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
       ${Array(6).fill(0).map((_,i)=>{
-        const it=slots[i];
-        if(!it)return '<div style="aspect-ratio:1;border-radius:12px;border:1px dashed #2a2a4a;background:#0f0f1e;display:flex;align-items:center;justify-content:center;color:#444">+</div>';
-        return `<div style="aspect-ratio:1;border-radius:12px;border:1px solid ${RCOL[it.rarity]||'#444'};background:#0f0f1e;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden">
-          ${it.item_image?`<img src="${it.item_image}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:26px">${it.item_type||'❓'}</span>`}
-        </div>`;
+        const it=(inv||[])[i];
+        if(!it)return '<div style="aspect-ratio:1;border-radius:12px;border:1px dashed #2a2a4a;background:#0f0f1e;display:flex;align-items:center;justify-content:center;color:#444;font-size:18px">+</div>';
+        return `<div style="aspect-ratio:1;border-radius:12px;border:1px solid ${RCOL[it.rarity]||'#444'};background:#0f0f1e;display:flex;align-items:center;justify-content:center;overflow:hidden">${it.item_image?`<img src="${it.item_image}" style="width:100%;height:100%;object-fit:cover">`:`<span style="font-size:26px">${it.item_type||'❓'}</span>`}</div>`;
       }).join('')}
     </div>`);
 }
 
 async function loadCraftCounts(){
-  const {data}=await sb.from('inventory').select('rarity').eq('user_id',currentUser.user_id);
+  const {data}=await sb.from('inventory').select('rarity').eq('user_id',currentUser.user_id).eq('is_equipped',false);
   const cnt={common:0,rare:0,vr:0,epic:0};
   (data||[]).forEach(it=>{if(cnt[it.rarity]!==undefined)cnt[it.rarity]++;});
   document.getElementById('cnt-common').textContent=cnt.common+' шт';
@@ -863,10 +950,10 @@ async function loadCraftCounts(){
 }
 
 async function craft(from,to){
-  const {data:items}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('rarity',from).limit(10);
+  const {data:items}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('rarity',from).eq('is_equipped',false).limit(10);
   if(!items||items.length<10){alert('Нужно 10 предметов редкости: '+RN[from]);return;}
   await sb.from('inventory').delete().in('id',items.map(i=>i.id));
-  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:RN[to]+' (крафт)',item_type:'⚗️',rarity:to,base_price:RC[to]||0});
+  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:RN[to]+' (крафт)',item_type:'⚗️',rarity:to,base_price:RC[to]||0,is_equipped:false});
   alert('Получен: '+RN[to]+'!');
   await loadCraftCounts();
 }
@@ -876,37 +963,16 @@ async function loadMyPets(){
   list.innerHTML='<div class="loading">Загрузка...</div>';
   const {data}=await sb.from('user_pets').select('*,pets(*)').eq('user_id',currentUser.user_id);
   if(!data||!data.length){list.innerHTML='<div class="empty-msg">Нет питомцев</div>';return;}
-  const petCards=await Promise.all(data.map(async up=>{
-    const accSlots=[up.acc_slot_1,up.acc_slot_2,up.acc_slot_3].filter(Boolean);
-    let accHtml='';
-    if(accSlots.length>0){
-      const {data:accs}=await sb.from('inventory').select('*').in('id',accSlots);
-      accHtml=`<div style="margin-top:8px">
-        <div style="font-size:11px;color:#888;margin-bottom:4px">Аксессуары:</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          ${(accs||[]).map(ac=>`
-            <div style="display:flex;align-items:center;gap:4px;background:#0f0f1e;border:1px solid ${RCOL[ac.rarity]||'#444'};border-radius:8px;padding:4px 8px">
-              ${ac.item_image?`<img src="${ac.item_image}" style="width:20px;height:20px;object-fit:cover;border-radius:4px">`:`<span style="font-size:14px">${ac.item_type||'❓'}</span>`}
-              <span style="font-size:10px;color:${RCOL[ac.rarity]||'#888'}">+${ACC_BONUS[ac.rarity]||0}%</span>
-            </div>`).join('')}
-        </div>
-      </div>`;
-    }
-    return `<div class="pet-card ${up.is_active?'active-pet':''}">
-      <span style="font-size:36px" onclick="setActivePet(${up.id})">${up.pets?.emoji||'🐱'}</span>
-      <div style="flex:1" onclick="setActivePet(${up.id})">
+  list.innerHTML=data.map(up=>`
+    <div class="pet-card ${up.is_active?'active-pet':''}" onclick="setActivePet(${up.id})">
+      <span style="font-size:36px">${up.pets?.emoji||'🐱'}</span>
+      <div style="flex:1">
         <div style="font-size:14px;font-weight:700">${up.custom_name||up.pets?.name||'Питомец'}</div>
         <div style="font-size:12px;color:#888">⚡${up.speed} 🎯${up.agility} ✨${up.charm} 🔥${up.boost}x</div>
-        <div style="font-size:11px;color:#4fc3f7;margin-top:2px">Бафф аксов: +${up.acc_bonus||0}%</div>
-        ${accHtml}
+        <div style="font-size:11px;color:#4fc3f7">Бафф аксов: +${up.acc_bonus||0}%</div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
-        ${up.is_active?'<span style="font-size:11px;color:#1D9E75;font-weight:700">Активен</span>':''}
-        ${accSlots.length>0?`<button onclick="unequipAcc(${up.id})" style="padding:4px 8px;background:none;border:1px solid #993C1D;border-radius:8px;color:#993C1D;font-size:10px;cursor:pointer;font-family:Arial,sans-serif">Снять аксы</button>`:''}
-      </div>
-    </div>`;
-  }));
-  list.innerHTML=petCards.join('');
+      ${up.is_active?'<span style="font-size:11px;color:#1D9E75;font-weight:700;flex-shrink:0">Активен</span>':''}
+    </div>`).join('');
 }
 
 async function setActivePet(petId){
@@ -929,15 +995,14 @@ async function loadFarm(){
   const seedCount=seeds?.reduce((a,s)=>a+s.quantity,0)||0;
   document.getElementById('farm-seeds-count').textContent='Семян: '+seedCount;
   const usedSlots=farmSlots?.length||0;
-  const totalSlots=Math.min(16,Math.max(4,usedSlots+1));
-  let html='';
+  const totalSlots=Math.min(16,Math.max(4,usedSlots+2));
   const now=new Date();
+  let html='';
   for(let i=0;i<totalSlots;i++){
     const slot=farmSlots?.find(s=>s.slot_index===i);
     if(slot){
       const plantedAt=new Date(slot.planted_at);
-      const growMs=slot.plants.grow_minutes*60*1000;
-      const endTime=new Date(plantedAt.getTime()+growMs);
+      const endTime=new Date(plantedAt.getTime()+slot.plants.grow_minutes*60000);
       const isReady=now>=endTime;
       if(isReady){
         html+=`<div class="farm-slot ready" onclick="harvest(${slot.id},${slot.plants.reward_diamonds},'${slot.plants.name}','${slot.plants.emoji}','${slot.plants.rarity}')">
@@ -949,17 +1014,13 @@ async function loadFarm(){
           <span style="font-size:28px">${slot.plants.emoji}</span>
           <div class="farm-timer" id="ftimer-${i}">...</div>
         </div>`;
+        const endT=endTime;
         farmTimers[i]=setInterval(()=>{
-          const rem=Math.max(0,endTime-new Date());
+          const rem=Math.max(0,endT-new Date());
           const el=document.getElementById('ftimer-'+i);
           if(el){
-            if(rem<=0){
-              clearInterval(farmTimers[i]);
-              loadFarm();
-            } else {
-              const h=Math.floor(rem/3600000),m=Math.floor((rem%3600000)/60000),s=Math.floor((rem%60000)/1000);
-              el.textContent=h>0?h+'ч '+m+'м':m>0?m+'м '+s+'с':s+'с';
-            }
+            if(rem<=0){clearInterval(farmTimers[i]);loadFarm();}
+            else{const h=Math.floor(rem/3600000),m=Math.floor((rem%3600000)/60000),s=Math.floor((rem%60000)/1000);el.textContent=h>0?h+'ч '+m+'м':m>0?m+'м '+s+'с':s+'с';}
           } else clearInterval(farmTimers[i]);
         },1000);
       }
@@ -971,7 +1032,7 @@ async function loadFarm(){
     }
   }
   grid.innerHTML=html;
-  if(!seeds||!seeds.length){seedsList.innerHTML='<div class="empty-msg">Нет семян — открой кейс семян!</div>';return;}
+  if(!seeds||!seeds.length){seedsList.innerHTML='<div class="empty-msg">Нет семян — открой кейс 🌱 Семена!</div>';return;}
   seedsList.innerHTML=seeds.map(s=>`
     <div class="seed-item" onclick="openPlantSelectSeed(${s.plant_id})">
       <span style="font-size:28px">${s.plants.emoji}</span>
@@ -985,14 +1046,13 @@ async function loadFarm(){
 
 async function openPlantSelect(slotIndex){
   const {data:seeds}=await sb.from('seeds').select('*,plants(*)').eq('user_id',currentUser.user_id).gt('quantity',0);
-  if(!seeds||!seeds.length){alert('Нет семян! Открой кейс семян.');return;}
+  if(!seeds||!seeds.length){alert('Нет семян! Открой кейс 🌱 Семена.');return;}
   showModal('Выбери семя для посадки',seeds.map(s=>`
     <div class="seed-item" onclick="closeModal();plantSeed(${slotIndex},${s.plant_id},${s.id})">
       <span style="font-size:28px">${s.plants.emoji}</span>
       <div style="flex:1">
         <div style="font-size:14px;font-weight:600">${s.plants.name}</div>
-        <div style="font-size:12px;color:${RCOL[s.plants.rarity]||'#888'}">${RN[s.plants.rarity]||s.plants.rarity} · ${s.plants.grow_minutes>=60?Math.floor(s.plants.grow_minutes/60)+'ч':s.plants.grow_minutes+'м'}</div>
-        <div style="font-size:11px;color:#1D9E75">+${s.plants.reward_diamonds} 💜</div>
+        <div style="font-size:12px;color:${RCOL[s.plants.rarity]||'#888'}">${s.plants.grow_minutes>=60?Math.floor(s.plants.grow_minutes/60)+'ч':s.plants.grow_minutes+'м'} · +${s.plants.reward_diamonds} 💜</div>
       </div>
       <div style="font-size:13px;color:#a78bfa;font-weight:700">x${s.quantity}</div>
     </div>`).join(''));
@@ -1005,43 +1065,39 @@ async function openPlantSelectSeed(plantId){
   for(let i=0;i<16;i++){if(!usedIdxs.includes(i)){freeSlot=i;break;}}
   if(freeSlot===-1){alert('Нет свободных грядок!');return;}
   const {data:seed}=await sb.from('seeds').select('*').eq('user_id',currentUser.user_id).eq('plant_id',plantId).single();
-  if(!seed||seed.quantity<1){alert('Нет семян этого растения!');return;}
+  if(!seed||seed.quantity<1){alert('Нет семян!');return;}
   await plantSeed(freeSlot,plantId,seed.id);
 }
 
 async function plantSeed(slotIndex,plantId,seedId){
   const {data:existing}=await sb.from('farm_slots').select('id').eq('user_id',currentUser.user_id).eq('slot_index',slotIndex).eq('harvested',false).single();
-  if(existing){alert('Эта грядка уже занята!');return;}
+  if(existing){alert('Грядка занята!');return;}
   const {data:seed}=await sb.from('seeds').select('*').eq('id',seedId).single();
   if(!seed||seed.quantity<1){alert('Нет семян!');return;}
   await sb.from('farm_slots').insert({user_id:currentUser.user_id,slot_index:slotIndex,plant_id:plantId,planted_at:new Date().toISOString(),harvested:false});
   if(seed.quantity<=1){await sb.from('seeds').delete().eq('id',seedId);}
   else{await sb.from('seeds').update({quantity:seed.quantity-1}).eq('id',seedId);}
-  alert('Посажено! Ожидай урожай 🌱');
+  alert('Посажено! 🌱');
   await loadFarm();
 }
 
 async function harvest(slotId,reward,name,emoji,rarity){
   await sb.from('farm_slots').update({harvested:true}).eq('id',slotId);
   await saveUser({balance:bal+reward});
-  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:name,item_type:emoji,rarity:rarity||'common',base_price:reward});
-  alert('Урожай собран! +'+reward+' 💜\n'+emoji+' '+name+' добавлен в инвентарь');
+  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:name,item_type:emoji,rarity:rarity||'common',base_price:reward,is_equipped:false});
+  alert('Урожай собран!\n+'+reward+' 💜\n'+emoji+' '+name+' в инвентарь');
   await loadFarm();
 }
 
 async function openShowcaseSelect(slotIndex){
   currentShowcaseSlot=slotIndex;
-  const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id);
+  const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('is_equipped',false);
   const content=(!data||!data.length)?'<div class="empty-msg">Инвентарь пуст</div>':
     `<div class="seed-item" onclick="setShowcaseSlot(null)"><span style="font-size:28px">✕</span><div style="font-size:14px;color:#888">Очистить слот</div></div>`+
-    data.map(it=>`
-      <div class="seed-item" onclick='setShowcaseSlot(${JSON.stringify({id:it.id,item_name:it.item_name,item_type:it.item_type,item_image:it.item_image,rarity:it.rarity,base_price:it.base_price||RC[it.rarity]||0})})'>
-        ${it.item_image?`<img src="${it.item_image}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
-        <div>
-          <div style="font-size:14px;font-weight:600">${it.item_name}</div>
-          <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div>
-        </div>
-      </div>`).join('');
+    data.map(it=>`<div class="seed-item" onclick='setShowcaseSlot(${JSON.stringify({id:it.id,item_name:it.item_name,item_type:it.item_type,item_image:it.item_image,rarity:it.rarity,base_price:it.base_price||RC[it.rarity]||0})})'>
+      ${it.item_image?`<img src="${it.item_image}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
+      <div><div style="font-size:14px;font-weight:600">${it.item_name}</div><div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div></div>
+    </div>`).join('');
   showModal('Выбери предмет для витрины',content);
 }
 
@@ -1178,10 +1234,8 @@ async function loadAdminPetsList(){
   list.innerHTML=data.map(p=>`
     <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2a2a4a">
       <span style="font-size:28px">${p.emoji}</span>
-      <div>
-        <div style="font-size:13px;font-weight:600">${p.name}</div>
-        <div style="font-size:11px;color:#888">${p.price_diamonds?p.price_diamonds+' 💜':p.price_item_rarity?'Нужен '+RN[p.price_item_rarity]:'Стартовый'}</div>
-      </div>
+      <div><div style="font-size:13px;font-weight:600">${p.name}</div>
+      <div style="font-size:11px;color:#888">${p.price_diamonds?p.price_diamonds+' 💜':p.price_item_rarity?'Нужен '+RN[p.price_item_rarity]:'Стартовый'}</div></div>
     </div>`).join('');
 }
 
@@ -1215,10 +1269,8 @@ async function loadPromoList(){
   if(!data||!data.length){list.innerHTML='<div class="empty-msg">Нет промокодов</div>';return;}
   list.innerHTML=data.map(p=>`
     <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a2a4a">
-      <div>
-        <div style="font-size:13px;font-weight:700;color:#a78bfa">${p.code}</div>
-        <div style="font-size:11px;color:#888">+${p.reward_diamonds} 💜 · ${p.used_count}/${p.max_uses}</div>
-      </div>
+      <div><div style="font-size:13px;font-weight:700;color:#a78bfa">${p.code}</div>
+      <div style="font-size:11px;color:#888">+${p.reward_diamonds} 💜 · ${p.used_count}/${p.max_uses}</div></div>
       <button onclick="adminTogglePromo(${p.id},${p.is_active})" style="padding:4px 10px;background:none;border:1px solid #2a2a4a;border-radius:8px;color:${p.is_active?'#1D9E75':'#888'};font-size:11px;cursor:pointer;font-family:Arial,sans-serif">${p.is_active?'Выкл':'Вкл'}</button>
     </div>`).join('');
 }
@@ -1235,35 +1287,11 @@ async function loadPlayersList(){
   if(!data||!data.length){list.innerHTML='<div class="empty-msg">Нет игроков</div>';return;}
   list.innerHTML=data.map(u=>`
     <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a2a4a">
-      <div>
-        <div style="font-size:13px;font-weight:600">${u.username}</div>
-        <div style="font-size:11px;color:#888">ID: ${u.user_id}</div>
-      </div>
+      <div><div style="font-size:13px;font-weight:600">${u.username}</div>
+      <div style="font-size:11px;color:#888">ID: ${u.user_id}</div></div>
       <div style="font-size:13px;color:#a78bfa;font-weight:700">${u.balance.toLocaleString('ru')} 💜</div>
     </div>`).join('');
 }
-
-
-async function unequipAcc(petId){
-  if(!confirm('Снять все аксессуары с питомца?'))return;
-  const {data:pet}=await sb.from('user_pets').select('*').eq('id',petId).single();
-  if(!pet)return;
-  const slots=['acc_slot_1','acc_slot_2','acc_slot_3'];
-  for(const slot of slots){
-    if(pet[slot]){
-      await sb.from('inventory').update({is_equipped:false}).eq('id',pet[slot]);
-    }
-  }
-  await sb.from('user_pets').update({acc_slot_1:null,acc_slot_2:null,acc_slot_3:null,acc_bonus:0}).eq('id',petId);
-  if(activePet&&activePet.id===petId){
-    Object.assign(activePet,{acc_slot_1:null,acc_slot_2:null,acc_slot_3:null,acc_bonus:0});
-    updateUI();
-  }
-  alert('Аксессуары сняты!');
-  await loadMyPets();
-}
-
-
 
 window.addEventListener('load',initUser);
 </script>
