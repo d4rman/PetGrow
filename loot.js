@@ -7,9 +7,9 @@ let lootBoxes=[],bots=[],lastShot=0;
 let currentWeapon=null,ammo=0;
 
 const WEAPONS={
-  pistol:{name:'Пистолет',emoji:'🔫',damage:25,range:5,fireRate:400,ammoType:'pistol'},
-  rifle:{name:'Винтовка',emoji:'🎯',damage:40,range:8,fireRate:600,ammoType:'rifle'},
-  shotgun:{name:'Дробовик',emoji:'💥',damage:60,range:3,fireRate:800,ammoType:'shotgun'}
+  pistol:{name:'Пистолет',emoji:'🔫',damage:25,range:7,fireRate:400,ammoType:'pistol'},
+  rifle:{name:'Винтовка',emoji:'🎯',damage:40,range:12,fireRate:600,ammoType:'rifle'},
+  shotgun:{name:'Дробовик',emoji:'💥',damage:60,range:4,fireRate:800,ammoType:'shotgun'}
 };
 
 const LOOT_TABLE=[
@@ -193,7 +193,7 @@ let lastShot=0;
 function tryShoot(){
   if(!gameRunning)return;
   const now=Date.now();
-  const weapon=currentWeapon||{damage:10,range:1.5,fireRate:300};
+  const weapon=currentWeapon||{damage:10,range:2,fireRate:300};
   if(now-lastShot<weapon.fireRate)return;
   if(currentWeapon&&ammo<=0){
     if(now-lastShot>1000)alert('Нет патронов!');
@@ -207,11 +207,11 @@ function tryShoot(){
     if(bot.hp<=0)return;
     const dx=bot.x-playerX,dy=bot.y-playerY;
     const dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist>(currentWeapon?.range||1.5))return;
+    if(dist>(weapon.range||7))return;
     const angleToBot=Math.atan2(dy,dx);
     let diff=Math.abs(playerAngle-angleToBot);
     if(diff>Math.PI)diff=Math.PI*2-diff;
-    if(diff<0.4){
+    if(diff<0.5){
       bot.hp-=weapon.damage||10;
       hit=true;
       if(bot.hp<=0){
