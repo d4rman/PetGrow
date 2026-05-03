@@ -471,6 +471,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
       <div id="js-right-dot" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:rgba(255,255,255,0.5);border-radius:50%"></div>
     </div>
     <button id="action-btn" style="display:none;position:absolute;bottom:220px;left:50%;transform:translateX(-50%);padding:12px 24px;background:#EF9F27;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;pointer-events:all">📦 Открыть</button>
+    <button onclick="showRaidBag()" style="position:absolute;top:60px;left:14px;padding:8px 14px;background:rgba(127,119,221,0.8);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif">🎒 Рюкзак</button>
     <button onclick="exitRaid()" style="position:absolute;top:60px;right:14px;padding:8px 14px;background:rgba(153,60,29,0.8);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif">Выйти</button>
   </div>
   <div id="loot-results" class="card" style="display:none">
@@ -1623,8 +1624,10 @@ function update(){
   }
   if(jsRightActive&&Math.sqrt(jsRightX*jsRightX+jsRightY*jsRightY)>0.1){
     playerAngle=Math.atan2(jsRightY,jsRightX);
+    tryShoot();
   }
-  bots.forEach(bot=>{
+  bots.forEach((bot,idx)=>{
+    if(bot.hp<=0)return;
     bot.patrol+=bot.speed;
     const dx=Math.cos(bot.angle+bot.patrol)*0.02;
     const dy=Math.sin(bot.angle+bot.patrol)*0.02;
@@ -1644,8 +1647,31 @@ function update(){
   else abtn.style.display='none';
   const exitDist=Math.sqrt((COLS-3-playerX)**2+(ROWS-3-playerY)**2);
   if(exitDist<1.5)finishRaid();
-  document.getElementById('hp-display').textContent=Math.floor(playerHP);
 }
+
+let lastShot=0;
+function tryShoot(){
+  const now=Date.now();
+  if(now-lastShot<400)return;
+  bots.forEach(bot=>{
+    if(bot.hp<=0)return;
+    const dx=bot.x-playerX,dy=bot.y-playerY;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist>6)return;
+    const angleToBot=Math.atan2(dy,dx);
+    let diff=Math.abs(playerAngle-angleToBot);
+    if(diff>Math.PI)diff=Math.PI*2-diff;
+    if(diff<0.25){
+      bot.hp-=25;
+      lastShot=now;
+      if(bot.hp<=0){
+        const drop=LOOT_POOL[Math.floor(Math.random()*LOOT_POOL.length)];
+        lootBoxes.push({x:bot.x,y:bot.y,open:false,items:[drop],isBot:true});
+      }
+    }
+  });
+}
+
 
 function render(){
   if(!ctx)return;
@@ -1743,38 +1769,79 @@ function setupJoysticks(){
   const jld=document.getElementById('js-left-dot');
   const jr=document.getElementById('joystick-right');
   const jrd=document.getElementById('js-right-dot');
-  function handleTouch(e){
-    e.preventDefault();
-    Array.from(e.touches).forEach(t=>{
+  let leftTouchId=null,rightTouchId=null;
+  let leftCX=0,leftCY=0,rightCX=0,rightCY=0;
+
+  function getJoyInput(cx,cy,tx,ty,dot,maxR=60){
+    const dx=tx-cx,dy=ty-cy;
+    const len=Math.sqrt(dx*dx+dy*dy);
+    const clamp=Math.min(len,maxR);
+    const nx=len>0?dx/len:0,ny=len>0?dy/len:0;
+    dot.style.transform=`translate(calc(-50% + ${nx*clamp}px),calc(-50% + ${ny*clamp}px))`;
+    return{x:nx,y:ny,active:len>5};
+  }
+
+  document.addEventListener('touchstart',e=>{
+    Array.from(e.changedTouches).forEach(t=>{
       const jlr=jl.getBoundingClientRect(),jrr=jr.getBoundingClientRect();
-      if(t.clientX>jlr.left&&t.clientX<jlr.right&&t.clientY>jlr.top&&t.clientY<jlr.bottom){
-        jsLeftActive=true;
-        const cx=jlr.left+jlr.width/2,cy=jlr.top+jlr.height/2;
-        const dx=t.clientX-cx,dy=t.clientY-cy,len=Math.sqrt(dx*dx+dy*dy),max=40;
-        const clamp=Math.min(len,max);
-        jsLeftX=dx/len;jsLeftY=dy/len;
-        jld.style.transform=`translate(calc(-50% + ${dx/len*clamp}px),calc(-50% + ${dy/len*clamp}px))`;
+      if(leftTouchId===null&&t.clientX>jlr.left-20&&t.clientX<jlr.right+20&&t.clientY>jlr.top-20&&t.clientY<jlr.bottom+20){
+        leftTouchId=t.identifier;
+        leftCX=jlr.left+jlr.width/2;leftCY=jlr.top+jlr.height/2;
       }
-      if(t.clientX>jrr.left&&t.clientX<jrr.right&&t.clientY>jrr.top&&t.clientY<jrr.bottom){
-        jsRightActive=true;
-        const cx=jrr.left+jrr.width/2,cy=jrr.top+jrr.height/2;
-        const dx=t.clientX-cx,dy=t.clientY-cy,len=Math.sqrt(dx*dx+dy*dy),max=40;
-        const clamp=Math.min(len,max);
-        jsRightX=dx/len;jsRightY=dy/len;
-        jrd.style.transform=`translate(calc(-50% + ${dx/len*clamp}px),calc(-50% + ${dy/len*clamp}px))`;
+      if(rightTouchId===null&&t.clientX>jrr.left-20&&t.clientX<jrr.right+20&&t.clientY>jrr.top-20&&t.clientY<jrr.bottom+20){
+        rightTouchId=t.identifier;
+        rightCX=jrr.left+jrr.width/2;rightCY=jrr.top+jrr.height/2;
       }
     });
-    if(!Array.from(e.touches).some(t=>{const r=jl.getBoundingClientRect();return t.clientX>r.left&&t.clientX<r.right&&t.clientY>r.top&&t.clientY<r.bottom;})){
-      jsLeftActive=false;jsLeftX=0;jsLeftY=0;jld.style.transform='translate(-50%,-50%)';
-    }
-    if(!Array.from(e.touches).some(t=>{const r=jr.getBoundingClientRect();return t.clientX>r.left&&t.clientX<r.right&&t.clientY>r.top&&t.clientY<r.bottom;})){
-      jsRightActive=false;jsRightX=0;jsRightY=0;jrd.style.transform='translate(-50%,-50%)';
-    }
-  }
-  document.addEventListener('touchmove',handleTouch,{passive:false});
+  },{passive:false});
+
+  document.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    Array.from(e.changedTouches).forEach(t=>{
+      if(t.identifier===leftTouchId){
+        const r=getJoyInput(leftCX,leftCY,t.clientX,t.clientY,jld);
+        jsLeftActive=r.active;jsLeftX=r.x;jsLeftY=r.y;
+      }
+      if(t.identifier===rightTouchId){
+        const r=getJoyInput(rightCX,rightCY,t.clientX,t.clientY,jrd);
+        jsRightActive=r.active;jsRightX=r.x;jsRightY=r.y;
+      }
+    });
+  },{passive:false});
+
   document.addEventListener('touchend',e=>{
-    if(!e.touches.length){jsLeftActive=false;jsRightActive=false;jsLeftX=0;jsLeftY=0;jsRightX=0;jsRightY=0;jld.style.transform='translate(-50%,-50%)';jrd.style.transform='translate(-50%,-50%)';}
+    Array.from(e.changedTouches).forEach(t=>{
+      if(t.identifier===leftTouchId){
+        leftTouchId=null;jsLeftActive=false;jsLeftX=0;jsLeftY=0;
+        jld.style.transform='translate(-50%,-50%)';
+      }
+      if(t.identifier===rightTouchId){
+        rightTouchId=null;jsRightActive=false;jsRightX=0;jsRightY=0;
+        jrd.style.transform='translate(-50%,-50%)';
+      }
+    });
   });
+}
+
+function showRaidBag(){
+  if(!raidLoot.length){alert('Рюкзак пуст!');return;}
+  showModal('🎒 Рюкзак ('+raidLoot.length+'/'+bagSize+')',
+    raidLoot.map((it,i)=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2a2a4a">
+        <span style="font-size:24px">${it.emoji}</span>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:600">${it.name}</div>
+          <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">~${it.value} 💜</div>
+        </div>
+        <button onclick="dropItem(${i})" style="padding:4px 10px;background:none;border:1px solid #993C1D;border-radius:8px;color:#993C1D;font-size:11px;cursor:pointer;font-family:Arial,sans-serif">Выбросить</button>
+      </div>`).join(''));
+}
+
+function dropItem(index){
+  raidLoot.splice(index,1);
+  document.getElementById('bag-display').textContent=raidLoot.length+'/'+bagSize;
+  closeModal();
+  if(raidLoot.length)showRaidBag();
 }
 
 
