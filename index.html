@@ -436,6 +436,53 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   </div>
 </div>
 
+<div class="screen" id="s-loot">
+  <div class="topbar">
+    <div class="balance"><span class="diamond"></span><span class="bal-num" id="bal-loot">—</span></div>
+    <div style="font-size:12px;color:#888">LootSearcher</div>
+  </div>
+  <div id="loot-menu" class="card" style="text-align:center">
+    <div style="font-size:48px;margin-bottom:10px">🎮</div>
+    <div style="font-size:18px;font-weight:700;margin-bottom:6px">LootSearcher</div>
+    <div style="font-size:13px;color:#888;margin-bottom:20px">Исследуй заброшенный завод<br>Собирай лут · Избегай ботов</div>
+    <div style="background:#0f0f1e;border-radius:12px;padding:12px;margin-bottom:16px;text-align:left">
+      <div style="font-size:13px;color:#fff;margin-bottom:8px;font-weight:600">Как играть:</div>
+      <div style="font-size:12px;color:#888;line-height:1.6">🕹️ Левый джойстик — движение<br>👁️ Правый джойстик — поворот<br>📦 Подойди к ящику чтобы открыть<br>🚪 Найди выход чтобы забрать лут</div>
+    </div>
+    <div style="background:#0f0f1e;border-radius:12px;padding:12px;margin-bottom:16px;text-align:left">
+      <div style="font-size:13px;color:#fff;margin-bottom:8px;font-weight:600">Твой рюкзак:</div>
+      <div style="font-size:12px;color:#888">Слоты: <span id="raid-bag-size" style="color:#a78bfa">10/10</span> свободно</div>
+    </div>
+    <button onclick="startRaid()" style="width:100%;padding:14px;background:#7F77DD;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">⚔️ Начать рейд</button>
+  </div>
+  <div id="loot-game" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a14;z-index:50">
+    <canvas id="game-canvas" style="display:block;width:100%;height:100%"></canvas>
+    <div id="loot-ui" style="position:absolute;top:0;left:0;width:100%;pointer-events:none">
+      <div style="display:flex;justify-content:space-between;padding:10px 14px;background:rgba(0,0,0,0.6)">
+        <div style="font-size:13px;color:#fff">❤️ <span id="hp-display">100</span></div>
+        <div style="font-size:13px;color:#EF9F27;font-weight:700">LootSearcher</div>
+        <div style="font-size:13px;color:#a78bfa">🎒 <span id="bag-display">0/10</span></div>
+      </div>
+    </div>
+    <div id="joystick-left" style="position:absolute;bottom:100px;left:30px;width:100px;height:100px;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.3);border-radius:50%;touch-action:none">
+      <div id="js-left-dot" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:rgba(255,255,255,0.5);border-radius:50%"></div>
+    </div>
+    <div id="joystick-right" style="position:absolute;bottom:100px;right:30px;width:100px;height:100px;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.3);border-radius:50%;touch-action:none">
+      <div id="js-right-dot" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:rgba(255,255,255,0.5);border-radius:50%"></div>
+    </div>
+    <button id="action-btn" style="display:none;position:absolute;bottom:220px;left:50%;transform:translateX(-50%);padding:12px 24px;background:#EF9F27;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;pointer-events:all">📦 Открыть</button>
+    <button onclick="exitRaid()" style="position:absolute;top:60px;right:14px;padding:8px 14px;background:rgba(153,60,29,0.8);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif">Выйти</button>
+  </div>
+  <div id="loot-results" class="card" style="display:none">
+    <div style="font-size:24px;text-align:center;margin-bottom:10px">🎉</div>
+    <div style="font-size:16px;font-weight:700;text-align:center;margin-bottom:14px">Рейд завершён!</div>
+    <div id="loot-found-list"></div>
+    <button onclick="saveLootAndExit()" style="width:100%;padding:14px;background:#1D9E75;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;margin-top:14px;font-family:Arial,sans-serif">💾 Сохранить лут</button>
+    <button onclick="document.getElementById('loot-results').style.display='none';document.getElementById('loot-menu').style.display='block'" style="width:100%;padding:12px;background:none;border:1px solid #2a2a4a;border-radius:14px;font-size:14px;color:#888;cursor:pointer;margin-top:8px;font-family:Arial,sans-serif">Выйти без сохранения</button>
+  </div>
+</div>
+
+
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="menu-drawer">
   <div style="text-align:center;font-size:13px;color:#888;margin-bottom:14px">Меню</div>
@@ -444,6 +491,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     <button class="menu-item" onclick="goTo('craft',null);closeDrawer()"><span style="font-size:24px">⚗️</span>Крафт</button>
     <button class="menu-item" onclick="goTo('inv',null);closeDrawer()"><span style="font-size:24px">🎒</span>Инвентарь</button>
     <button class="menu-item" onclick="goTo('farm',null);closeDrawer()"><span style="font-size:24px">🌱</span>Ферма</button>
+    <button class="menu-item" onclick="goTo('loot',null);closeDrawer()"><span style="font-size:24px">🎮</span>LootSearcher</button>
     <button class="menu-item" id="admin-menu-btn" style="display:none;border:1px solid #534AB7;color:#a78bfa" onclick="goTo('admin',null);closeDrawer()"><span style="font-size:24px">⚙️</span>Админ</button>
   </div>
   <input class="admin-input" id="promo-input" placeholder="Введи промокод...">
@@ -1480,6 +1528,255 @@ async function loadPlayersList(){
       <div style="font-size:13px;color:#a78bfa;font-weight:700">${u.balance.toLocaleString('ru')} 💜</div>
     </div>`).join('');
 }
+
+const TILE=32,COLS=40,ROWS=30;
+const WALL=1,FLOOR=0,LOOT=2,EXIT=3;
+let gameRunning=false,playerX=5,playerY=5,playerAngle=0,playerHP=100;
+let raidLoot=[],bagSize=10,jsLeftActive=false,jsRightActive=false;
+let jsLeftX=0,jsLeftY=0,jsRightX=0,jsRightY=0;
+let lootBoxes=[],bots=[],ctx=null,animFrame=null;
+
+const MAP_DATA=(()=>{
+  const m=Array(ROWS).fill(null).map(()=>Array(COLS).fill(FLOOR));
+  // Внешние стены
+  for(let i=0;i<COLS;i++){m[0][i]=WALL;m[ROWS-1][i]=WALL;}
+  for(let i=0;i<ROWS;i++){m[i][0]=WALL;m[i][COLS-1]=WALL;}
+  // Комнаты
+  const rooms=[
+    {x:2,y:2,w:10,h:8},{x:14,y:2,w:12,h:8},{x:28,y:2,w:10,h:8},
+    {x:2,y:12,w:8,h:10},{x:12,y:12,w:16,h:10},{x:30,y:12,w:8,h:10},
+    {x:4,y:24,w:10,h:4},{x:16,y:24,w:10,h:4},{x:28,y:24,w:8,h:4}
+  ];
+  rooms.forEach(r=>{
+    for(let y=r.y;y<r.y+r.h;y++)for(let x=r.x;x<r.x+r.w;x++){
+      if(y>0&&y<ROWS-1&&x>0&&x<COLS-1)m[y][x]=WALL;
+    }
+    for(let y=r.y+1;y<r.y+r.h-1;y++)for(let x=r.x+1;x<r.x+r.w-1;x++)m[y][x]=FLOOR;
+    // Двери
+    const doorY=Math.floor(r.y+r.h/2),doorX=Math.floor(r.x+r.w/2);
+    if(r.x+r.w<COLS-1){m[doorY][r.x+r.w-1]=FLOOR;m[doorY][r.x+r.w]=FLOOR;}
+    if(r.y+r.h<ROWS-1){m[r.y+r.h-1][doorX]=FLOOR;m[r.y+r.h][doorX]=FLOOR;}
+  });
+  // Коридоры
+  [[10,6,14,6],[22,6,28,6],[10,17,12,17],[28,17,30,17],[8,20,8,24],[20,22,20,24],[32,22,32,24]].forEach(([x1,y1,x2,y2])=>{
+    if(x1===x2){for(let y=Math.min(y1,y2);y<=Math.max(y1,y2);y++)m[y][x1]=FLOOR;}
+    else{for(let x=Math.min(x1,x2);x<=Math.max(x1,x2);x++)m[y1][x]=FLOOR;}
+  });
+  return m;
+})();
+
+const LOOT_POOL=[
+  {name:'Процессор',emoji:'💾',rarity:'rare',value:200},
+  {name:'Видеокарта',emoji:'🖥️',rarity:'epic',value:500},
+  {name:'Материнская плата',emoji:'🔧',rarity:'vr',value:300},
+  {name:'Семя травы',emoji:'🌿',rarity:'common',value:50},
+  {name:'Семя кокоса',emoji:'🥥',rarity:'legendary',value:800},
+  {name:'Аптечка',emoji:'💊',rarity:'common',value:80},
+  {name:'Патроны',emoji:'🔫',rarity:'common',value:40},
+  {name:'Золото',emoji:'🪙',rarity:'rare',value:250},
+  {name:'Нож',emoji:'🗡️',rarity:'rare',value:180},
+  {name:'Бронежилет',emoji:'🛡️',rarity:'epic',value:600},
+];
+
+function startRaid(){
+  document.getElementById('loot-menu').style.display='none';
+  document.getElementById('loot-game').style.display='block';
+  document.getElementById('loot-results').style.display='none';
+  playerX=3.5;playerY=3.5;playerAngle=0;playerHP=100;raidLoot=[];gameRunning=true;
+  document.getElementById('hp-display').textContent=100;
+  document.getElementById('bag-display').textContent='0/'+bagSize;
+  lootBoxes=[];bots=[];
+  [[5,5],[15,4],[30,4],[3,15],[20,16],[32,15],[6,26],[20,26],[30,26]].forEach(([x,y])=>{
+    lootBoxes.push({x,y,open:false,items:[LOOT_POOL[Math.floor(Math.random()*LOOT_POOL.length)],LOOT_POOL[Math.floor(Math.random()*LOOT_POOL.length)]]});
+  });
+  bots=[
+    {x:15,y:6,angle:0,hp:50,speed:0.015,patrol:0},
+    {x:30,y:6,angle:Math.PI,hp:50,speed:0.015,patrol:0},
+    {x:20,y:17,angle:0,hp:50,speed:0.02,patrol:0},
+    {x:5,y:17,angle:0,hp:30,speed:0.01,patrol:0},
+  ];
+  const canvas=document.getElementById('game-canvas');
+  canvas.width=canvas.offsetWidth;
+  canvas.height=canvas.offsetHeight;
+  ctx=canvas.getContext('2d');
+  setupJoysticks();
+  gameLoop();
+}
+
+function gameLoop(){
+  if(!gameRunning)return;
+  update();
+  render();
+  animFrame=requestAnimationFrame(gameLoop);
+}
+
+function update(){
+  const speed=0.06;
+  if(jsLeftActive){
+    const len=Math.sqrt(jsLeftX*jsLeftX+jsLeftY*jsLeftY);
+    if(len>0.1){
+      const nx=jsLeftX/len*speed,ny=jsLeftY/len*speed;
+      const nx2=playerX+nx,ny2=playerY+ny;
+      if(MAP_DATA[Math.floor(playerY)][Math.floor(nx2)]===FLOOR)playerX=nx2;
+      if(MAP_DATA[Math.floor(ny2)][Math.floor(playerX)]===FLOOR)playerY=ny2;
+    }
+  }
+  if(jsRightActive&&Math.sqrt(jsRightX*jsRightX+jsRightY*jsRightY)>0.1){
+    playerAngle=Math.atan2(jsRightY,jsRightX);
+  }
+  bots.forEach(bot=>{
+    bot.patrol+=bot.speed;
+    const dx=Math.cos(bot.angle+bot.patrol)*0.02;
+    const dy=Math.sin(bot.angle+bot.patrol)*0.02;
+    const nx=bot.x+dx,ny=bot.y+dy;
+    if(nx>0&&nx<COLS&&ny>0&&ny<ROWS&&MAP_DATA[Math.floor(ny)][Math.floor(nx)]===FLOOR){bot.x=nx;bot.y=ny;}
+    else{bot.angle+=Math.PI/2;}
+    const dist=Math.sqrt((bot.x-playerX)**2+(bot.y-playerY)**2);
+    if(dist<0.8){playerHP=Math.max(0,playerHP-0.3);document.getElementById('hp-display').textContent=Math.floor(playerHP);}
+    if(playerHP<=0){exitRaid();return;}
+  });
+  let nearBox=null,nearDist=999;
+  lootBoxes.forEach(box=>{
+    if(!box.open){const d=Math.sqrt((box.x-playerX)**2+(box.y-playerY)**2);if(d<1.5&&d<nearDist){nearDist=d;nearBox=box;}}
+  });
+  const abtn=document.getElementById('action-btn');
+  if(nearBox){abtn.style.display='block';abtn.onclick=()=>openBox(nearBox);}
+  else abtn.style.display='none';
+  const exitDist=Math.sqrt((COLS-3-playerX)**2+(ROWS-3-playerY)**2);
+  if(exitDist<1.5)finishRaid();
+  document.getElementById('hp-display').textContent=Math.floor(playerHP);
+}
+
+function render(){
+  if(!ctx)return;
+  const W=ctx.canvas.width,H=ctx.canvas.height;
+  const camX=playerX-W/2/TILE,camY=playerY-H/2/TILE;
+  ctx.fillStyle='#0a0a14';ctx.fillRect(0,0,W,H);
+  for(let y=0;y<ROWS;y++){
+    for(let x=0;x<COLS;x++){
+      const sx=(x-camX)*TILE,sy=(y-camY)*TILE;
+      if(sx<-TILE||sx>W+TILE||sy<-TILE||sy>H+TILE)continue;
+      if(MAP_DATA[y][x]===WALL){ctx.fillStyle='#2a2a4a';ctx.fillRect(sx,sy,TILE,TILE);ctx.strokeStyle='#1a1a2e';ctx.lineWidth=1;ctx.strokeRect(sx,sy,TILE,TILE);}
+      else{ctx.fillStyle='#16213e';ctx.fillRect(sx,sy,TILE,TILE);}
+    }
+  }
+  // Выход
+  const ex=(COLS-3-camX)*TILE,ey=(ROWS-3-camY)*TILE;
+  ctx.fillStyle='#1D9E75';ctx.fillRect(ex,ey,TILE,TILE);
+  ctx.fillStyle='#fff';ctx.font='16px Arial';ctx.textAlign='center';ctx.fillText('🚪',ex+TILE/2,ey+TILE/1.3);
+  // Ящики
+  lootBoxes.forEach(box=>{
+    const bx=(box.x-camX)*TILE,by=(box.y-camY)*TILE;
+    ctx.fillStyle=box.open?'#333':'#8B6914';ctx.fillRect(bx-12,by-12,24,24);
+    ctx.font='16px Arial';ctx.textAlign='center';ctx.fillText(box.open?'📭':'📦',bx,by+6);
+  });
+  // Боты
+  bots.forEach(bot=>{
+    const bx=(bot.x-camX)*TILE,by=(bot.y-camY)*TILE;
+    ctx.beginPath();ctx.arc(bx,by,12,0,Math.PI*2);ctx.fillStyle='#993C1D';ctx.fill();
+    ctx.font='14px Arial';ctx.textAlign='center';ctx.fillText('👤',bx,by+5);
+  });
+  // Игрок
+  const px=(playerX-camX)*TILE,py=(playerY-camY)*TILE;
+  ctx.beginPath();ctx.arc(px,py,14,0,Math.PI*2);ctx.fillStyle='#7F77DD';ctx.fill();
+  ctx.font='18px Arial';ctx.textAlign='center';ctx.fillText('🧑',px,py+6);
+  // Луч зрения
+  ctx.beginPath();ctx.moveTo(px,py);
+  ctx.lineTo(px+Math.cos(playerAngle)*30,py+Math.sin(playerAngle)*30);
+  ctx.strokeStyle='rgba(255,255,100,0.5)';ctx.lineWidth=2;ctx.stroke();
+}
+
+function openBox(box){
+  if(raidLoot.length>=bagSize){alert('Рюкзак полон!');return;}
+  box.open=true;
+  const item=box.items[0];
+  raidLoot.push(item);
+  document.getElementById('bag-display').textContent=raidLoot.length+'/'+bagSize;
+  alert('Найдено: '+item.emoji+' '+item.name);
+}
+
+function finishRaid(){
+  gameRunning=false;cancelAnimationFrame(animFrame);
+  document.getElementById('loot-game').style.display='none';
+  document.getElementById('loot-results').style.display='block';
+  const list=document.getElementById('loot-found-list');
+  if(!raidLoot.length){list.innerHTML='<div class="empty-msg">Ничего не нашли</div>';return;}
+  list.innerHTML=raidLoot.map(it=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2a2a4a">
+      <span style="font-size:24px">${it.emoji}</span>
+      <div style="flex:1"><div style="font-size:14px;font-weight:600">${it.name}</div>
+      <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div></div>
+      <div style="font-size:13px;color:#a78bfa;font-weight:700">~${it.value} 💜</div>
+    </div>`).join('');
+}
+
+function exitRaid(){
+  gameRunning=false;cancelAnimationFrame(animFrame);
+  document.getElementById('loot-game').style.display='none';
+  if(raidLoot.length>0)finishRaid();
+  else{document.getElementById('loot-results').style.display='none';document.getElementById('loot-menu').style.display='block';}
+}
+
+async function saveLootAndExit(){
+  for(const item of raidLoot){
+    const isSeed=item.name.startsWith('Семя ');
+    if(isSeed){
+      const plantName=item.name.replace('Семя ','');
+      const {data:plant}=await sb.from('plants').select('*').ilike('name',plantName).single();
+      if(plant){
+        const {data:ex}=await sb.from('seeds').select('*').eq('user_id',currentUser.user_id).eq('plant_id',plant.id).single();
+        if(ex)await sb.from('seeds').update({quantity:ex.quantity+1}).eq('id',ex.id);
+        else await sb.from('seeds').insert({user_id:currentUser.user_id,plant_id:plant.id,quantity:1});
+      }
+    } else {
+      await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:item.name,item_type:item.emoji,rarity:item.rarity,base_price:item.value,is_equipped:false});
+    }
+  }
+  raidLoot=[];
+  alert('Лут сохранён в инвентарь!');
+  document.getElementById('loot-results').style.display='none';
+  document.getElementById('loot-menu').style.display='block';
+}
+
+function setupJoysticks(){
+  const jl=document.getElementById('joystick-left');
+  const jld=document.getElementById('js-left-dot');
+  const jr=document.getElementById('joystick-right');
+  const jrd=document.getElementById('js-right-dot');
+  function handleTouch(e){
+    e.preventDefault();
+    Array.from(e.touches).forEach(t=>{
+      const jlr=jl.getBoundingClientRect(),jrr=jr.getBoundingClientRect();
+      if(t.clientX>jlr.left&&t.clientX<jlr.right&&t.clientY>jlr.top&&t.clientY<jlr.bottom){
+        jsLeftActive=true;
+        const cx=jlr.left+jlr.width/2,cy=jlr.top+jlr.height/2;
+        const dx=t.clientX-cx,dy=t.clientY-cy,len=Math.sqrt(dx*dx+dy*dy),max=40;
+        const clamp=Math.min(len,max);
+        jsLeftX=dx/len;jsLeftY=dy/len;
+        jld.style.transform=`translate(calc(-50% + ${dx/len*clamp}px),calc(-50% + ${dy/len*clamp}px))`;
+      }
+      if(t.clientX>jrr.left&&t.clientX<jrr.right&&t.clientY>jrr.top&&t.clientY<jrr.bottom){
+        jsRightActive=true;
+        const cx=jrr.left+jrr.width/2,cy=jrr.top+jrr.height/2;
+        const dx=t.clientX-cx,dy=t.clientY-cy,len=Math.sqrt(dx*dx+dy*dy),max=40;
+        const clamp=Math.min(len,max);
+        jsRightX=dx/len;jsRightY=dy/len;
+        jrd.style.transform=`translate(calc(-50% + ${dx/len*clamp}px),calc(-50% + ${dy/len*clamp}px))`;
+      }
+    });
+    if(!Array.from(e.touches).some(t=>{const r=jl.getBoundingClientRect();return t.clientX>r.left&&t.clientX<r.right&&t.clientY>r.top&&t.clientY<r.bottom;})){
+      jsLeftActive=false;jsLeftX=0;jsLeftY=0;jld.style.transform='translate(-50%,-50%)';
+    }
+    if(!Array.from(e.touches).some(t=>{const r=jr.getBoundingClientRect();return t.clientX>r.left&&t.clientX<r.right&&t.clientY>r.top&&t.clientY<r.bottom;})){
+      jsRightActive=false;jsRightX=0;jsRightY=0;jrd.style.transform='translate(-50%,-50%)';
+    }
+  }
+  document.addEventListener('touchmove',handleTouch,{passive:false});
+  document.addEventListener('touchend',e=>{
+    if(!e.touches.length){jsLeftActive=false;jsRightActive=false;jsLeftX=0;jsLeftY=0;jsRightX=0;jsRightY=0;jld.style.transform='translate(-50%,-50%)';jrd.style.transform='translate(-50%,-50%)';}
+  });
+}
+
 
 window.addEventListener('load',initUser);
 </script>
