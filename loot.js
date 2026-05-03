@@ -136,6 +136,8 @@ function update(){
   }
   if(jsRightActive&&Math.sqrt(jsRightX*jsRightX+jsRightY*jsRightY)>0.1){
     playerAngle=Math.atan2(jsRightY,jsRightX);
+  }
+  if(jsRightActive){
     tryShoot();
   }
   const now=Date.now();
@@ -187,44 +189,37 @@ function update(){
   if(exitDist<1.5)finishRaid();
 }
 
+let lastShot=0;
 function tryShoot(){
-  if(!currentWeapon&&ammo<=0){
-    punchAttack();return;
-  }
-  const weapon=currentWeapon||{damage:10,range:1.5,fireRate:300};
+  if(!gameRunning)return;
   const now=Date.now();
+  const weapon=currentWeapon||{damage:10,range:1.5,fireRate:300};
   if(now-lastShot<weapon.fireRate)return;
-  if(currentWeapon&&ammo<=0){alert('Нет патронов!');return;}
+  if(currentWeapon&&ammo<=0){
+    if(now-lastShot>1000)alert('Нет патронов!');
+    lastShot=now;return;
+  }
   if(currentWeapon)ammo--;
   updateWeaponUI();
   lastShot=now;
-  showShootEffect();
+  let hit=false;
   bots.forEach(bot=>{
     if(bot.hp<=0)return;
     const dx=bot.x-playerX,dy=bot.y-playerY;
     const dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist>weapon.range)return;
+    if(dist>(currentWeapon?.range||1.5))return;
     const angleToBot=Math.atan2(dy,dx);
     let diff=Math.abs(playerAngle-angleToBot);
     if(diff>Math.PI)diff=Math.PI*2-diff;
-    if(diff<0.3){
-      bot.hp-=weapon.damage||25;
+    if(diff<0.4){
+      bot.hp-=weapon.damage||10;
+      hit=true;
       if(bot.hp<=0){
-        const drop=getRandomLoot();
-        lootBoxes.push({x:bot.x,y:bot.y,open:false,items:[drop,getRandomLoot()],isBot:true});
+        const drop1=getRandomLoot();
+        const drop2=getRandomLoot();
+        lootBoxes.push({x:bot.x,y:bot.y,open:false,items:[drop1,drop2],isBot:true});
       }
     }
-  });
-}
-
-function punchAttack(){
-  const now=Date.now();
-  if(now-lastShot<500)return;
-  lastShot=now;
-  bots.forEach(bot=>{
-    if(bot.hp<=0)return;
-    const dist=Math.sqrt((bot.x-playerX)**2+(bot.y-playerY)**2);
-    if(dist<1.2){bot.hp-=15;if(bot.hp<=0){const drop=getRandomLoot();lootBoxes.push({x:bot.x,y:bot.y,open:false,items:[drop]});}}
   });
 }
 
