@@ -490,11 +490,16 @@ function render(){
     }
   }
 
-  const ex=(COLS-5-camX)*TILE,ey=(ROWS-5-camY)*TILE;
-  if(fogMap[ROWS-5]&&fogMap[ROWS-5][COLS-5]){
-    ctx.fillStyle='#1D9E75';ctx.fillRect(ex,ey,TILE*2,TILE*2);
-    ctx.font='20px Arial';ctx.textAlign='center';ctx.fillText('🚪',ex+TILE,ey+TILE*1.3);
-  }
+  const exitX=COLS-6,exitY=ROWS-6;
+const ex=(exitX-camX)*TILE,ey=(exitY-camY)*TILE;
+if(fogMap[exitY]&&fogMap[exitY][exitX]){
+  ctx.fillStyle='#0d4a2a';ctx.fillRect(ex-4,ey-4,TILE+8,TILE+8);
+  ctx.strokeStyle='#1D9E75';ctx.lineWidth=3;ctx.strokeRect(ex-4,ey-4,TILE+8,TILE+8);
+  ctx.font='20px Arial';ctx.textAlign='center';
+  ctx.fillText('🚁',ex+TILE/2,ey+TILE*0.75);
+  ctx.fillStyle='#1D9E75';ctx.font='bold 9px Arial';
+  ctx.fillText('ВЫХОД',ex+TILE/2,ey+TILE+10);
+}
 
   lootBoxes.forEach(box=>{
     const bx=(box.x-camX)*TILE+TILE/2,by=(box.y-camY)*TILE+TILE/2;
@@ -576,7 +581,7 @@ function renderMinimap(W,H,camX,camY){
   const ppx=mx+playerX*scaleX,ppy=my+playerY*scaleY;
   ctx.fillStyle='#7F77DD';
   ctx.beginPath();ctx.arc(ppx,ppy,3,0,Math.PI*2);ctx.fill();
-  const exitX=mx+(COLS-5)*scaleX,exitY=my+(ROWS-5)*scaleY;
+  const exitX=mx+(COLS-6)*scaleX,exitY=my+(ROWS-6)*scaleY;
   ctx.fillStyle='#1D9E75';
   ctx.beginPath();ctx.arc(exitX,exitY,3,0,Math.PI*2);ctx.fill();
   ctx.fillStyle='#888';ctx.font='8px Arial';ctx.textAlign='left';
@@ -619,15 +624,29 @@ function openBox(box){
       updateHealthUI();return;
     }
     if(item.category==='armor'){
-      playerArmor=item.armorAmount;playerMaxArmor=item.armorAmount;
-      updateHealthUI();
-      alert('Броня надета: '+item.emoji+' '+item.name);return;
-    }
-    if(item.category==='bag'){
-      bagSize=item.bagSlots||10;
+  if(item.armorAmount>playerMaxArmor){
+    playerArmor=item.armorAmount;playerMaxArmor=item.armorAmount;
+    updateHealthUI();
+    alert('Броня надета: '+item.emoji+' '+item.name+' ('+item.armorAmount+'%)');
+  } else {
+    if(raidLoot.length<bagSize){
+      raidLoot.push(item);
       document.getElementById('bag-display').textContent=raidLoot.length+'/'+bagSize;
-      alert('Рюкзак подобран: '+item.bagSlots+' слотов!');return;
-    }
+      alert('Броня слабее текущей — в рюкзак: '+item.name);
+    } else alert('Рюкзак полон!');
+  }
+  return;
+}
+if(item.category==='bag'){
+  if((item.bagSlots||10)>bagSize){
+    bagSize=item.bagSlots||10;
+    document.getElementById('bag-display').textContent=raidLoot.length+'/'+bagSize;
+    alert('Рюкзак улучшен: '+item.bagSlots+' слотов!');
+  } else {
+    alert('У тебя уже лучший рюкзак ('+bagSize+' слотов)');
+  }
+  return;
+}
     if(raidLoot.length<bagSize){
       raidLoot.push(item);added++;
       document.getElementById('bag-display').textContent=raidLoot.length+'/'+bagSize;
