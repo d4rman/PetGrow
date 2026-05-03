@@ -1635,9 +1635,26 @@ function update(){
     if(nx>0&&nx<COLS&&ny>0&&ny<ROWS&&MAP_DATA[Math.floor(ny)][Math.floor(nx)]===FLOOR){bot.x=nx;bot.y=ny;}
     else{bot.angle+=Math.PI/2;}
     const dist=Math.sqrt((bot.x-playerX)**2+(bot.y-playerY)**2);
-    if(dist<0.8){playerHP=Math.max(0,playerHP-0.3);document.getElementById('hp-display').textContent=Math.floor(playerHP);}
-    if(playerHP<=0){exitRaid();return;}
-  });
+if(dist<0.8){playerHP=Math.max(0,playerHP-0.3);}
+const angleToPlayer=Math.atan2(playerY-bot.y,playerX-bot.x);
+bot.angle=angleToPlayer-bot.patrol;
+if(dist<5){
+  const now=Date.now();
+  if(!bot.lastShot)bot.lastShot=0;
+  if(now-bot.lastShot>1200){
+    bot.lastShot=now;
+    let diff=Math.abs(angleToPlayer-Math.atan2(playerY-bot.y,playerX-bot.x));
+    if(diff>Math.PI)diff=Math.PI*2-diff;
+    const accuracy=dist<2?0.15:dist<4?0.35:0.55;
+    if(Math.random()>accuracy){
+      playerHP=Math.max(0,playerHP-15);
+      document.getElementById('hp-display').textContent=Math.floor(playerHP);
+      showDamageEffect();
+      if(playerHP<=0){exitRaid();return;}
+    }
+  }
+}
+
   let nearBox=null,nearDist=999;
   lootBoxes.forEach(box=>{
     if(!box.open){const d=Math.sqrt((box.x-playerX)**2+(box.y-playerY)**2);if(d<1.5&&d<nearDist){nearDist=d;nearBox=box;}}
