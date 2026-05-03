@@ -322,7 +322,7 @@ function update(){
           playerHP=Math.max(0,playerHP-dmg);
           updateHealthUI();
           showDamageEffect();
-          if(playerHP<=0){exitRaid();return;}
+          if(playerHP<=0){exitRaid(true);return;}
         }
       }
     } else {
@@ -561,13 +561,24 @@ function openBox(box){
   let added=0;
   items.forEach(item=>{
     if(item.category==='weapon'){
-      if(!currentWeapon||currentWeapon.name!==item.name){
-        currentWeapon=WEAPONS[item.weaponType]||null;
-        ammo=item.weaponType==='pistol'?30:item.weaponType==='rifle'?20:item.weaponType==='shotgun'?10:item.weaponType==='smg'?40:8;
-        updateWeaponUI();
-      }
-      return;
+  const wpData=WEAPONS[item.weaponType];
+  if(!wpData)return;
+  if(!currentWeapon){
+    currentWeapon=wpData;
+    ammo=item.weaponType==='pistol'?30:item.weaponType==='rifle'?20:item.weaponType==='shotgun'?10:item.weaponType==='smg'?40:8;
+    updateWeaponUI();
+    alert('Оружие взято в руки: '+wpData.emoji+' '+wpData.name);
+  } else {
+    if(raidLoot.length<bagSize){
+      raidLoot.push(item);
+      document.getElementById('bag-display').textContent=raidLoot.length+'/'+bagSize;
+      alert('Оружие в рюкзаке: '+wpData.emoji+' '+wpData.name+'\nМожно взять в следующем рейде');
+    } else {
+      alert('Рюкзак полон! Выброси что-нибудь');
     }
+  }
+  return;
+}
     if(item.category==='ammo'&&currentWeapon&&item.ammoType===currentWeapon.ammoType){
       ammo+=item.count||10;updateWeaponUI();return;
     }
@@ -614,9 +625,16 @@ function finishRaid(){
       </div>`).join('');
 }
 
-function exitRaid(){
+function exitRaid(died=false){
   gameRunning=false;if(animFrame)cancelAnimationFrame(animFrame);
   document.getElementById('loot-game').style.display='none';
+  if(died){
+    raidLoot=[];currentWeapon=null;ammo=0;
+    document.getElementById('loot-results').style.display='none';
+    document.getElementById('loot-menu').style.display='block';
+    alert('Ты погиб 💀\nВесь лут потерян');
+    return;
+  }
   if(raidLoot.length>0)finishRaid();
   else{document.getElementById('loot-results').style.display='none';document.getElementById('loot-menu').style.display='block';}
 }
