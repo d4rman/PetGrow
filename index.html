@@ -1861,6 +1861,13 @@ function dropItem(index){
   if(raidLoot.length)showRaidBag();
 }
 
+function showDamageEffect(){
+  const flash=document.createElement('div');
+  flash.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,0,0,0.3);z-index:999;pointer-events:none;transition:opacity 0.3s';
+  document.body.appendChild(flash);
+  setTimeout(()=>{flash.style.opacity='0';setTimeout(()=>flash.remove(),300);},50);
+}
+
 
 window.addEventListener('load',initUser);
 </script>
