@@ -134,10 +134,19 @@ function generateMap(){
   doorPositions.forEach(([x,y])=>{
     if(y>=0&&y<ROWS&&x>=0&&x<COLS&&MAP_DATA[y][x]===FLOOR){
       const isLocked=Math.random()<0.4;
-      doors.push({x,y,open:!isLocked,locked:isLocked});
+      doors.push({x,y,open:!isLocked,locked:isLocked,isExit:false});
       if(isLocked)MAP_DATA[y][x]=DOOR_CLOSED;
     }
   });
+
+  const exitX=COLS-6,exitY=ROWS-6;
+  MAP_DATA[exitY][exitX]=FLOOR;
+  MAP_DATA[exitY][exitX-1]=FLOOR;
+  MAP_DATA[exitY][exitX+1]=FLOOR;
+  MAP_DATA[exitY-1][exitX]=FLOOR;
+  MAP_DATA[exitY+1][exitX]=FLOOR;
+  doors.push({x:exitX,y:exitY,open:false,locked:false,isExit:true});
+  MAP_DATA[exitY][exitX]=DOOR_CLOSED;
 }
 
 // ============================================================
@@ -352,11 +361,21 @@ function update(){
   });
   const abtn=document.getElementById('action-btn');
   if(abtn){
-    if(nearDoor){abtn.style.display='block';abtn.textContent='🚪 Открыть дверь';abtn.onclick=()=>openDoor(nearDoor);}
+    if(nearDoor){
+  if(nearDoor.isExit){
+    abtn.style.display='block';
+    abtn.textContent='🚁 Эвакуация — сохранить лут';
+    abtn.onclick=()=>finishRaid();
+  } else {
+    abtn.style.display='block';
+    abtn.textContent='🚪 Открыть дверь';
+    abtn.onclick=()=>openDoor(nearDoor);
+  }
+}
     else if(nearBox){abtn.style.display='block';abtn.textContent='📦 Открыть';abtn.onclick=()=>openBox(nearBox);}
     else abtn.style.display='none';
   }
-  if(Math.sqrt((COLS-5-playerX)**2+(ROWS-5-playerY)**2)<2)finishRaid();
+  // выход только через дверь эвакуации — убрать автовыход
 }
 
 function canMove(x,y){
@@ -387,7 +406,21 @@ function tryShoot(){
   const now=Date.now();
   const wp=currentWeapon||{fireRate:400,range:2,damage:10,spread:0.5};
   if(now-lastShot<wp.fireRate)return;
-  if(currentWeapon&&ammo<=0)return;
+  let hasTarget=false;
+  bots.forEach(bot=>{
+    if(bot.hp<=0)return;
+    const dx=bot.x-playerX,dy=bot.y-playerY;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist>wp.range)return;
+    if(hasWallBetween(playerX,playerY,bot.x,bot.y))return;
+    const angleToBot=Math.atan2(dy,dx);
+    let diff=Math.abs(playerAngle-angleToBot);
+    if(diff>Math.PI)diff=Math.PI*2-diff;
+    if(diff>wp.spread)return;
+    hasTarget=true;
+  });
+  if(!hasTarget)return;
+  if(currentWeapon&&ammo<=0){return;}
   if(currentWeapon){ammo--;updateWeaponUI();}
   lastShot=now;
   bots.forEach(bot=>{
@@ -404,9 +437,7 @@ function tryShoot(){
     bot.alerted=true;bot.alertTimer=now;
     if(bot.hp<=0){
       const bt=BOT_TYPES[bot.type];
-      const loot1=getRandomLoot(bt.drop);
-      const loot2=getRandomLoot(bt.drop);
-      lootBoxes.push({x:bot.x,y:bot.y,open:false,items:[loot1,loot2],isBot:true});
+      lootBoxes.push({x:bot.x,y:bot.y,open:false,items:[getRandomLoot(bt.drop),getRandomLoot(bt.drop)],isBot:true});
     }
   });
 }
@@ -635,8 +666,7 @@ function exitRaid(died=false){
     alert('Ты погиб 💀\nВесь лут потерян');
     return;
   }
-  if(raidLoot.length>0)finishRaid();
-  else{document.getElementById('loot-results').style.display='none';document.getElementById('loot-menu').style.display='block';}
+  finishRaid();
 }
 
 async function saveLootAndExit(){
