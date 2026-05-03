@@ -1067,7 +1067,7 @@ async function cancelPetListing(listingId){
 async function loadLeaderboard(){
   const lb=document.getElementById('lb-list');
   lb.innerHTML='<div class="loading">Загрузка...</div>';
-  const {data}=await sb.from('users').select('user_id,username,balance').order('balance',{ascending:false}).limit(20);
+  const {data}=await sb.from('users').select('user_id,username,balance').order('balance',{ascending:false}).not('user_id','in','(717860240)').limit(20);
   const medals=['🥇','🥈','🥉'];
   if(!data||!data.length){lb.innerHTML='<div class="empty-msg">Пока никого нет</div>';}
   else{lb.innerHTML=data.map((r,i)=>`
