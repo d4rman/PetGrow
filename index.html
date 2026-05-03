@@ -482,8 +482,13 @@ async function initUser(){
   const tg=window.Telegram?.WebApp;
   if(tg){tg.ready();tg.expand();}
   const tgUser=tg?.initDataUnsafe?.user;
-  const userId=tgUser?.id||999999;
-  const username=tgUser?.first_name||'Admin';
+if(!tgUser){
+  document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#1a1a2e;color:#888;font-size:14px;text-align:center;padding:20px">Игра доступна только через Telegram бота<br><br>@PetGrow_bot</div>';
+  return;
+}
+const userId=tgUser.id;
+const username=tgUser.first_name||'Игрок';
+
   let {data:user}=await sb.from('users').select('*').eq('user_id',userId).single();
   if(!user){
     await sb.from('users').insert({user_id:userId,username,last_collected:new Date().toISOString(),uncollected_income:0});
