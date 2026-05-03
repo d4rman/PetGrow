@@ -79,7 +79,7 @@ function startRaid(){
   document.getElementById('loot-game').style.display='block';
   document.getElementById('loot-results').style.display='none';
   playerX=3.5;playerY=3.5;playerAngle=0;playerHP=100;
-  raidLoot=[];gameRunning=true;currentWeapon=null;ammo=0;
+  raidLoot=[];gameRunning=true;currentWeapon=WEAPONS.pistol;ammo=30;
   updateWeaponUI();
   document.getElementById('hp-display').textContent=100;
   document.getElementById('bag-display').textContent='0/'+bagSize;
@@ -150,10 +150,10 @@ function update(){
         const ax=bot.x+Math.cos(alt)*0.02,ay=bot.y+Math.sin(alt)*0.02;
         if(MAP_DATA[Math.floor(ay)]&&MAP_DATA[Math.floor(ay)][Math.floor(ax)]===FLOOR){bot.x=ax;bot.y=ay;}
       }
-      if(dist<5&&now-bot.lastShot>1200){
-        bot.lastShot=now;
-        const acc=dist<2?0.1:dist<3.5?0.35:0.6;
-        if(Math.random()>acc){
+      if(dist<5&&now-bot.lastShot>1200&&!hasWallBetween(bot.x,bot.y,playerX,playerY)){
+  bot.lastShot=now;
+  const acc=dist<2?0.1:dist<3.5?0.35:0.6;
+  if(Math.random()>acc){
           const dmg=dist<2?20:dist<4?13:8;
           playerHP=Math.max(0,playerHP-dmg);
           document.getElementById('hp-display').textContent=Math.floor(playerHP);
@@ -206,13 +206,25 @@ function tryShoot(){
     const angleToBot=Math.atan2(dy,dx);
     let diff=Math.abs(playerAngle-angleToBot);
     if(diff>Math.PI)diff=Math.PI*2-diff;
-    if(diff<angleSpread){
-      bot.hp-=damage;
-      if(bot.hp<=0){
-        lootBoxes.push({x:bot.x,y:bot.y,open:false,items:[getRandomLoot(),getRandomLoot()],isBot:true});
-      }
+    if(diff>angleSpread)return;
+    if(hasWallBetween(playerX,playerY,bot.x,bot.y))return;
+    bot.hp-=damage;
+    if(bot.hp<=0){
+      lootBoxes.push({x:bot.x,y:bot.y,open:false,items:[getRandomLoot(),getRandomLoot()],isBot:true});
     }
   });
+}
+
+function hasWallBetween(x1,y1,x2,y2){
+  const steps=Math.ceil(Math.sqrt((x2-x1)**2+(y2-y1)**2)*4);
+  for(let i=1;i<steps;i++){
+    const t=i/steps;
+    const cx=x1+(x2-x1)*t;
+    const cy=y1+(y2-y1)*t;
+    const mx=Math.floor(cx),my=Math.floor(cy);
+    if(my>=0&&my<ROWS&&mx>=0&&mx<COLS&&MAP_DATA[my][mx]===WALL)return true;
+  }
+  return false;
 }
 
 function punchAttack(){
