@@ -1626,34 +1626,51 @@ function update(){
     playerAngle=Math.atan2(jsRightY,jsRightX);
     tryShoot();
   }
-  bots.forEach((bot,idx)=>{
-    if(bot.hp<=0)return;
-    bot.patrol+=bot.speed;
-    const dx=Math.cos(bot.angle+bot.patrol)*0.02;
-    const dy=Math.sin(bot.angle+bot.patrol)*0.02;
-    const nx=bot.x+dx,ny=bot.y+dy;
-    if(nx>0&&nx<COLS&&ny>0&&ny<ROWS&&MAP_DATA[Math.floor(ny)][Math.floor(nx)]===FLOOR){bot.x=nx;bot.y=ny;}
-    else{bot.angle+=Math.PI/2;}
-    const dist=Math.sqrt((bot.x-playerX)**2+(bot.y-playerY)**2);
-if(dist<0.8){playerHP=Math.max(0,playerHP-0.3);}
-const angleToPlayer=Math.atan2(playerY-bot.y,playerX-bot.x);
-bot.angle=angleToPlayer-bot.patrol;
-if(dist<5){
   const now=Date.now();
-  if(!bot.lastShot)bot.lastShot=0;
-  if(now-bot.lastShot>1200){
-    bot.lastShot=now;
-    let diff=Math.abs(angleToPlayer-Math.atan2(playerY-bot.y,playerX-bot.x));
-    if(diff>Math.PI)diff=Math.PI*2-diff;
-    const accuracy=dist<2?0.15:dist<4?0.35:0.55;
-    if(Math.random()>accuracy){
-      playerHP=Math.max(0,playerHP-15);
-      document.getElementById('hp-display').textContent=Math.floor(playerHP);
-      showDamageEffect();
-      if(playerHP<=0){exitRaid();return;}
+  bots.forEach(bot=>{
+    if(bot.hp<=0)return;
+    const dx=playerX-bot.x,dy=playerY-bot.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const angleToPlayer=Math.atan2(dy,dx);
+    if(dist<6){
+      bot.x+=Math.cos(angleToPlayer)*0.015;
+      bot.y+=Math.sin(angleToPlayer)*0.015;
+      if(MAP_DATA[Math.floor(bot.y)][Math.floor(bot.x)]===WALL){
+        bot.x-=Math.cos(angleToPlayer)*0.015;
+        bot.y-=Math.sin(angleToPlayer)*0.015;
+      }
+      if(!bot.lastShot)bot.lastShot=0;
+      if(now-bot.lastShot>1200){
+        bot.lastShot=now;
+        const accuracy=dist<2?0.2:dist<4?0.45:0.65;
+        if(Math.random()>accuracy){
+          playerHP=Math.max(0,playerHP-15);
+          document.getElementById('hp-display').textContent=Math.floor(playerHP);
+          showDamageEffect();
+          if(playerHP<=0){exitRaid();return;}
+        }
+      }
+    } else {
+      bot.patrol+=bot.speed;
+      const px=Math.cos(bot.angle+bot.patrol)*0.02;
+      const py=Math.sin(bot.angle+bot.patrol)*0.02;
+      const nx=bot.x+px,ny=bot.y+py;
+      if(nx>0&&nx<COLS&&ny>0&&ny<ROWS&&MAP_DATA[Math.floor(ny)][Math.floor(nx)]===FLOOR){bot.x=nx;bot.y=ny;}
+      else bot.angle+=Math.PI/2;
     }
-  }
+    if(dist<0.8){playerHP=Math.max(0,playerHP-0.3);document.getElementById('hp-display').textContent=Math.floor(playerHP);if(playerHP<=0){exitRaid();return;}}
+  });
+  let nearBox=null,nearDist=999;
+  lootBoxes.forEach(box=>{
+    if(!box.open){const d=Math.sqrt((box.x-playerX)**2+(box.y-playerY)**2);if(d<1.5&&d<nearDist){nearDist=d;nearBox=box;}}
+  });
+  const abtn=document.getElementById('action-btn');
+  if(nearBox){abtn.style.display='block';abtn.onclick=()=>openBox(nearBox);}
+  else abtn.style.display='none';
+  const exitDist=Math.sqrt((COLS-3-playerX)**2+(ROWS-3-playerY)**2);
+  if(exitDist<1.5)finishRaid();
 }
+
 
   let nearBox=null,nearDist=999;
   lootBoxes.forEach(box=>{
@@ -1688,6 +1705,7 @@ function tryShoot(){
     }
   });
 }
+
 
 
 function render(){
@@ -1863,10 +1881,11 @@ function dropItem(index){
 
 function showDamageEffect(){
   const flash=document.createElement('div');
-  flash.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,0,0,0.3);z-index:999;pointer-events:none;transition:opacity 0.3s';
+  flash.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,0,0,0.3);z-index:999;pointer-events:none';
   document.body.appendChild(flash);
-  setTimeout(()=>{flash.style.opacity='0';setTimeout(()=>flash.remove(),300);},50);
+  setTimeout(()=>flash.remove(),200);
 }
+
 
 window.addEventListener('load',initUser);
 </script>
