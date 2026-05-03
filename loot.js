@@ -356,21 +356,28 @@ function update(){
     if(!box.open){const d=Math.sqrt((box.x-playerX)**2+(box.y-playerY)**2);if(d<1.5&&d<nearDist){nearDist=d;nearBox=box;}}
   });
   let nearDoor=null,nearDoorDist=999;
-  doors.forEach(door=>{
-    if(!door.open){const d=Math.sqrt((door.x-playerX)**2+(door.y-playerY)**2);if(d<1.8&&d<nearDoorDist){nearDoorDist=d;nearDoor=door;}}
-  });
+doors.forEach(door=>{
+  const d=Math.sqrt((door.x-playerX)**2+(door.y-playerY)**2);
+  if(d<2.5&&d<nearDoorDist){nearDoorDist=d;nearDoor=door;}
+});
   const abtn=document.getElementById('action-btn');
   if(abtn){
     if(nearDoor){
+  abtn.style.display='block';
   if(nearDoor.isExit){
-    abtn.style.display='block';
-    abtn.textContent='🚁 Эвакуация — сохранить лут';
-    abtn.onclick=()=>finishRaid();
+    abtn.textContent='🚁 Эвакуироваться!';
+    abtn.style.background='#1D9E75';
+    abtn.onclick=()=>{
+      abtn.style.display='none';
+      finishRaid();
+    };
   } else {
-    abtn.style.display='block';
     abtn.textContent='🚪 Открыть дверь';
+    abtn.style.background='#EF9F27';
     abtn.onclick=()=>openDoor(nearDoor);
   }
+} else {
+  abtn.style.background='#EF9F27';
 }
     else if(nearBox){abtn.style.display='block';abtn.textContent='📦 Открыть';abtn.onclick=()=>openBox(nearBox);}
     else abtn.style.display='none';
@@ -492,13 +499,12 @@ function render(){
 
   const exitX=COLS-6,exitY=ROWS-6;
 const ex=(exitX-camX)*TILE,ey=(exitY-camY)*TILE;
-if(fogMap[exitY]&&fogMap[exitY][exitX]){
-  ctx.fillStyle='#0d4a2a';ctx.fillRect(ex-4,ey-4,TILE+8,TILE+8);
-  ctx.strokeStyle='#1D9E75';ctx.lineWidth=3;ctx.strokeRect(ex-4,ey-4,TILE+8,TILE+8);
-  ctx.font='20px Arial';ctx.textAlign='center';
-  ctx.fillText('🚁',ex+TILE/2,ey+TILE*0.75);
-  ctx.fillStyle='#1D9E75';ctx.font='bold 9px Arial';
-  ctx.fillText('ВЫХОД',ex+TILE/2,ey+TILE+10);
+ctx.fillStyle='#0d6a3a';ctx.fillRect(ex-6,ey-6,TILE+12,TILE+12);
+ctx.strokeStyle='#00ff88';ctx.lineWidth=3;ctx.strokeRect(ex-6,ey-6,TILE+12,TILE+12);
+ctx.font='22px Arial';ctx.textAlign='center';
+ctx.fillText('🚁',ex+TILE/2,ey+TILE*0.75);
+ctx.fillStyle='#00ff88';ctx.font='bold 10px Arial';
+ctx.fillText('ВЫХОД',ex+TILE/2,ey+TILE+14);
 }
 
   lootBoxes.forEach(box=>{
