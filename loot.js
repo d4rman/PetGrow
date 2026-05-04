@@ -117,7 +117,7 @@ function generateMap(){
       if(locked)MAP_DATA[y][x]=DOOR_CLOSED;
     }
   });
-  const EX=COLS-8,EY=ROWS-8;
+  const EX=107,EY=84;
   for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){
     const mx=EX+dx,my=EY+dy;
     if(mx>=0&&mx<COLS&&my>=0&&my<ROWS)MAP_DATA[my][mx]=FLOOR;
@@ -126,8 +126,8 @@ function generateMap(){
   MAP_DATA[EY][EX]=FLOOR;
 }
 
-const EXIT_X=()=>COLS-8;
-const EXIT_Y=()=>ROWS-8;
+const EXIT_X=()=>107;
+const EXIT_Y=()=>84;
 
 function initFog(){fogMap=Array(ROWS).fill(null).map(()=>Array(COLS).fill(false));}
 
