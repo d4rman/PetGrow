@@ -298,9 +298,10 @@ function update(){
   const abtn=document.getElementById('action-btn');
   let nearDoor=null,nearDoorDist=999,nearBox=null,nearBoxDist=999;
   doors.forEach(door=>{
-    const d=Math.sqrt((door.x-playerX)**2+(door.y-playerY)**2);
-    if(d<2.5&&d<nearDoorDist){nearDoorDist=d;nearDoor=door;}
-  });
+  if(door.open&&!door.isExit)return;
+  const d=Math.sqrt((door.x-playerX)**2+(door.y-playerY)**2);
+  if(d<2.5&&d<nearDoorDist){nearDoorDist=d;nearDoor=door;}
+});
   lootBoxes.forEach(box=>{
     if(!box.open){const d=Math.sqrt((box.x-playerX)**2+(box.y-playerY)**2);if(d<1.8&&d<nearBoxDist){nearBoxDist=d;nearBox=box;}}
   });
@@ -413,7 +414,15 @@ function render(){
   ctx.font='17px Arial';ctx.textAlign='center';ctx.fillText('🧑',px,py+6);
   const rl=Math.min((currentWeapon?.range||2)*TILE*0.35,50);
   ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px+Math.cos(playerAngle)*rl,py+Math.sin(playerAngle)*rl);ctx.strokeStyle='rgba(255,255,80,0.55)';ctx.lineWidth=1.5;ctx.stroke();
-  const hpp=playerHP/100;ctx.fillStyle='rgba(0,0,0,0.55)';ctx.fillRect(px-38,py-30,76,7);ctx.fillStyle=hpp>0.5?'#1D9E75':hpp>0.25?'#EF9F27':'#cc3333';ctx.fillRect(px-38,py-30,76*hpp,7);
+  const hpp=playerHP/100;
+ctx.fillStyle='rgba(0,0,0,0.55)';ctx.fillRect(px-20,py+20,40,5);
+ctx.fillStyle=hpp>0.5?'#1D9E75':hpp>0.25?'#EF9F27':'#cc3333';
+ctx.fillRect(px-20,py+20,40*hpp,5);
+if(playerArmor>0){
+  const ap=playerArmor/playerMaxArmor;
+  ctx.fillStyle='rgba(0,0,0,0.55)';ctx.fillRect(px-20,py+26,40,4);
+  ctx.fillStyle='#4fc3f7';ctx.fillRect(px-20,py+26,40*ap,4);
+}
   renderMinimap(W,H);
 }
 
