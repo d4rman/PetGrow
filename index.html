@@ -39,8 +39,6 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .slot.legendary .slot-badge{color:#EF9F27}
 .slot.epic .slot-badge{color:#a78bfa}
 .slot.rare .slot-badge,.slot.vr .slot-badge{color:#378ADD}
-.showcase-val{text-align:center;margin-top:10px;font-size:12px;color:#888}
-.showcase-num{font-size:20px;font-weight:700;color:#a78bfa;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px}
 .cases-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .case-card{background:#16213e;border:1px solid #2a2a4a;border-radius:16px;padding:14px;text-align:center;cursor:pointer;transition:transform 0.15s}
 .case-card:active{transform:scale(0.96)}
@@ -50,7 +48,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .case-name{font-size:13px;font-weight:600;color:#fff;margin-bottom:4px}
 .case-price{font-size:12px;color:#a78bfa;display:flex;align-items:center;justify-content:center;gap:4px}
 .free-tag{background:#0d2e1a;color:#1D9E75;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:600}
-.open-btn{width:100%;padding:14px;background:#7F77DD;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;display:none;font-family:Arial,sans-serif}
+.open-btn{width:100%;padding:14px;background:#7F77DD;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:8px;display:none;font-family:Arial,sans-serif}
 .rou-wrap{background:#16213e;border:1px solid #2a2a4a;border-radius:16px;padding:14px;margin-bottom:12px;display:none}
 .rou-track{overflow:hidden;border-radius:12px;height:90px;position:relative;border:1px solid #2a2a4a}
 .rou-pointer{position:absolute;top:0;left:50%;transform:translateX(-50%);width:3px;height:100%;background:#a78bfa;z-index:10}
@@ -90,7 +88,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .lb-name{flex:1;font-size:13px;font-weight:600;color:#fff}
 .lb-val{font-size:12px;color:#a78bfa;font-weight:700}
 .you-tag{background:#1a1035;border:1px solid #7F77DD;border-radius:10px;padding:8px 14px;text-align:center;margin-top:10px;font-size:13px;color:#a78bfa}
-.inv-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2a2a4a;cursor:pointer}
+.inv-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2a2a4a;cursor:pointer;position:relative}
 .inv-item:last-child{border:none}
 .inv-img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0}
 .empty-msg{color:#888;text-align:center;padding:20px 0;font-size:14px}
@@ -99,6 +97,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .mkt-item:last-child{border:none}
 .buy-btn{padding:6px 12px;background:#7F77DD;color:#fff;border:none;border-radius:8px;font-size:12px;cursor:pointer;font-family:Arial,sans-serif;flex-shrink:0}
 .cancel-btn{padding:6px 12px;background:none;border:1px solid #993C1D;color:#993C1D;border-radius:8px;font-size:12px;cursor:pointer;font-family:Arial,sans-serif;flex-shrink:0}
+.quick-sell-btn{padding:5px 8px;background:none;border:1px solid #1D9E75;border-radius:6px;color:#1D9E75;font-size:10px;cursor:pointer;font-family:Arial,sans-serif;flex-shrink:0}
 .admin-input{width:100%;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:10px;padding:10px 12px;color:#fff;font-size:14px;margin-bottom:8px;font-family:Arial,sans-serif}
 .admin-input:focus{outline:none;border-color:#7F77DD}
 .admin-btn{width:100%;padding:12px;background:#7F77DD;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;font-family:Arial,sans-serif}
@@ -128,6 +127,20 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 .seed-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:pointer;margin-bottom:6px;background:#0f0f1e}
 .seed-item:active{background:#2a2a4a}
 .acc-slot{display:flex;align-items:center;gap:8px;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:10px;padding:8px 10px;margin-bottom:6px}
+.qty-badge{position:absolute;top:2px;right:2px;background:#7F77DD;color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:6px}
+.fav-badge{position:absolute;top:2px;left:2px;font-size:12px}
+.sort-bar{display:flex;gap:6px;margin-bottom:10px}
+.sort-btn{padding:5px 10px;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:8px;color:#888;font-size:11px;cursor:pointer;font-family:Arial,sans-serif}
+.sort-btn.active{border-color:#7F77DD;color:#a78bfa;background:#1a1035}
+.achv-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #2a2a4a}
+.achv-item:last-child{border:none}
+.achv-badge{font-size:32px;flex-shrink:0}
+.achv-locked{opacity:0.3;filter:grayscale(1)}
+.history-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a2a4a;font-size:13px}
+.history-item:last-child{border:none}
+.spin-count-bar{display:flex;gap:8px;margin-bottom:12px;justify-content:center}
+.spin-count-btn{padding:8px 16px;background:#0f0f1e;border:2px solid #2a2a4a;border-radius:10px;color:#888;font-size:14px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;min-width:44px;text-align:center}
+.spin-count-btn.active{border-color:#7F77DD;color:#a78bfa;background:#1a1035}
 </style>
 </head>
 <body>
@@ -167,8 +180,6 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
       <div class="slot" onclick="openShowcaseSelect(4)"><span style="color:#444;font-size:18px">+</span></div>
       <div class="slot" onclick="openShowcaseSelect(5)"><span style="color:#444;font-size:18px">+</span></div>
     </div>
-    <div class="showcase-val">Стоимость витрины</div>
-    <div class="showcase-num"><span class="diamond"></span><span id="showcase-val">0</span></div>
   </div>
 </div>
 
@@ -178,7 +189,18 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     <div style="font-size:12px;color:#888">PetGrow 💜</div>
   </div>
   <div class="cases-grid" id="cases-grid"><div class="loading" style="grid-column:span 2">Загрузка...</div></div>
-  <button class="open-btn" id="open-btn" onclick="spin()">Открыть кейс</button>
+  <div id="spin-count-wrap" style="display:none">
+    <div style="font-size:12px;color:#888;text-align:center;margin-bottom:6px">Количество открытий:</div>
+    <div class="spin-count-bar">
+      <button class="spin-count-btn active" onclick="setSpinCount(1,this)">1</button>
+      <button class="spin-count-btn" onclick="setSpinCount(2,this)">2</button>
+      <button class="spin-count-btn" onclick="setSpinCount(3,this)">3</button>
+      <button class="spin-count-btn" onclick="setSpinCount(4,this)">4</button>
+      <button class="spin-count-btn" onclick="setSpinCount(5,this)">5</button>
+    </div>
+    <div style="font-size:12px;color:#888;text-align:center;margin-bottom:8px">Итого: <span id="spin-total-cost" style="color:#a78bfa;font-weight:700">0 💜</span></div>
+  </div>
+  <button class="open-btn" id="open-btn" onclick="spinMultiple()">Открыть кейс</button>
   <div class="rou-wrap" id="roulette">
     <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:10px;text-align:center" id="rou-title">Прокрутка...</div>
     <div class="rou-track" id="rou-track">
@@ -189,6 +211,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
       <div id="won-visual"></div>
       <div class="won-title">Вы получили!</div>
       <div class="won-rarity" id="won-rarity"></div>
+      <div id="multi-won-list" style="margin-top:10px;text-align:left"></div>
       <button class="again-btn" onclick="resetCase()">Открыть ещё раз</button>
     </div>
   </div>
@@ -204,7 +227,15 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     <div style="font-size:12px;color:#888">PetGrow 💜</div>
   </div>
   <div class="card">
-    <div class="card-title">🎒 Инвентарь</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="card-title" style="margin:0">🎒 Инвентарь</div>
+    </div>
+    <div class="sort-bar">
+      <button class="sort-btn active" onclick="setInvSort('new',this)">Новые</button>
+      <button class="sort-btn" onclick="setInvSort('rarity',this)">Редкость</button>
+      <button class="sort-btn" onclick="setInvSort('price',this)">Цена</button>
+      <button class="sort-btn" onclick="setInvSort('fav',this)">⭐ Избранное</button>
+    </div>
     <div id="inv-list"><div class="loading">Загрузка...</div></div>
   </div>
 </div>
@@ -360,6 +391,22 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
   </div>
 </div>
 
+<div class="screen" id="s-achv">
+  <div class="topbar">
+    <div class="balance"><span class="diamond"></span><span class="bal-num" id="bal-achv">—</span></div>
+    <div style="font-size:12px;color:#888">PetGrow 💜</div>
+  </div>
+  <div class="card">
+    <div class="card-title">🏅 Достижения</div>
+    <div style="font-size:12px;color:#888;margin-bottom:12px">Зарабатывай ромбики — получай бейджи!</div>
+    <div id="achv-list"><div class="loading">Загрузка...</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 История рейдов</div>
+    <div id="raid-history-list"><div class="loading">Загрузка...</div></div>
+  </div>
+</div>
+
 <div class="screen" id="s-loot">
   <div class="topbar">
     <div class="balance"><span class="diamond"></span><span class="bal-num" id="bal-loot">—</span></div>
@@ -372,10 +419,6 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     <div style="background:#0f0f1e;border-radius:12px;padding:12px;margin-bottom:12px;text-align:left">
       <div style="font-size:13px;font-weight:600;margin-bottom:8px">Как играть:</div>
       <div style="font-size:12px;color:#888;line-height:1.8">🕹️ Левый джойстик — движение<br>🎯 Правый джойстик — прицел и стрельба<br>📦 Подойди к ящику чтобы открыть<br>🚁 Найди точку эвакуации для выхода с лутом<br>☠️ Погибнешь — потеряешь весь лут</div>
-    </div>
-    <div style="background:#0f0f1e;border-radius:12px;padding:12px;margin-bottom:16px;text-align:left">
-      <div style="font-size:13px;font-weight:600;margin-bottom:4px">Снаряжение:</div>
-      <div style="font-size:12px;color:#888">Рюкзак: <span id="raid-bag-size" style="color:#a78bfa">6</span> слотов · Стартовое оружие: 🔫 Пистолет М9</div>
     </div>
     <button onclick="startRaid()" style="width:100%;padding:14px;background:linear-gradient(135deg,#7F77DD,#EF9F27);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">⚔️ Начать рейд</button>
   </div>
@@ -494,6 +537,7 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     <button class="menu-item" onclick="goTo('inv',null);closeDrawer()"><span style="font-size:24px">🎒</span>Инвентарь</button>
     <button class="menu-item" onclick="goTo('farm',null);closeDrawer()"><span style="font-size:24px">🌱</span>Ферма</button>
     <button class="menu-item" onclick="goTo('loot',null);closeDrawer()"><span style="font-size:24px">🎮</span>LootSearcher</button>
+    <button class="menu-item" onclick="goTo('achv',null);closeDrawer()"><span style="font-size:24px">🏅</span>Достижения</button>
     <button class="menu-item" id="admin-menu-btn" style="display:none;border:1px solid #534AB7;color:#a78bfa" onclick="goTo('admin',null);closeDrawer()"><span style="font-size:24px">⚙️</span>Админ</button>
   </div>
   <input class="admin-input" id="promo-input" placeholder="Введи промокод...">
@@ -525,7 +569,17 @@ const RN={common:'Обычный',rare:'Редкий',vr:'Очень редки�
 const RCOL={common:'#888',rare:'#378ADD',vr:'#1D9E75',epic:'#a78bfa',legendary:'#EF9F27'};
 const ACC_BONUS={common:5,rare:10,vr:20,epic:35,legendary:50};
 const PET_NAMES=['Рекс','Дракоша','Орлик','Квакша','Барсик'];
-let currentUser=null,bal=0,spinning=false,selectedCase=null,selectedCaseItems=[],showcaseSlots=[null,null,null,null,null,null],currentShowcaseSlot=0,activePet=null,incomeTimer=null,farmTimers={},currentMarketTab='accessory';
+
+const ACHIEVEMENTS=[
+  {key:'earn_1k',emoji:'🥉',title:'Первая тысяча',desc:'Заработай 1,000 💜',threshold:1000},
+  {key:'earn_10k',emoji:'🥈',title:'Десять тысяч',desc:'Заработай 10,000 💜',threshold:10000},
+  {key:'earn_50k',emoji:'🥇',title:'Полтинник',desc:'Заработай 50,000 💜',threshold:50000},
+  {key:'earn_100k',emoji:'💎',title:'Сотка',desc:'Заработай 100,000 💜',threshold:100000},
+  {key:'earn_500k',emoji:'👑',title:'Пол миллиона',desc:'Заработай 500,000 💜',threshold:500000},
+  {key:'earn_1m',emoji:'🌟',title:'Миллионер',desc:'Заработай 1,000,000 💜',threshold:1000000},
+];
+
+let currentUser=null,bal=0,spinning=false,selectedCase=null,selectedCaseItems=[],showcaseSlots=[null,null,null,null,null,null],currentShowcaseSlot=0,activePet=null,incomeTimer=null,farmTimers={},currentMarketTab='accessory',spinCount=1,currentCasePrice=0,invSort='new';
 
 async function initUser(){
   const tg=window.Telegram?.WebApp;
@@ -543,6 +597,7 @@ async function initUser(){
   if(ADMIN_IDS.includes(userId))document.getElementById('admin-menu-btn').style.display='flex';
   await loadActivePet();
   updateUI();startIncomeTimer();loadCases();
+  checkAchievements();
 }
 
 async function loadActivePet(){
@@ -560,8 +615,7 @@ function calcIncome(){
 function calcUpgradeCost(level){return Math.floor(100*Math.pow(1.5,level-1));}
 
 function setAvatarEl(elId,imageUrl,emoji,size){
-  const el=document.getElementById(elId);
-  if(!el)return;
+  const el=document.getElementById(elId);if(!el)return;
   el.innerHTML=imageUrl?`<img src="${imageUrl}" style="width:${size}px;height:${size}px;object-fit:cover;border-radius:inherit">`:`<span style="font-size:${Math.floor(size*0.65)}px">${emoji}</span>`;
 }
 
@@ -617,6 +671,7 @@ async function collectIncome(){
   if(unc<=0){alert('Ещё не накопилось!');return;}
   await saveUser({balance:bal+unc,last_collected:new Date().toISOString()});
   alert('Собрано: +'+unc+' 💜');
+  checkAchievements();
 }
 
 async function saveUser(updates){
@@ -632,6 +687,7 @@ async function savePet(updates){
 }
 
 async function feedPet(){if(!activePet){alert('Нет питомца!');return;}await savePet({boost:2.0,last_fed:new Date().toISOString()});alert('Питомец сыт! Бустер 2x 😸');}
+
 async function upgrade(stat){
   if(!activePet){alert('Нет питомца!');return;}
   const cur=activePet[stat]||1,cost=calcUpgradeCost(cur);
@@ -639,6 +695,7 @@ async function upgrade(stat){
   await saveUser({balance:bal-cost});await savePet({[stat]:cur+1});
   alert({speed:'⚡ Скорость',agility:'🎯 Ловкость',charm:'✨ Милость'}[stat]+' → ур.'+(cur+1));
 }
+
 async function renamePet(){if(!activePet){alert('Нет питомца!');return;}const name=prompt('Новое имя:',activePet.custom_name||'Питомец');if(!name||!name.trim())return;await savePet({custom_name:name.trim()});}
 
 async function updateAccDisplay(){
@@ -701,23 +758,40 @@ async function loadCases(){
   const {data:cases}=await sb.from('cases').select('*').eq('is_active',true).order('price');
   if(!cases||!cases.length){grid.innerHTML='<div class="empty-msg" style="grid-column:span 2">Кейсы не добавлены</div>';return;}
   grid.innerHTML=cases.map(c=>`
-    <div class="case-card ${c.price===0?'free':''}" onclick="selectCase(${c.id},this)">
+    <div class="case-card ${c.price===0?'free':''}" onclick="selectCase(${c.id},${c.price||0},this)">
       <div class="case-img">${c.image_url||'📦'}</div>
       <div class="case-name">${c.name}</div>
       <div class="case-price">${c.price===0?'<span class="free-tag">Бесплатно</span>':'<span class="diamond" style="width:10px;height:10px;border-width:1.5px"></span>'+c.price}</div>
-      ${c.cooldown_hours>0?'<div style="font-size:10px;color:#1D9E75;margin-top:4px">⏱ '+c.cooldown_hours+'ч</div>':''}
     </div>`).join('');
   const sel=document.getElementById('a-item-case');
   if(sel)sel.innerHTML='<option value="">— выбери кейс —</option>'+cases.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
   loadAdminCasesList();
 }
 
-async function selectCase(caseId,el){
+function setSpinCount(n,btn){
+  spinCount=n;
+  document.querySelectorAll('.spin-count-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const total=currentCasePrice*n;
+  const el=document.getElementById('spin-total-cost');
+  if(el)el.textContent=total>0?total.toLocaleString('ru')+' 💜':'Бесплатно';
+  const openBtn=document.getElementById('open-btn');
+  if(openBtn)openBtn.textContent=n>1?'Открыть '+n+' кейса':'Открыть кейс';
+}
+
+async function selectCase(caseId,price,el){
   document.querySelectorAll('.case-card').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');selectedCase=caseId;
+  el.classList.add('selected');
+  selectedCase=caseId;currentCasePrice=price||0;
   document.getElementById('open-btn').style.display='block';
+  document.getElementById('spin-count-wrap').style.display='block';
   document.getElementById('roulette').style.display='none';
   document.getElementById('won-box').style.display='none';
+  spinCount=1;
+  document.querySelectorAll('.spin-count-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  const el2=document.getElementById('spin-total-cost');
+  if(el2)el2.textContent=price>0?price.toLocaleString('ru')+' 💜':'Бесплатно';
+  document.getElementById('open-btn').textContent='Открыть кейс';
   const {data:items}=await sb.from('case_items').select('*').eq('case_id',caseId);
   selectedCaseItems=items||[];
   document.getElementById('chances').style.display='block';
@@ -733,16 +807,49 @@ async function selectCase(caseId,el){
     </div>`).join('');
 }
 
+async function spinMultiple(){
+  if(spinning||!selectedCase||!selectedCaseItems.length)return;
+  const totalCost=currentCasePrice*spinCount;
+  if(bal<totalCost){alert('Нужно '+totalCost+' 💜');return;}
+  if(spinCount===1){await spin();return;}
+  spinning=true;
+  document.getElementById('open-btn').style.display='none';
+  document.getElementById('spin-count-wrap').style.display='none';
+  const winners=[];
+  for(let i=0;i<spinCount;i++){
+    const rand=Math.random()*100;let cum=0,winner=selectedCaseItems[0];
+    for(const it of selectedCaseItems){cum+=parseFloat(it.chance)||0;if(rand<=cum){winner=it;break;}}
+    winners.push(winner);
+  }
+  await saveUser({balance:bal-totalCost});
+  for(const winner of winners){
+    await addItemToInventory(winner);
+  }
+  document.getElementById('roulette').style.display='block';
+  document.getElementById('rou-title').textContent='Получено '+spinCount+' предметов!';
+  const wv=document.getElementById('won-visual');wv.innerHTML='';
+  const ml=document.getElementById('multi-won-list');
+  ml.innerHTML=winners.map(w=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #2a2a4a">
+      ${w.image_url?`<img src="${w.image_url}" style="width:36px;height:36px;object-fit:cover;border-radius:8px">`:`<span style="font-size:24px">${w.item_emoji||'❓'}</span>`}
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${w.item_name}</div>
+      <div style="font-size:11px;color:${RCOL[w.rarity]||'#888'}">${RN[w.rarity]||w.rarity}</div></div>
+    </div>`).join('');
+  document.getElementById('won-rarity').textContent='';
+  document.getElementById('won-box').style.display='block';
+  spinning=false;
+}
+
 async function spin(){
   if(spinning||!selectedCase)return;
   if(!selectedCaseItems.length){alert('В кейсе нет предметов!');return;}
-  const {data:cd}=await sb.from('cases').select('*').eq('id',selectedCase).single();
-  const cost=cd?.price||0;
-  if(bal<cost){alert('Нужно '+cost+' 💜');return;}
+  if(bal<currentCasePrice){alert('Нужно '+currentCasePrice+' 💜');return;}
   spinning=true;
   document.getElementById('open-btn').style.display='none';
+  document.getElementById('spin-count-wrap').style.display='none';
   document.getElementById('roulette').style.display='block';
   document.getElementById('won-box').style.display='none';
+  document.getElementById('multi-won-list').innerHTML='';
   document.getElementById('rou-title').textContent='Прокрутка...';
   const rand=Math.random()*100;let cum=0,winner=selectedCaseItems[0];
   for(const it of selectedCaseItems){cum+=parseFloat(it.chance)||0;if(rand<=cum){winner=it;break;}}
@@ -767,23 +874,37 @@ async function spin(){
       document.getElementById('won-rarity').textContent=RN[winner.rarity]||winner.rarity;
       document.getElementById('won-rarity').style.color=RCOL[winner.rarity]||'#888';
       document.getElementById('won-box').style.display='block';
-      await saveUser({balance:bal-cost});
-      const isPet=PET_NAMES.includes(winner.item_name),isSeed=winner.item_name.startsWith('Семя ');
-      if(isPet){
-        const {data:pd}=await sb.from('pets').select('*').ilike('name',winner.item_name).single();
-        if(pd){await sb.from('user_pets').insert({user_id:currentUser.user_id,pet_id:pd.id,custom_name:pd.name,speed:1,agility:1,charm:1,boost:1.0,acc_bonus:0,is_active:false});alert('Питомец: '+winner.item_emoji+' '+winner.item_name+'\nНайди в Меню → Питомец');}
-      } else if(isSeed){
-        const pn=winner.item_name.replace('Семя ','');
-        const {data:pl}=await sb.from('plants').select('*').ilike('name',pn).single();
-        if(pl){const {data:ex}=await sb.from('seeds').select('*').eq('user_id',currentUser.user_id).eq('plant_id',pl.id).single();if(ex)await sb.from('seeds').update({quantity:ex.quantity+1}).eq('id',ex.id);else await sb.from('seeds').insert({user_id:currentUser.user_id,plant_id:pl.id,quantity:1});}
-      } else {
-        await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0,is_equipped:false,source_case_id:selectedCase});
-      }
+      await saveUser({balance:bal-currentCasePrice});
+      await addItemToInventory(winner);
     },4100);
   },50);
 }
 
-function resetCase(){document.getElementById('roulette').style.display='none';document.getElementById('won-box').style.display='none';document.getElementById('open-btn').style.display='block';}
+async function addItemToInventory(winner){
+  const isPet=PET_NAMES.includes(winner.item_name),isSeed=winner.item_name.startsWith('Семя ');
+  if(isPet){
+    const {data:pd}=await sb.from('pets').select('*').ilike('name',winner.item_name).single();
+    if(pd){await sb.from('user_pets').insert({user_id:currentUser.user_id,pet_id:pd.id,custom_name:pd.name,speed:1,agility:1,charm:1,boost:1.0,acc_bonus:0,is_active:false});}
+  } else if(isSeed){
+    const pn=winner.item_name.replace('Семя ','');
+    const {data:pl}=await sb.from('plants').select('*').ilike('name',pn).single();
+    if(pl){const {data:ex}=await sb.from('seeds').select('*').eq('user_id',currentUser.user_id).eq('plant_id',pl.id).single();if(ex)await sb.from('seeds').update({quantity:ex.quantity+1}).eq('id',ex.id);else await sb.from('seeds').insert({user_id:currentUser.user_id,plant_id:pl.id,quantity:1});}
+  } else {
+    const {data:existing}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('item_name',winner.item_name).eq('is_equipped',false).single();
+    if(existing){
+      await sb.from('inventory').update({quantity:(existing.quantity||1)+1}).eq('id',existing.id);
+    } else {
+      await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:winner.item_name,item_type:winner.item_emoji||'❓',item_image:winner.image_url||null,rarity:winner.rarity,base_price:RC[winner.rarity]||0,is_equipped:false,source_case_id:selectedCase,quantity:1});
+    }
+  }
+}
+
+function resetCase(){
+  document.getElementById('roulette').style.display='none';
+  document.getElementById('won-box').style.display='none';
+  document.getElementById('open-btn').style.display='block';
+  document.getElementById('spin-count-wrap').style.display='block';
+}
 
 async function goTo(id,btn){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -795,24 +916,56 @@ async function goTo(id,btn){
   if(id==='craft')await loadCraftCounts();
   if(id==='pet'){await loadMyPets();updateAccDisplay();}
   if(id==='farm')await loadFarm();
+  if(id==='achv'){await loadAchievements();await loadRaidHistory();}
   if(id==='admin'){loadAdminCasesList();loadAdminPetsList();loadPlayersList();loadPromoList();}
+}
+
+function setInvSort(sort,btn){
+  invSort=sort;
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadInventory();
 }
 
 async function loadInventory(){
   const inv=document.getElementById('inv-list');
   inv.innerHTML='<div class="loading">Загрузка...</div>';
-  const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('is_equipped',false).order('obtained_at',{ascending:false});
+  let q=sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('is_equipped',false);
+  if(invSort==='fav')q=q.eq('is_favorite',true);
+  if(invSort==='rarity')q=q.order('rarity',{ascending:false});
+  else if(invSort==='price')q=q.order('base_price',{ascending:false});
+  else q=q.order('obtained_at',{ascending:false});
+  const {data}=await q;
   if(!data||!data.length){inv.innerHTML='<div class="empty-msg">Инвентарь пуст</div>';return;}
-  inv.innerHTML=data.map(it=>`
+  const grouped={};
+  data.forEach(it=>{
+    const key=it.item_name+'_'+it.rarity;
+    if(!grouped[key])grouped[key]={...it,totalQty:0,ids:[]};
+    grouped[key].totalQty+=(it.quantity||1);
+    grouped[key].ids.push(it.id);
+  });
+  inv.innerHTML=Object.values(grouped).map(it=>`
     <div class="inv-item" onclick="openItemCard(${it.id})">
       ${it.item_image?`<img src="${it.item_image}" class="inv-img">`:`<span style="font-size:32px;flex-shrink:0">${it.item_type||'❓'}</span>`}
       <div style="flex:1">
-        <div style="font-size:14px;font-weight:600">${it.item_name}</div>
+        <div style="font-size:14px;font-weight:600">${it.item_name} ${it.is_favorite?'⭐':''}</div>
         <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div>
         <div style="font-size:11px;color:#888">~${(it.base_price||RC[it.rarity]||0).toLocaleString('ru')} 💜</div>
       </div>
-      <span style="color:#444;font-size:18px">›</span>
+      ${it.totalQty>1?`<div class="qty-badge">x${it.totalQty}</div>`:''}
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+        <button onclick="event.stopPropagation();quickSell(${it.id},${it.base_price||RC[it.rarity]||0})" class="quick-sell-btn">💰 Продать</button>
+        <span style="color:#444;font-size:18px">›</span>
+      </div>
     </div>`).join('');
+}
+
+async function quickSell(itemId,price){
+  if(!confirm('Продать за '+price+' 💜?'))return;
+  await sb.from('inventory').delete().eq('id',itemId);
+  await saveUser({balance:bal+price});
+  alert('Продано за '+price+' 💜');
+  await loadInventory();
 }
 
 async function openItemCard(itemId){
@@ -825,6 +978,7 @@ async function openItemCard(itemId){
       ${item.item_image?`<img src="${item.item_image}" style="width:100px;height:100px;object-fit:cover;border-radius:16px;border:2px solid ${RCOL[item.rarity]||'#444'};display:block;margin:0 auto">`:`<div style="font-size:64px">${item.item_type||'❓'}</div>`}
       <div style="font-size:16px;font-weight:700;margin-top:10px">${item.item_name}</div>
       <div style="font-size:13px;color:${RCOL[item.rarity]||'#888'};margin-top:4px">${RN[item.rarity]||item.rarity}</div>
+      ${(item.quantity||1)>1?`<div style="font-size:12px;color:#a78bfa;margin-top:4px">В наличии: x${item.quantity||1}</div>`:''}
     </div>
     <div style="background:#0f0f1e;border-radius:12px;padding:12px;margin:10px 0">
       <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #2a2a4a">
@@ -843,9 +997,15 @@ async function openItemCard(itemId){
     <div style="display:grid;gap:8px">
       ${isPetCase?`<button onclick="closeModal();openPetCase(${item.id},${item.source_case_id})" style="width:100%;padding:10px;background:#EF9F27;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🎁 Открыть кейс питомца</button>`:''}
       ${!isPetCase?`<button onclick="closeModal();equipAcc(${item.id})" style="width:100%;padding:10px;background:#1D9E75;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🐱 Надеть на питомца</button>`:''}
+      <button onclick="closeModal();toggleFavorite(${item.id},${!!item.is_favorite})" style="width:100%;padding:10px;background:none;border:1px solid #EF9F27;border-radius:10px;color:#EF9F27;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">${item.is_favorite?'★ Убрать из избранного':'☆ Добавить в избранное'}</button>
       <button onclick="closeModal();sellItem(${item.id})" style="width:100%;padding:10px;background:none;border:1px solid #7F77DD;border-radius:10px;color:#a78bfa;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🏪 Выставить на рынок</button>
-      <button onclick="closeModal();openShowcaseSelect(0)" style="width:100%;padding:10px;background:none;border:1px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🖼️ На витрину</button>
+      <button onclick="closeModal();openShowcaseSelect(0,${item.id})" style="width:100%;padding:10px;background:none;border:1px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">🖼️ На витрину</button>
     </div>`);
+}
+
+async function toggleFavorite(itemId,current){
+  await sb.from('inventory').update({is_favorite:!current}).eq('id',itemId);
+  closeModal();await loadInventory();
 }
 
 async function openPetCase(invItemId,caseId){
@@ -868,6 +1028,52 @@ async function sellItem(itemId){
   await sb.from('marketplace').insert({seller_id:currentUser.user_id,item_id:itemId,item_name:item.item_name,item_type:item.item_type,item_image:item.item_image||null,rarity:item.rarity,price:parseInt(price),category:cat});
   await sb.from('inventory').delete().eq('id',itemId);
   alert('Выставлено!');await loadInventory();
+}
+
+async function openShowcaseSelect(slotIndex,preselectedItemId){
+  currentShowcaseSlot=slotIndex;
+  const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('is_equipped',false);
+  const content=(!data||!data.length)?'<div class="empty-msg">Инвентарь пуст</div>':
+    `<div class="seed-item" onclick="setShowcaseSlot(null)"><span style="font-size:28px">✕</span><div style="font-size:14px;color:#888">Очистить слот</div></div>`+
+    data.map(it=>`<div class="seed-item" onclick='setShowcaseSlot(${JSON.stringify({id:it.id,item_name:it.item_name,item_type:it.item_type,item_image:it.item_image,rarity:it.rarity,base_price:it.base_price||RC[it.rarity]||0})})'>
+      ${it.item_image?`<img src="${it.item_image}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
+      <div><div style="font-size:14px;font-weight:600">${it.item_name}</div>
+      <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div></div>
+    </div>`).join('');
+  showModal('Витрина — выбери предмет',content);
+  if(preselectedItemId){
+    const item=data?.find(i=>i.id===preselectedItemId);
+    if(item){
+      showModal('Витрина — заполнить все слоты?',`
+        <div style="text-align:center;padding:10px 0">
+          ${item.item_image?`<img src="${item.item_image}" style="width:80px;height:80px;object-fit:cover;border-radius:12px;display:block;margin:0 auto">`:`<div style="font-size:52px">${item.item_type||'❓'}</div>`}
+          <div style="font-size:15px;font-weight:700;margin-top:8px">${item.item_name}</div>
+        </div>
+        <div style="display:grid;gap:8px;margin-top:12px">
+          <button onclick="fillAllSlots(${JSON.stringify({id:item.id,item_name:item.item_name,item_type:item.item_type,item_image:item.item_image,rarity:item.rarity,base_price:item.base_price||RC[item.rarity]||0}).replace(/"/g,'&quot;')})" style="width:100%;padding:10px;background:#7F77DD;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">Заполнить все 6 слотов</button>
+          <button onclick="setShowcaseSlot(${JSON.stringify({id:item.id,item_name:item.item_name,item_type:item.item_type,item_image:item.item_image,rarity:item.rarity,base_price:item.base_price||RC[item.rarity]||0}).replace(/"/g,'&quot;')})" style="width:100%;padding:10px;background:none;border:1px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">Только в один слот</button>
+        </div>`);
+    }
+  }
+}
+
+function fillAllSlots(item){
+  for(let i=0;i<6;i++)showcaseSlots[i]=item;
+  updateShowcase();closeModal();
+}
+
+function setShowcaseSlot(item){showcaseSlots[currentShowcaseSlot]=item;updateShowcase();closeModal();}
+
+function updateShowcase(){
+  const grid=document.getElementById('showcase-slots'),slots=grid.querySelectorAll('.slot');
+  slots.forEach((slot,i)=>{
+    const item=showcaseSlots[i];slot.className='slot'+(item?' '+item.rarity:'');
+    if(item){
+      const badge={common:'C',rare:'R',vr:'VR',epic:'E',legendary:'L'}[item.rarity]||'';
+      slot.innerHTML=item.item_image?`<img src="${item.item_image}"><span class="slot-badge">${badge}</span>`:`<span style="font-size:26px">${item.item_type||'❓'}</span><span class="slot-badge">${badge}</span>`;
+      slot.onclick=()=>openShowcaseSelect(i,item.id);
+    } else {slot.innerHTML='<span style="color:#444;font-size:18px">+</span>';slot.onclick=()=>openShowcaseSelect(i);}
+  });
 }
 
 function switchMarketTab(tab,btn){
@@ -922,7 +1128,7 @@ async function showSellPanel(){
   showModal('Выбери предмет',data.map(it=>`
     <div class="seed-item" onclick="closeModal();sellItem(${it.id})">
       ${it.item_image?`<img src="${it.item_image}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
-      <div><div style="font-size:14px;font-weight:600">${it.item_name}</div>
+      <div><div style="font-size:14px;font-weight:600">${it.item_name}${(it.quantity||1)>1?' x'+(it.quantity||1):''}</div>
       <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div></div>
     </div>`).join(''));
 }
@@ -934,7 +1140,9 @@ async function buyItem(listingId,price){
   await saveUser({balance:bal-price});
   const {data:s}=await sb.from('users').select('balance').eq('user_id',l.seller_id).single();
   if(s)await sb.from('users').update({balance:s.balance+Math.floor(price*0.9)}).eq('user_id',l.seller_id);
-  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:l.item_name,item_type:l.item_type,item_image:l.item_image||null,rarity:l.rarity,base_price:RC[l.rarity]||0,is_equipped:false});
+  const {data:ex}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('item_name',l.item_name).eq('is_equipped',false).single();
+  if(ex)await sb.from('inventory').update({quantity:(ex.quantity||1)+1}).eq('id',ex.id);
+  else await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:l.item_name,item_type:l.item_type,item_image:l.item_image||null,rarity:l.rarity,base_price:RC[l.rarity]||0,is_equipped:false,quantity:1});
   await sb.from('marketplace').delete().eq('id',listingId);
   alert('Куплено!');await loadMarket();
 }
@@ -942,7 +1150,9 @@ async function buyItem(listingId,price){
 async function cancelListing(listingId){
   const {data:l}=await sb.from('marketplace').select('*').eq('id',listingId).single();
   if(!l)return;
-  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:l.item_name,item_type:l.item_type,item_image:l.item_image||null,rarity:l.rarity,base_price:RC[l.rarity]||0,is_equipped:false});
+  const {data:ex}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('item_name',l.item_name).eq('is_equipped',false).single();
+  if(ex)await sb.from('inventory').update({quantity:(ex.quantity||1)+1}).eq('id',ex.id);
+  else await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:l.item_name,item_type:l.item_type,item_image:l.item_image||null,rarity:l.rarity,base_price:RC[l.rarity]||0,is_equipped:false,quantity:1});
   await sb.from('marketplace').delete().eq('id',listingId);
   alert('Лот снят!');await loadMarket();
 }
@@ -1019,9 +1229,9 @@ async function viewShowcase(userId,username){
 }
 
 async function loadCraftCounts(){
-  const {data}=await sb.from('inventory').select('rarity').eq('user_id',currentUser.user_id).eq('is_equipped',false);
+  const {data}=await sb.from('inventory').select('rarity,quantity').eq('user_id',currentUser.user_id).eq('is_equipped',false);
   const cnt={common:0,rare:0,vr:0,epic:0};
-  (data||[]).forEach(it=>{if(cnt[it.rarity]!==undefined)cnt[it.rarity]++;});
+  (data||[]).forEach(it=>{if(cnt[it.rarity]!==undefined)cnt[it.rarity]+=(it.quantity||1);});
   document.getElementById('cnt-common').textContent=cnt.common+' шт';
   document.getElementById('cnt-rare').textContent=cnt.rare+' шт';
   document.getElementById('cnt-vr').textContent=cnt.vr+' шт';
@@ -1029,18 +1239,28 @@ async function loadCraftCounts(){
 }
 
 async function craft(from,to){
-  const {data:items}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('rarity',from).eq('is_equipped',false).limit(10);
-  if(!items||items.length<10){alert('Нужно 10 предметов: '+RN[from]);return;}
+  const {data:items}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('rarity',from).eq('is_equipped',false);
+  if(!items||!items.length){alert('Нужно 10 предметов: '+RN[from]);return;}
+  let total=items.reduce((a,i)=>a+(i.quantity||1),0);
+  if(total<10){alert('Нужно 10 предметов редкости '+RN[from]+'. У тебя: '+total);return;}
+  let remaining=10;
+  for(const item of items){
+    if(remaining<=0)break;
+    const qty=item.quantity||1;
+    if(qty<=remaining){await sb.from('inventory').delete().eq('id',item.id);remaining-=qty;}
+    else{await sb.from('inventory').update({quantity:qty-remaining}).eq('id',item.id);remaining=0;}
+  }
   const srcId=items.find(i=>i.source_case_id)?.source_case_id||null;
-  await sb.from('inventory').delete().in('id',items.map(i=>i.id));
   let crafted=null;
   if(srcId){const {data:ci}=await sb.from('case_items').select('*').eq('case_id',srcId).eq('rarity',to);if(ci&&ci.length)crafted=ci[Math.floor(Math.random()*ci.length)];}
   if(!crafted){const {data:ci}=await sb.from('case_items').select('*').eq('rarity',to);if(ci&&ci.length)crafted=ci[Math.floor(Math.random()*ci.length)];}
   if(crafted){
-    await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:crafted.item_name,item_type:crafted.item_emoji||'❓',item_image:crafted.image_url||null,rarity:to,base_price:RC[to]||0,is_equipped:false,source_case_id:srcId||crafted.case_id});
+    const {data:ex}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('item_name',crafted.item_name).eq('is_equipped',false).single();
+    if(ex)await sb.from('inventory').update({quantity:(ex.quantity||1)+1}).eq('id',ex.id);
+    else await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:crafted.item_name,item_type:crafted.item_emoji||'❓',item_image:crafted.image_url||null,rarity:to,base_price:RC[to]||0,is_equipped:false,quantity:1,source_case_id:srcId||crafted.case_id});
     alert('Получен: '+crafted.item_name+'! 🎉');
   } else {
-    await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:RN[to]+' предмет',item_type:'⚗️',rarity:to,base_price:RC[to]||0,is_equipped:false});
+    await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:RN[to]+' предмет',item_type:'⚗️',rarity:to,base_price:RC[to]||0,is_equipped:false,quantity:1});
     alert('Получен: '+RN[to]+'!');
   }
   await loadCraftCounts();
@@ -1065,8 +1285,7 @@ async function loadMyPets(){
 async function setActivePet(petId){
   await sb.from('user_pets').update({is_active:false}).eq('user_id',currentUser.user_id);
   await sb.from('user_pets').update({is_active:true}).eq('id',petId);
-  await loadActivePet();updateUI();await loadMyPets();
-  alert('Питомец активирован!');
+  await loadActivePet();updateUI();await loadMyPets();alert('Питомец активирован!');
 }
 
 async function loadFarm(){
@@ -1138,39 +1357,57 @@ async function plantSeed(si,plantId,seedId){
 async function harvest(slotId,reward,name,emoji,rarity){
   await sb.from('farm_slots').update({harvested:true}).eq('id',slotId);
   await saveUser({balance:bal+reward});
-  await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:name,item_type:emoji,rarity:rarity||'common',base_price:reward,is_equipped:false});
+  const {data:ex}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('item_name',name).eq('is_equipped',false).single();
+  if(ex)await sb.from('inventory').update({quantity:(ex.quantity||1)+1}).eq('id',ex.id);
+  else await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:name,item_type:emoji,rarity:rarity||'common',base_price:reward,is_equipped:false,quantity:1});
   alert('Урожай!\n+'+reward+' 💜\n'+emoji+' '+name+' → инвентарь');
   await loadFarm();
 }
 
-async function openShowcaseSelect(slotIndex){
-  currentShowcaseSlot=slotIndex;
-  const {data}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('is_equipped',false);
-  const content=(!data||!data.length)?'<div class="empty-msg">Инвентарь пуст</div>':
-    `<div class="seed-item" onclick="setShowcaseSlot(null)"><span style="font-size:28px">✕</span><div style="font-size:14px;color:#888">Очистить слот</div></div>`+
-    data.map(it=>`<div class="seed-item" onclick='setShowcaseSlot(${JSON.stringify({id:it.id,item_name:it.item_name,item_type:it.item_type,item_image:it.item_image,rarity:it.rarity,base_price:it.base_price||RC[it.rarity]||0})})'>
-      ${it.item_image?`<img src="${it.item_image}" style="width:40px;height:40px;object-fit:cover;border-radius:8px">`:`<span style="font-size:28px">${it.item_type||'❓'}</span>`}
-      <div><div style="font-size:14px;font-weight:600">${it.item_name}</div>
-      <div style="font-size:12px;color:${RCOL[it.rarity]||'#888'}">${RN[it.rarity]||it.rarity}</div></div>
-    </div>`).join('');
-  showModal('Витрина — выбери предмет',content);
+async function checkAchievements(){
+  if(!currentUser)return;
+  const totalEarned=currentUser.balance||0;
+  for(const achv of ACHIEVEMENTS){
+    if(totalEarned>=achv.threshold){
+      const {data:existing}=await sb.from('achievements').select('*').eq('user_id',currentUser.user_id).eq('achievement_key',achv.key).single();
+      if(!existing){
+        await sb.from('achievements').insert({user_id:currentUser.user_id,achievement_key:achv.key});
+      }
+    }
+  }
 }
 
-function setShowcaseSlot(item){showcaseSlots[currentShowcaseSlot]=item;updateShowcase();closeModal();}
+async function loadAchievements(){
+  const list=document.getElementById('achv-list');if(!list)return;
+  list.innerHTML='<div class="loading">Загрузка...</div>';
+  const {data:earned}=await sb.from('achievements').select('achievement_key').eq('user_id',currentUser.user_id);
+  const earnedKeys=new Set((earned||[]).map(a=>a.achievement_key));
+  const totalEarned=currentUser.balance||0;
+  list.innerHTML=ACHIEVEMENTS.map(achv=>{
+    const isEarned=earnedKeys.has(achv.key);
+    const progress=Math.min(100,Math.floor(totalEarned/achv.threshold*100));
+    return `<div class="achv-item ${isEarned?'':'achv-locked'}">
+      <div class="achv-badge">${achv.emoji}</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:700">${achv.title} ${isEarned?'✅':''}</div>
+        <div style="font-size:12px;color:#888;margin-bottom:4px">${achv.desc}</div>
+        ${!isEarned?`<div style="height:4px;background:#2a2a4a;border-radius:4px;overflow:hidden"><div style="height:4px;background:#7F77DD;border-radius:4px;width:${progress}%"></div></div><div style="font-size:10px;color:#888;margin-top:2px">${progress}%</div>`:'<div style="font-size:11px;color:#1D9E75">Получено! 🎉</div>'}
+      </div>
+    </div>`;}).join('');
+}
 
-function updateShowcase(){
-  const grid=document.getElementById('showcase-slots'),slots=grid.querySelectorAll('.slot');
-  let total=0;
-  slots.forEach((slot,i)=>{
-    const item=showcaseSlots[i];slot.className='slot'+(item?' '+item.rarity:'');
-    if(item){
-      total+=item.base_price||RC[item.rarity]||0;
-      const badge={common:'C',rare:'R',vr:'VR',epic:'E',legendary:'L'}[item.rarity]||'';
-      slot.innerHTML=item.item_image?`<img src="${item.item_image}"><span class="slot-badge">${badge}</span>`:`<span style="font-size:26px">${item.item_type||'❓'}</span><span class="slot-badge">${badge}</span>`;
-      slot.onclick=()=>openShowcaseSelect(i);
-    } else {slot.innerHTML='<span style="color:#444;font-size:18px">+</span>';slot.onclick=()=>openShowcaseSelect(i);}
-  });
-  document.getElementById('showcase-val').textContent=total.toLocaleString('ru');
+async function loadRaidHistory(){
+  const list=document.getElementById('raid-history-list');if(!list)return;
+  const {data}=await sb.from('raid_history').select('*').eq('user_id',currentUser.user_id).order('created_at',{ascending:false}).limit(5);
+  if(!data||!data.length){list.innerHTML='<div class="empty-msg">Нет рейдов — иди в LootSearcher!</div>';return;}
+  list.innerHTML=data.map(r=>`
+    <div class="history-item">
+      <div>
+        <div style="font-weight:600">Рейд ${new Date(r.created_at).toLocaleDateString('ru')}</div>
+        <div style="font-size:11px;color:#888">${r.items_count} предметов</div>
+      </div>
+      <div style="font-size:14px;font-weight:700;color:#a78bfa">~${r.total_value.toLocaleString('ru')} 💜</div>
+    </div>`).join('');
 }
 
 function showModal(title,content){
@@ -1200,7 +1437,7 @@ async function usePromo(){
   await sb.from('promocodes').update({used_count:promo.used_count+1}).eq('id',promo.id);
   if(code==='PETCASE'){
     const {data:pc}=await sb.from('cases').select('*').ilike('name','%Кейс питомца%').single();
-    if(pc){await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:'🎁 Кейс питомца',item_type:'🎁',rarity:'epic',base_price:0,is_equipped:false,source_case_id:pc.id});document.getElementById('promo-input').value='';closeDrawer();alert('🎁 Кейс питомца добавлен в инвентарь!');return;}
+    if(pc){await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:'🎁 Кейс питомца',item_type:'🎁',rarity:'epic',base_price:0,is_equipped:false,source_case_id:pc.id,quantity:1});document.getElementById('promo-input').value='';closeDrawer();alert('🎁 Кейс питомца добавлен в инвентарь!');return;}
   }
   if(promo.reward_diamonds>0){await saveUser({balance:bal+promo.reward_diamonds});alert('+'+promo.reward_diamonds+' 💜');}
   document.getElementById('promo-input').value='';closeDrawer();
