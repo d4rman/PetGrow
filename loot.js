@@ -468,3 +468,471 @@ function tryShoot(){
     }
   });
 }
+function drawTile(x,y,textureKey,fallbackColor){
+  if(texturesLoaded&&textures[textureKey]){
+    ctx.drawImage(textures[textureKey],x,y,TILE,TILE);
+  } else {
+    ctx.fillStyle=fallbackColor;
+    ctx.fillRect(x,y,TILE,TILE);
+  }
+}
+
+function drawProp(sx,sy,propType){
+  const size=TILE*0.8,offset=(TILE-size)/2;
+  if(texturesLoaded&&textures['prop_'+propType]){
+    ctx.drawImage(textures['prop_'+propType],sx+offset,sy+offset,size,size);
+  } else {
+    const colors={box:'#5a4a2a',barrel:'#2a4a2a',table:'#3a2a1a',column:'#3a3a3a'};
+    const emojis={box:'📦',barrel:'🛢️',table:'🪑',column:'⬛'};
+    ctx.fillStyle=colors[propType]||'#333';
+    ctx.fillRect(sx+offset,sy+offset,size,size);
+    ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1;
+    ctx.strokeRect(sx+offset,sy+offset,size,size);
+    ctx.font=Math.floor(size*0.6)+'px Arial';
+    ctx.textAlign='center';
+    ctx.fillText(emojis[propType]||'▪',sx+TILE/2,sy+TILE*0.75);
+  }
+}
+
+function render(){
+  if(!ctx)return;
+  const canvas=document.getElementById('game-canvas');
+  const W=canvas.width,H=canvas.height;
+  const camX=playerX-W/2/TILE,camY=playerY-H/2/TILE;
+  ctx.fillStyle='#050510';ctx.fillRect(0,0,W,H);
+
+  for(let y=0;y<ROWS;y++){
+    for(let x=0;x<COLS;x++){
+      const sx=(x-camX)*TILE,sy=(y-camY)*TILE;
+      if(sx<-TILE||sx>W+TILE||sy<-TILE||sy>H+TILE)continue;
+      if(!fogMap[y]||!fogMap[y][x]){
+        ctx.fillStyle='#06060f';ctx.fillRect(sx,sy,TILE,TILE);
+        continue;
+      }
+      const cell=MAP_DATA[y][x];
+      const rtype=getRoomTypeAt(x,y);
+      const rt=ROOM_TYPES[rtype]||ROOM_TYPES.warehouse;
+
+      if(cell===WALL){
+        // Стена с текстурой
+        const wallTex=rtype==='lab'||rtype==='office'?'wall_metal':'wall_brick';
+        drawTile(sx,sy,wallTex,rt.wallColor);
+        // Тень на стене
+        ctx.fillStyle='rgba(0,0,0,0.3)';
+        ctx.fillRect(sx,sy,TILE,4);
+        ctx.fillRect(sx,sy,4,TILE);
+      } else if(cell===DOOR_CLOSED){
+        ctx.fillStyle='#5a3a10';ctx.fillRect(sx,sy,TILE,TILE);
+        ctx.strokeStyle='#EF9F27';ctx.lineWidth=2;ctx.strokeRect(sx,sy,TILE,TILE);
+        ctx.fillStyle='#EF9F27';ctx.font='10px Arial';ctx.textAlign='center';
+        ctx.fillText('🚪',sx+TILE/2,sy+TILE*0.75);
+      } else if(cell===DOOR_OPEN){
+        const floorTex=rtype==='office'?'floor_tile':rtype==='lab'?'floor_metal':'floor_concrete';
+        drawTile(sx,sy,floorTex,rt.floorColor);
+        ctx.fillStyle='rgba(29,158,117,0.15)';ctx.fillRect(sx,sy,TILE,TILE);
+      } else if(cell===FLOOR){
+        // Пол с текстурой по типу комнаты
+        let floorTex='floor_concrete';
+        if(rtype==='office')floorTex='floor_tile';
+        else if(rtype==='lab')floorTex='floor_metal';
+        else if(rtype==='storage')floorTex='floor_wood';
+        else if(rtype==='armory')floorTex='floor_metal';
+        drawTile(sx,sy,floorTex,rt.floorColor);
+        // Детали пола
+        if(!texturesLoaded){
+          if((x+y)%6===0){ctx.fillStyle='rgba(255,255,255,0.02)';ctx.fillRect(sx,sy,TILE,TILE);}
+          if(x%4===0&&y%4===0){ctx.fillStyle='rgba(0,0,0,0.2)';ctx.fillRect(sx+TILE-2,sy,2,TILE);}
+        }
+      } else if(cell===PROP){
+        // Пол под пропом
+        let floorTex='floor_concrete';
+        if(rtype==='office')floorTex='floor_tile';
+        else if(rtype==='lab')floorTex='floor_metal';
+        drawTile(sx,sy,floorTex,rt.floorColor);
+        // Тень пропа
+        ctx.fillStyle='rgba(0,0,0,0.4)';
+        ctx.fillRect(sx+4,sy+4,TILE-2,TILE-2);
+        // Проп
+        const prop=props.find(p=>Math.floor(p.x)===x&&Math.floor(p.y)===y);
+        if(prop)drawProp(sx,sy,prop.type);
+      }
+    }
+  }
+
+  // Название комнаты при входе
+  const pRtype=getRoomTypeAt(Math.floor(playerX),Math.floor(playerY));
+  const pRt=ROOM_TYPES[pRtype];
+  if(pRt){
+    ctx.fillStyle='rgba(0,0,0,0.5)';
+    ctx.fillRect(W/2-60,H/2+40,120,22);
+    ctx.fillStyle='rgba(255,255,255,0.4)';
+    ctx.font='11px Arial';ctx.textAlign='center';
+    ctx.fillText(pRt.name,W/2,H/2+56);
+  }
+
+  // Точка эвакуации
+  const EX=EXIT_X(),EY=EXIT_Y();
+  if(fogMap[EY]&&fogMap[EY][EX]){
+    const ex=(EX-camX)*TILE,ey=(EY-camY)*TILE;
+    // Пульсирующий фон
+    const pulse=Math.sin(Date.now()/400)*0.3+0.7;
+    ctx.fillStyle=`rgba(10,74,37,${pulse})`;
+    ctx.fillRect(ex-6,ey-6,TILE+12,TILE+12);
+    ctx.strokeStyle='#00ff88';ctx.lineWidth=3;
+    ctx.strokeRect(ex-6,ey-6,TILE+12,TILE+12);
+    ctx.font='20px Arial';ctx.textAlign='center';
+    ctx.fillText('🚁',ex+TILE/2,ey+TILE*0.75);
+    ctx.fillStyle='#00ff88';ctx.font='bold 9px Arial';
+    ctx.fillText('ВЫХОД',ex+TILE/2,ey+TILE+12);
+  }
+
+  // Ящики с лутом
+  lootBoxes.forEach(box=>{
+    const bx=(box.x-camX)*TILE+TILE/2,by=(box.y-camY)*TILE+TILE/2;
+    if(bx<-TILE||bx>W+TILE||by<-TILE||by>H+TILE)return;
+    if(!fogMap[Math.floor(box.y)]||!fogMap[Math.floor(box.y)][Math.floor(box.x)])return;
+    if(!box.open){
+      ctx.fillStyle='rgba(0,0,0,0.4)';ctx.fillRect(bx-10,by-10+4,22,22);
+      ctx.fillStyle='#6B4F12';ctx.fillRect(bx-11,by-11,22,22);
+      ctx.strokeStyle=box.isBot?'#993C1D':'#EF9F27';ctx.lineWidth=2;
+      ctx.strokeRect(bx-11,by-11,22,22);
+      ctx.font='14px Arial';ctx.textAlign='center';
+      ctx.fillText('📦',bx,by+5);
+      // Мигание если рядом
+      const d=Math.sqrt((box.x-playerX)**2+(box.y-playerY)**2);
+      if(d<1.8){
+        ctx.strokeStyle=`rgba(239,159,39,${Math.sin(Date.now()/200)*0.5+0.5})`;
+        ctx.lineWidth=3;ctx.strokeRect(bx-12,by-12,24,24);
+      }
+    } else {
+      ctx.fillStyle='rgba(50,30,5,0.6)';ctx.fillRect(bx-11,by-11,22,22);
+      ctx.font='14px Arial';ctx.textAlign='center';
+      ctx.fillText('📭',bx,by+5);
+    }
+  });
+
+  // Боты
+  bots.forEach(bot=>{
+    if(bot.hp<=0)return;
+    const bx=(bot.x-camX)*TILE,by=(bot.y-camY)*TILE;
+    const vis=fogMap[Math.floor(bot.y)]&&fogMap[Math.floor(bot.y)][Math.floor(bot.x)];
+    if(!vis&&!bot.alerted)return;
+    if(bx<-60||bx>W+60||by<-60||by>H+60)return;
+    const bt=BOT_TYPES[bot.type];
+    // Тень
+    ctx.fillStyle='rgba(0,0,0,0.3)';
+    ctx.beginPath();ctx.ellipse(bx,by+14,12,5,0,0,Math.PI*2);ctx.fill();
+    // Тело
+    ctx.beginPath();ctx.arc(bx,by,13,0,Math.PI*2);
+    ctx.fillStyle=bt.color;ctx.fill();
+    ctx.strokeStyle=bot.alerted?'#ff4444':'#cc2222';ctx.lineWidth=2;ctx.stroke();
+    // Иконка
+    ctx.font='13px Arial';ctx.textAlign='center';
+    ctx.fillText(WEAPONS[bt.weapon]?.emoji||'👤',bx,by+5);
+    // Индикатор тревоги
+    if(bot.alerted){
+      ctx.fillStyle='#ff4444';ctx.font='bold 10px Arial';
+      ctx.fillText('!',bx,by-18);
+    }
+    // HP бар
+    const hp=bot.hp/bot.maxHp;
+    ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fillRect(bx-14,by-22,28,5);
+    ctx.fillStyle=hp>0.5?'#1D9E75':hp>0.25?'#EF9F27':'#cc3333';
+    ctx.fillRect(bx-14,by-22,28*hp,5);
+    // Направление взгляда
+    ctx.beginPath();ctx.moveTo(bx,by);
+    ctx.lineTo(bx+Math.cos(bot.angle)*18,by+Math.sin(bot.angle)*18);
+    ctx.strokeStyle='rgba(200,100,100,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+  });
+
+  // Игрок
+  const px=(playerX-camX)*TILE,py=(playerY-camY)*TILE;
+  // Тень
+  ctx.fillStyle='rgba(0,0,0,0.3)';
+  ctx.beginPath();ctx.ellipse(px,py+16,14,6,0,0,Math.PI*2);ctx.fill();
+  // Тело
+  ctx.beginPath();ctx.arc(px,py,15,0,Math.PI*2);
+  ctx.fillStyle='#3a3a7a';ctx.fill();
+  ctx.strokeStyle='#7F77DD';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.font='17px Arial';ctx.textAlign='center';
+  ctx.fillText('🧑',px,py+6);
+  // Луч прицела
+  const rl=Math.min((currentWeapon?.range||2)*TILE*0.35,60);
+  const ex2=px+Math.cos(playerAngle)*rl,ey2=py+Math.sin(playerAngle)*rl;
+  ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(ex2,ey2);
+  ctx.strokeStyle='rgba(255,255,80,0.6)';ctx.lineWidth=1.5;ctx.stroke();
+  // Точка прицела
+  ctx.beginPath();ctx.arc(ex2,ey2,3,0,Math.PI*2);
+  ctx.fillStyle='rgba(255,255,80,0.8)';ctx.fill();
+  // HP бар игрока
+  const hpp=playerHP/100;
+  ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(px-40,py-32,80,7);
+  ctx.fillStyle=hpp>0.5?'#1D9E75':hpp>0.25?'#EF9F27':'#cc3333';
+  ctx.fillRect(px-40,py-32,80*hpp,7);
+  if(playerArmor>0){
+    const ap=playerArmor/playerMaxArmor;
+    ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(px-40,py-24,80,5);
+    ctx.fillStyle='#4fc3f7';ctx.fillRect(px-40,py-24,80*ap,5);
+  }
+
+  renderMinimap(W,H);
+}
+
+function renderMinimap(W,H){
+  const mw=110,mh=80,mx=10,my=50,scaleX=mw/COLS,scaleY=mh/ROWS;
+  ctx.fillStyle='rgba(0,0,0,0.75)';ctx.fillRect(mx-2,my-2,mw+4,mh+4);
+  ctx.strokeStyle='#2a2a4a';ctx.lineWidth=1;ctx.strokeRect(mx-2,my-2,mw+4,mh+4);
+  for(let y=0;y<ROWS;y+=2){
+    for(let x=0;x<COLS;x+=2){
+      if(!fogMap[y]||!fogMap[y][x])continue;
+      const cell=MAP_DATA[y][x];
+      if(cell===WALL)continue;
+      const rtype=getRoomTypeAt(x,y);
+      const rt=ROOM_TYPES[rtype]||ROOM_TYPES.warehouse;
+      if(cell===DOOR_CLOSED)ctx.fillStyle='#8B6914';
+      else if(cell===DOOR_OPEN)ctx.fillStyle='#1a4a1a';
+      else if(cell===PROP)ctx.fillStyle='#4a3a2a';
+      else ctx.fillStyle=rt.floorColor;
+      ctx.fillRect(mx+x*scaleX,my+y*scaleY,scaleX*2+1,scaleY*2+1);
+    }
+  }
+  // Боты на карте
+  bots.forEach(bot=>{
+    if(bot.hp<=0||!discoveredBots.has(bot.id))return;
+    const bx=mx+bot.x*scaleX,by=my+bot.y*scaleY;
+    ctx.fillStyle='#ff4444';
+    ctx.beginPath();ctx.moveTo(bx,by-3);ctx.lineTo(bx+2,by+2);ctx.lineTo(bx-2,by+2);
+    ctx.closePath();ctx.fill();
+  });
+  // Игрок
+  const ppx=mx+playerX*scaleX,ppy=my+playerY*scaleY;
+  ctx.fillStyle='#7F77DD';ctx.beginPath();ctx.arc(ppx,ppy,3,0,Math.PI*2);ctx.fill();
+  // Направление игрока
+  ctx.beginPath();ctx.moveTo(ppx,ppy);
+  ctx.lineTo(ppx+Math.cos(playerAngle)*6,ppy+Math.sin(playerAngle)*6);
+  ctx.strokeStyle='#a78bfa';ctx.lineWidth=1.5;ctx.stroke();
+  // Выход
+  const epx=mx+EXIT_X()*scaleX,epy=my+EXIT_Y()*scaleY;
+  const pulse=Math.sin(Date.now()/400)*0.5+0.5;
+  ctx.fillStyle=`rgba(0,255,136,${pulse})`;
+  ctx.beginPath();ctx.arc(epx,epy,4,0,Math.PI*2);ctx.fill();
+  // Легенда
+  ctx.fillStyle='#888';ctx.font='8px Arial';ctx.textAlign='left';
+  ctx.fillText('Карта',mx,my-4);
+}
+
+function openBox(box){
+  box.open=true;
+  const items=box.items||[];
+  let msg='';
+  items.forEach(item=>{
+    if(item.category==='weapon'){
+      const wpData=WEAPONS[item.weaponType];
+      if(!wpData)return;
+      if(!currentWeapon){
+        currentWeapon=wpData;
+        ammo=item.weaponType==='pistol'?30:item.weaponType==='rifle'?20:item.weaponType==='shotgun'?10:item.weaponType==='smg'?40:8;
+        updateWeaponUI();msg+='🔫 Оружие: '+wpData.name+'\n';
+      } else if(raidLoot.length<bagSize){
+        raidLoot.push(item);
+        document.getElementById('bag-display').textContent=raidLoot.length+'/'+bagSize;
+        msg+='🎒 В рюкзак: '+item.name+'\n';
+      } else msg+='❌ Рюкзак полон!\n';
+      return;
+    }
+    if(item.category==='ammo'&&currentWeapon&&item.ammoType===currentWeapon.ammoType){
+      ammo+=item.count||10;updateWeaponUI();msg+='🔴 Патроны: +'+item.count+'\n';return;
+    }
+    if(item.category==='medical'){
+      if(item.healAmount===70){medkitCount+=item.count||1;msg+='💊 Аптечка x'+(item.count||1)+'\n';}
+      else{bandageCount+=item.count||3;msg+='🩹 Бинты x'+(item.count||3)+'\n';}
+      updateHealthUI();return;
+    }
+    if(item.category==='armor'){
+      if(item.armorAmount>playerMaxArmor){
+        playerArmor=item.armorAmount;playerMaxArmor=item.armorAmount;
+        updateHealthUI();msg+='🛡️ Броня: '+item.name+'\n';
+      } else if(raidLoot.length<bagSize){
+        raidLoot.push(item);
+        document.getElementById('bag-display').textContent=raidLoot.length+'/'+bagSize;
+        msg+='🎒 В рюкзак: '+item.name+'\n';
+      }
+      return;
+    }
+    if(item.category==='bag'){
+      if((item.bagSlots||10)>bagSize){
+        bagSize=item.bagSlots||10;
+        document.getElementById('bag-display').textContent=raidLoot.length+'/'+bagSize;
+        msg+='🎒 Рюкзак: '+item.bagSlots+' слотов!\n';
+      }
+      return;
+    }
+    if(raidLoot.length<bagSize){
+      raidLoot.push(item);
+      document.getElementById('bag-display').textContent=raidLoot.length+'/'+bagSize;
+      msg+=item.emoji+' '+item.name+'\n';
+    } else msg+='❌ Рюкзак полон!\n';
+  });
+  if(msg)alert(msg.trim());
+}
+
+function finishRaid(){
+  gameRunning=false;if(animFrame)cancelAnimationFrame(animFrame);
+  document.getElementById('loot-game').style.display='none';
+  document.getElementById('loot-results').style.display='block';
+  const list=document.getElementById('loot-found-list');
+  if(!raidLoot.length){
+    list.innerHTML='<div style="color:#888;text-align:center;padding:20px">Ничего не нашли</div>';
+    // Сохраняем пустой рейд в историю
+    if(typeof sb!=='undefined'&&currentUser){
+      sb.from('raid_history').insert({user_id:currentUser.user_id,total_value:0,items_count:0});
+    }
+    return;
+  }
+  const total=raidLoot.reduce((a,b)=>a+(b.value||0),0);
+  const RC2={common:'#888',rare:'#378ADD',vr:'#1D9E75',epic:'#a78bfa',legendary:'#EF9F27'};
+  const RN2={common:'Обычный',rare:'Редкий',vr:'Очень редкий',epic:'Эпический',legendary:'Легендарный'};
+  list.innerHTML=`
+    <div style="font-size:13px;color:#888;margin-bottom:10px;text-align:center">
+      Итого: ~${total.toLocaleString('ru')} 💜 · ${raidLoot.length} предметов
+    </div>`+
+    raidLoot.map(it=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2a2a4a">
+        <span style="font-size:22px">${it.emoji}</span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">${it.name}</div>
+          <div style="font-size:11px;color:${RC2[it.rarity]||'#888'}">${RN2[it.rarity]||it.rarity}</div>
+        </div>
+        <div style="font-size:13px;color:#a78bfa;font-weight:700">~${it.value} 💜</div>
+      </div>`).join('');
+  // Сохраняем в историю рейдов
+  if(typeof sb!=='undefined'&&currentUser){
+    sb.from('raid_history').insert({user_id:currentUser.user_id,total_value:total,items_count:raidLoot.length});
+  }
+}
+
+function exitRaid(died=false){
+  gameRunning=false;if(animFrame)cancelAnimationFrame(animFrame);
+  document.getElementById('loot-game').style.display='none';
+  if(died){
+    raidLoot=[];currentWeapon=null;ammo=0;medkitCount=0;bandageCount=0;
+    document.getElementById('loot-results').style.display='none';
+    document.getElementById('loot-menu').style.display='block';
+    alert('Ты погиб 💀\nВесь лут потерян');return;
+  }
+  finishRaid();
+}
+
+function confirmExitRaid(){
+  if(confirm('Бросить рейд?\n⚠️ Весь лут будет потерян!\nДля сохранения найди точку эвакуации 🚁'))
+    exitRaid(true);
+}
+
+async function saveLootAndExit(){
+  if(!raidLoot.length){
+    document.getElementById('loot-results').style.display='none';
+    document.getElementById('loot-menu').style.display='block';
+    return;
+  }
+  for(const item of raidLoot){
+    if(item.category==='seed'){
+      const pn=item.name.replace('Семя ','');
+      const {data:plant}=await sb.from('plants').select('*').ilike('name',pn).single();
+      if(plant){
+        const {data:ex}=await sb.from('seeds').select('*').eq('user_id',currentUser.user_id).eq('plant_id',plant.id).single();
+        if(ex)await sb.from('seeds').update({quantity:ex.quantity+1}).eq('id',ex.id);
+        else await sb.from('seeds').insert({user_id:currentUser.user_id,plant_id:plant.id,quantity:1});
+      } else {
+        await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:item.name,item_type:item.emoji,rarity:item.rarity,base_price:item.value||50,is_equipped:false,quantity:1});
+      }
+    } else {
+      const {data:ex}=await sb.from('inventory').select('*').eq('user_id',currentUser.user_id).eq('item_name',item.name).eq('is_equipped',false).single();
+      if(ex)await sb.from('inventory').update({quantity:(ex.quantity||1)+1}).eq('id',ex.id);
+      else await sb.from('inventory').insert({user_id:currentUser.user_id,item_name:item.name,item_type:item.emoji,rarity:item.rarity,base_price:item.value||50,is_equipped:false,quantity:1});
+    }
+  }
+  raidLoot=[];
+  alert('Лут сохранён! 🎉');
+  document.getElementById('loot-results').style.display='none';
+  document.getElementById('loot-menu').style.display='block';
+}
+
+function showRaidBag(){
+  if(!raidLoot.length){alert('Рюкзак пуст!');return;}
+  const RC2={common:'#888',rare:'#378ADD',vr:'#1D9E75',epic:'#a78bfa',legendary:'#EF9F27'};
+  if(typeof showModal==='function'){
+    showModal('🎒 Рюкзак ('+raidLoot.length+'/'+bagSize+')',
+      raidLoot.map((it,i)=>`
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2a2a4a">
+          <span style="font-size:22px">${it.emoji}</span>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600">${it.name}</div>
+            <div style="font-size:12px;color:${RC2[it.rarity]||'#888'}">~${it.value} 💜</div>
+          </div>
+          <button onclick="dropLootItem(${i})" style="padding:4px 8px;background:none;border:1px solid #993C1D;border-radius:8px;color:#993C1D;font-size:11px;cursor:pointer;font-family:Arial,sans-serif">Выбросить</button>
+        </div>`).join(''));
+  }
+}
+
+function dropLootItem(index){
+  raidLoot.splice(index,1);
+  const el=document.getElementById('bag-display');
+  if(el)el.textContent=raidLoot.length+'/'+bagSize;
+  if(typeof closeModal==='function')closeModal();
+  if(raidLoot.length)showRaidBag();
+}
+
+function showDamageEffect(){
+  const flash=document.createElement('div');
+  flash.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,0,0,0.28);z-index:999;pointer-events:none';
+  document.body.appendChild(flash);setTimeout(()=>flash.remove(),160);
+}
+
+function setupJoysticks(){
+  const jl=document.getElementById('joystick-left'),jld=document.getElementById('js-left-dot');
+  const jr=document.getElementById('joystick-right'),jrd=document.getElementById('js-right-dot');
+  if(!jl||!jr)return;
+  let leftId=null,rightId=null,leftCX=0,leftCY=0,rightCX=0,rightCY=0;
+  function calcJoy(cx,cy,tx,ty,dot,maxR=65){
+    const dx=tx-cx,dy=ty-cy,len=Math.sqrt(dx*dx+dy*dy),clamp=Math.min(len,maxR);
+    const nx=len>0?dx/len:0,ny=len>0?dy/len:0;
+    dot.style.transform=`translate(calc(-50% + ${nx*clamp}px),calc(-50% + ${ny*clamp}px))`;
+    return{x:nx,y:ny,active:len>8};
+  }
+  document.addEventListener('touchstart',e=>{
+    Array.from(e.changedTouches).forEach(t=>{
+      const lr=jl.getBoundingClientRect(),rr=jr.getBoundingClientRect();
+      if(leftId===null&&t.clientX>lr.left-30&&t.clientX<lr.right+30&&t.clientY>lr.top-30&&t.clientY<lr.bottom+30){
+        leftId=t.identifier;leftCX=lr.left+lr.width/2;leftCY=lr.top+lr.height/2;
+      }
+      if(rightId===null&&t.clientX>rr.left-30&&t.clientX<rr.right+30&&t.clientY>rr.top-30&&t.clientY<rr.bottom+30){
+        rightId=t.identifier;rightCX=rr.left+rr.width/2;rightCY=rr.top+rr.height/2;
+      }
+    });
+  },{passive:false});
+  document.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    Array.from(e.changedTouches).forEach(t=>{
+      if(t.identifier===leftId){
+        const r=calcJoy(leftCX,leftCY,t.clientX,t.clientY,jld);
+        jsLeftActive=r.active;jsLeftX=r.x;jsLeftY=r.y;
+      }
+      if(t.identifier===rightId){
+        const r=calcJoy(rightCX,rightCY,t.clientX,t.clientY,jrd);
+        jsRightActive=r.active;jsRightX=r.x;jsRightY=r.y;
+      }
+    });
+  },{passive:false});
+  document.addEventListener('touchend',e=>{
+    Array.from(e.changedTouches).forEach(t=>{
+      if(t.identifier===leftId){
+        leftId=null;jsLeftActive=false;jsLeftX=0;jsLeftY=0;
+        jld.style.transform='translate(-50%,-50%)';
+      }
+      if(t.identifier===rightId){
+        rightId=null;jsRightActive=false;jsRightX=0;jsRightY=0;
+        jrd.style.transform='translate(-50%,-50%)';
+      }
+    });
+  });
+}
