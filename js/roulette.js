@@ -209,7 +209,7 @@ async function spinRouletteTable(){
   if(total>bal){alert('Недостаточно 💜');return;}
   if(rouletteSpinning)return;
   rouletteSpinning=true;
-  await saveUser({balance:bal-total});
+  await saveUser({balance:bal-total,total_lost:(currentUser.total_lost||0)+total});
 
   // Выбираем результат
   const resultIdx=Math.floor(Math.random()*ROULETTE_NUMBERS.length);
@@ -314,7 +314,7 @@ function finishRouletteRound(result,totalBet){
   const betsSnapshot={...rouletteBets};
   rouletteBets={};
 
-  if(won>0)saveUser({balance:bal+won});
+  if(won>0)saveUser({balance:bal+won,total_won:(currentUser.total_won||0)+won});
 
   // Показываем результат поверх стола
   showRouletteResultOverlay(result,won,profit,totalBet);
