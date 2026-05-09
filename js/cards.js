@@ -81,7 +81,7 @@ async function startCardsGame(){
   if(!cardBet||cardBet<10){alert('Минимальная ставка 10 💜');return;}
   if(cardBet>bal){alert('Недостаточно 💜');return;}
   if(cardBet>50000){alert('Максимальная ставка 50,000 💜');return;}
-  await saveUser({balance:bal-cardBet});
+  await saveUser({balance:bal-cardBet,total_lost:(currentUser.total_lost||0)+cardBet});
   cardCurrent=randomCard();
   cardStreak=0;
   cardWinnings=cardBet;
@@ -213,7 +213,7 @@ async function cashOut(){
   cardActive=false;
   const mult=getMultiplier(cardStreak);
   const won=Math.floor(cardBet*mult);
-  await saveUser({balance:bal+won});
+  await saveUser({balance:bal+won,total_won:(currentUser.total_won||0)+won});
   document.getElementById('modal-content').innerHTML=`
     <div style="text-align:center">
       <div style="font-size:48px;margin-bottom:8px">🏆</div>
