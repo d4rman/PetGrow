@@ -33,6 +33,7 @@ async function initUser(){
   currentUser=user;bal=user.balance;
   if(ADMIN_IDS.includes(userId))document.getElementById('admin-menu-btn').style.display='flex';
   await loadActivePet();
+  await checkAchievements();
   updateUI();startIncomeTimer();loadCases();checkAchievements();
 }
 
