@@ -47,7 +47,12 @@ async function openLiveRoulette(){
   overlay.style.display='block';
   liveBets={};
   liveSpinning=false;
+  liveRound=null;
   await lrLoadHistory();
+
+  // Показываем загрузку пока синхронизируемся
+  overlay.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#888;font-size:14px">Загрузка рулетки...</div>';
+
   await lrSyncRound();
   lrRender();
   lrStartPolling();
@@ -74,56 +79,82 @@ function lrStartPolling(){
   },2000);
 }
 
-async function lrLoadHistory(){
-  const {data}=await sb.from('live_roulette')
-    .select('*').not('spin_result','is',null)
-    .order('created_at',{ascending:false}).limit(20);
-  liveHistory=data||[];
-}
-
 async function lrSyncRound(){
   const {data:rounds}=await sb.from('live_roulette')
     .select('*').order('created_at',{ascending:false}).limit(1);
-  if(!rounds||!rounds.length){await lrCreateRound();return;}
+
+  if(!rounds||!rounds.length){
+    await lrCreateRound();
+    return;
+  }
+
   const round=rounds[0];
   const now=new Date();
   const endsAt=new Date(round.betting_ends_at);
 
-  if(round.status==='betting'&&now>=endsAt){
-    const diff=now-endsAt;
-    if(diff<5000)await lrDoSpin(round);
-    else liveRound=round;
+  // Если betting и время не вышло — используем этот раунд
+  if(round.status==='betting'&&now<endsAt){
+    liveRound=round;
     return;
   }
 
+  // Если betting и время вышло
+  if(round.status==='betting'&&now>=endsAt){
+    const diff=now-endsAt;
+    if(diff<6000){
+      await lrDoSpin(round);
+    } else {
+      // Зависший раунд — создаём новый
+      await lrCreateRound();
+    }
+    return;
+  }
+
+  // Если spinning
   if(round.status==='spinning'){
-    const elapsed=now-new Date(round.spin_at);
-    if(elapsed>13000){
+    const spinAt=new Date(round.spin_at);
+    const elapsed=now-spinAt;
+    liveRound=round;
+    if(elapsed>14000){
+      // Раунд завершён — создаём новый
       await lrCreateRound();
       await lrLoadHistory();
-      return;
     }
+    return;
   }
 
   liveRound=round;
 }
 
 async function lrCreateRound(){
+  // Ищем свежий betting раунд
   const {data:recent}=await sb.from('live_roulette')
     .select('*').eq('status','betting')
     .order('created_at',{ascending:false}).limit(1);
+
   if(recent&&recent.length){
-    const age=new Date()-new Date(recent[0].created_at);
-    if(age<3000){liveRound=recent[0];return;}
+    const endsAt=new Date(recent[0].betting_ends_at);
+    const now=new Date();
+    // Если раунд ещё не истёк
+    if(endsAt>now){
+      liveRound=recent[0];
+      return;
+    }
   }
+
+  // Создаём новый раунд на 30 секунд
   const now=new Date();
   const endsAt=new Date(now.getTime()+30000);
-  const {data}=await sb.from('live_roulette').insert({
-    status:'betting',betting_ends_at:endsAt.toISOString(),
+  const {data,error}=await sb.from('live_roulette').insert({
+    status:'betting',
+    betting_ends_at:endsAt.toISOString(),
   }).select().single();
-  liveRound=data;
-  liveBets={};
-  liveSpinning=false;
+
+  if(!error&&data){
+    liveRound=data;
+    liveBets={};
+    liveSpinning=false;
+  }
 }
 
 async function lrDoSpin(round){
@@ -176,9 +207,16 @@ async function lrCalculateWinnings(roundId,n,color){
 }
 
 async function lrPlaceBet(type){
-  if(!liveRound||liveRound.status!=='betting'){alert('Ставки закрыты!');return;}
+  if(!liveRound){alert('Нет активного раунда!');return;}
+  if(liveRound.status!=='betting'){alert('Ставки закрыты!');return;}
   if(!liveSelectedChip){alert('Выбери фишку!');return;}
-  if(lrGetTimeLeft()<=0){alert('Время вышло!');return;}
+  const tl=lrGetTimeLeft();
+  if(tl<=0){
+    // Пробуем синхронизировать и создать новый раунд
+    await lrSyncRound();
+    lrRender();
+    return;
+  }
   const newTotal=Object.values(liveBets).reduce((a,b)=>a+b,0)+liveSelectedChip;
   if(newTotal>bal){alert('Недостаточно 💜');return;}
   liveBets[type]=(liveBets[type]||0)+liveSelectedChip;
