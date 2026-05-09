@@ -1,7 +1,7 @@
 const CARD_SUITS=['♠','♥','♦','♣'];
 const CARD_VALUES=[2,3,4,5,6,7,8,9,10,11,12,13,14];
 const CARD_NAMES={2:'2',3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',10:'10',11:'J',12:'Q',13:'K',14:'A'};
-const MULTIPLIERS=[1.5,2.0,2.8,3.8,5.0,6.5,8.0,10.0];
+const MULTIPLIERS=[1.3,1.6,2.0,2.5,3.2,4.0,5.0,6.5,8.5,12.0];
 
 let cardBet=0,cardCurrent=null,cardStreak=0,cardWinnings=0,cardActive=false;
 
@@ -43,7 +43,7 @@ function openCardsGame(){
       <div style="margin-bottom:12px">
         <div style="font-size:12px;color:#888;margin-bottom:6px">Выбери ставку:</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
-          ${[50,100,250,500,1000,2500,5000,10000].map(v=>`
+          ${[100,250,500,1000,5000,10000,25000,50000].map(v=>`
             <button onclick="setCardBet(${v},this)" class="spin-count-btn" style="padding:6px 10px;font-size:12px">${v.toLocaleString('ru')}</button>
           `).join('')}
         </div>
@@ -80,7 +80,7 @@ function updateCardBetDisplay(){
 async function startCardsGame(){
   if(!cardBet||cardBet<10){alert('Минимальная ставка 10 💜');return;}
   if(cardBet>bal){alert('Недостаточно 💜');return;}
-  if(cardBet>100000){alert('Максимальная ставка 100,000 💜');return;}
+  if(cardBet>50000){alert('Максимальная ставка 50,000 💜');return;}
   await saveUser({balance:bal-cardBet});
   cardCurrent=randomCard();
   cardStreak=0;
@@ -141,8 +141,10 @@ async function guessCard(guess){
   // Анти-читерство: небольшой шанс что карта "случайно" не та
   // Если у игрока длинная серия — немного увеличиваем шанс проигрыша
   let cheatChance=0;
-  if(cardStreak>=3)cheatChance=0.05;
-  if(cardStreak>=5)cheatChance=0.10;
+  if(cardStreak>=2)cheatChance=0.05;
+  if(cardStreak>=4)cheatChance=0.12;
+  if(cardStreak>=6)cheatChance=0.20;
+  if(cardStreak>=8)cheatChance=0.30;
   if(Math.random()<cheatChance){
     // Форсируем равную карту (проигрыш)
     next.value=cardCurrent.value;
