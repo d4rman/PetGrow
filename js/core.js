@@ -87,6 +87,16 @@ function updateUI(){
   document.getElementById('pet-name-display').textContent=name;
   document.getElementById('pet-name-big').textContent=name;
   if(typeof updateAccDisplay==='function')updateAccDisplay();
+  const sl=document.getElementById('stat-lost');
+const sw=document.getElementById('stat-won');
+const sp=document.getElementById('stat-profit');
+if(sl)sl.textContent=(currentUser.total_lost||0).toLocaleString('ru')+' 💜';
+if(sw)sw.textContent=(currentUser.total_won||0).toLocaleString('ru')+' 💜';
+if(sp){
+  const profit=(currentUser.total_won||0)-(currentUser.total_lost||0);
+  sp.textContent=(profit>=0?'+':'')+profit.toLocaleString('ru')+' 💜';
+  sp.style.color=profit>=0?'#1D9E75':'#cc3333';
+}
 }
 
 function startIncomeTimer(){
