@@ -34,7 +34,9 @@ async function initUser(){
   if(ADMIN_IDS.includes(userId))document.getElementById('admin-menu-btn').style.display='flex';
   await loadActivePet();
   await checkAchievements();
-  updateUI();startIncomeTimer();loadCases();checkAchievements();
+  updateUI();startIncomeTimer();loadCases();
+setInterval(checkNotifications,15000);
+checkNotifications();
 }
 
 async function loadActivePet(){
