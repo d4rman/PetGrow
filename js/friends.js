@@ -307,14 +307,19 @@ function durakRender(){
         </div>
       </div>
 
-      <!-- Действия -->
-      ${isMyTurn?`
-        <div style="display:flex;gap:6px;margin-bottom:8px;justify-content:center">
-          ${amAttacker&&table.length>0&&table.every(p=>p.defense)?`
-            <button onclick="durakEndAttack()" style="padding:8px 16px;background:#7F77DD;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">✓ Закончить атаку</button>`:''}
-          ${amDefender&&table.length>0&&table.every(p=>p.defense)?`
-            <button onclick="durakTakeCards()" style="padding:8px 16px;background:#993C1D;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">📥 Взять карты</button>`:''}
-        </div>`:''}
+     <!-- Действия -->
+      <div style="display:flex;gap:6px;margin-bottom:8px;justify-content:center;flex-wrap:wrap">
+        ${isMyTurn&&amAttacker&&table.length>0&&table.every(p=>p.defense)?`
+          <button onclick="durakEndAttack()" style="padding:10px 18px;background:#7F77DD;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">✓ Закончить атаку</button>`:''}
+        ${isMyTurn&&amAttacker&&table.length===0?`
+          <div style="font-size:12px;color:#1D9E75;padding:8px;text-align:center">👆 Нажми на карту чтобы атаковать</div>`:''}
+        ${isMyTurn&&amDefender&&table.length>0?`
+          <button onclick="durakTakeCards()" style="padding:10px 18px;background:#993C1D;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">📥 Взять все карты</button>`:''}
+        ${isMyTurn&&amDefender&&table.length>0&&table.every(p=>p.defense)?`
+          <button onclick="durakEndDefense()" style="padding:10px 18px;background:#1D9E75;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">✓ Отбился!</button>`:''}
+        ${!isMyTurn?`
+          <div style="font-size:12px;color:#888;padding:8px;text-align:center">⏳ Ход противника...</div>`:''}
+      </div>
 
       <!-- Мои карты -->
       <div>
@@ -490,6 +495,32 @@ async function durakDecline(){
   }
   await sb.from('durak_games').update({status:'declined'}).eq('id',durakGame.id);
   closeDurakGame();
+}
+
+async function durakEndDefense(){
+  if(!durakGame)return;
+  const gs={...durakGame.game_state};
+  const table=gs.table||[];
+  if(!table.every(p=>p.defense)){alert('Не все карты отбиты!');return;}
+  const opId=durakGame.player1_id===durakMyId?durakGame.player2_id:durakGame.player1_id;
+  // Карты в отбой
+  gs.beaten=[...(gs.beaten||[]),...table.flatMap(p=>[p.attack,p.defense])];
+  gs.table=[];
+  // Добираем карты
+  await durakDraw(gs);
+  // Защищавшийся теперь атакует
+  gs.attacker=durakMyId;
+  gs.defender=opId;
+  // Проверяем конец
+  const myHand=gs.hands?.[durakMyId]||[];
+  const opHand=gs.hands?.[opId]||[];
+  if(!gs.deck?.length&&(!myHand.length||!opHand.length)){
+    gs.status='finished';
+    gs.winner=!myHand.length?durakMyId:opId;
+    await durakSaveState(gs,gs.attacker,true);
+    return;
+  }
+  await durakSaveState(gs,durakMyId);
 }
 
 async function durakHandleFinish(){
