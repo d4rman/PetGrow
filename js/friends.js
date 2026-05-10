@@ -135,10 +135,14 @@ function durakRenderCard(card,small=false){
   const s=small?36:52;
   const fs=small?11:15;
   const sus=small?14:20;
-  return`<div style="width:${s}px;height:${Math.floor(s*1.4)}px;background:#fff;border-radius:6px;border:2px solid #ccc;display:flex;flex-direction:column;justify-content:space-between;padding:3px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.5)">
-    <div style="font-size:${fs}px;color:${durakCardColor(card.s)};font-weight:700;line-height:1">${card.v}${card.s}</div>
-    <div style="font-size:${sus}px;text-align:center;color:${durakCardColor(card.s)}">${card.s}</div>
-    <div style="font-size:${fs}px;color:${durakCardColor(card.s)};font-weight:700;line-height:1;transform:rotate(180deg)">${card.v}${card.s}</div>
+  const isRed=card.s==='♥'||card.s==='♦';
+  const bg=isRed?'#2a0a0a':'#0a0a2a';
+  const border=isRed?'#cc2222':'#4444cc';
+  const col=isRed?'#ff4444':'#4488ff';
+  return`<div style="width:${s}px;height:${Math.floor(s*1.4)}px;background:${bg};border-radius:6px;border:2px solid ${border};display:flex;flex-direction:column;justify-content:space-between;padding:3px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.8)">
+    <div style="font-size:${fs}px;color:${col};font-weight:700;line-height:1">${card.v}${card.s}</div>
+    <div style="font-size:${sus}px;text-align:center;color:${col}">${card.s}</div>
+    <div style="font-size:${fs}px;color:${col};font-weight:700;line-height:1;transform:rotate(180deg)">${card.v}${card.s}</div>
   </div>`;
 }
 
