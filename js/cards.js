@@ -18,10 +18,14 @@ function renderCard(card,size='big'){
   const s=size==='big'?120:70;
   const fs=size==='big'?52:28;
   const nfs=size==='big'?22:14;
-  return `<div style="width:${s}px;height:${s*1.4}px;background:#fff;border-radius:12px;border:3px solid #2a2a4a;display:flex;flex-direction:column;justify-content:space-between;padding:8px;box-shadow:0 4px 20px rgba(0,0,0,0.5)">
-    <div style="font-size:${nfs}px;color:${cardColor(card.suit)};font-weight:700;line-height:1">${CARD_NAMES[card.value]}${card.suit}</div>
-    <div style="font-size:${fs}px;text-align:center;line-height:1">${card.suit}</div>
-    <div style="font-size:${nfs}px;color:${cardColor(card.suit)};font-weight:700;line-height:1;transform:rotate(180deg)">${CARD_NAMES[card.value]}${card.suit}</div>
+  const isRed=card.suit==='♥'||card.suit==='♦';
+  const bg=isRed?'linear-gradient(135deg,#2a0a0a,#1a0505)':'linear-gradient(135deg,#0a0a2a,#050515)';
+  const border=isRed?'#cc3333':'#3333cc';
+  const col=isRed?'#ff5555':'#5588ff';
+  return`<div style="width:${s}px;height:${Math.floor(s*1.4)}px;background:${bg};border-radius:12px;border:3px solid ${border};display:flex;flex-direction:column;justify-content:space-between;padding:8px;box-shadow:0 4px 20px rgba(0,0,0,0.8),inset 0 1px 0 rgba(255,255,255,0.1)">
+    <div style="font-size:${nfs}px;color:${col};font-weight:700;line-height:1;text-shadow:0 0 10px ${col}">${CARD_NAMES[card.value]}${card.suit}</div>
+    <div style="font-size:${fs}px;text-align:center;line-height:1;text-shadow:0 0 20px ${col};color:${col}">${card.suit}</div>
+    <div style="font-size:${nfs}px;color:${col};font-weight:700;line-height:1;transform:rotate(180deg);text-shadow:0 0 10px ${col}">${CARD_NAMES[card.value]}${card.suit}</div>
   </div>`;
 }
 
