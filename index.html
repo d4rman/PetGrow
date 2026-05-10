@@ -553,6 +553,9 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
     <button class="menu-item" onclick="openRoulette();closeDrawer()"><span style="font-size:24px">🎰</span>Рулетка</button>
     <button class="menu-item" onclick="openFriends();closeDrawer()" style="position:relative">
   <span style="font-size:24px">👥</span>Друзья
+  <div id="friends-badge" style="display:none;position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:#cc3333"></div>
+</button>
+<button class="menu-item" onclick="openLobbies();closeDrawer()"><span style="font-size:24px">🎮</span>Игровые столы</button>
     <div id="friends-badge" style="display:none;position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:#cc3333"></div>
 </button>
     <button class="menu-item" id="admin-menu-btn" style="display:none;border:1px solid #534AB7;color:#a78bfa" onclick="goTo('admin',null);closeDrawer()"><span style="font-size:24px">⚙️</span>Админ</button>
@@ -587,5 +590,6 @@ body{background:#1a1a2e;color:#fff;font-family:Arial,sans-serif;min-height:100vh
 <script src="js/roulette.js"></script>
 <script src="js/live_roulette.js"></script>
 <script src="js/friends.js"></script>
+<script src="js/lobby.js"></script>
 </body>
 </html>
