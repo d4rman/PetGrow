@@ -89,21 +89,28 @@ async function renderLobbies(){
 }
 
 function openCreateLobby(){
+  selectedMaxPlayers=2;
+  selectedLobbyBet=0;
   showModal('➕ Создать стол',`
     <div>
-      <div style="font-size:13px;color:#888;margin-bottom:14px">Создай стол и пригласи до 4 игроков</div>
-      <input id="lobby-name" placeholder="Название стола (необязательно)" style="width:100%;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:10px;padding:10px;color:#fff;font-size:13px;margin-bottom:8px;font-family:Arial,sans-serif">
+      <div style="font-size:13px;color:#888;margin-bottom:12px">Создай стол и пригласи игроков</div>
+      <div style="font-size:12px;color:#888;margin-bottom:4px">Название:</div>
+      <input id="lobby-name" placeholder="Название стола..." style="width:100%;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:10px;padding:10px;color:#fff;font-size:13px;margin-bottom:12px;font-family:Arial,sans-serif;box-sizing:border-box">
       <div style="font-size:12px;color:#888;margin-bottom:6px">Максимум игроков:</div>
       <div style="display:flex;gap:8px;margin-bottom:12px">
-        ${[2,3,4].map(n=>`
-          <button onclick="selectMaxPlayers(${n},this)" class="spin-count-btn ${n===2?'active':''}" style="flex:1;padding:10px">${n} игрока</button>`).join('')}
+        <button id="mp-2" onclick="selectMaxPlayers(2)" style="flex:1;padding:10px;background:#1a1035;border:2px solid #7F77DD;border-radius:10px;color:#a78bfa;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">2</button>
+        <button id="mp-3" onclick="selectMaxPlayers(3)" style="flex:1;padding:10px;background:#0f0f1e;border:2px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">3</button>
+        <button id="mp-4" onclick="selectMaxPlayers(4)" style="flex:1;padding:10px;background:#0f0f1e;border:2px solid #2a2a4a;border-radius:10px;color:#888;font-size:13px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">4</button>
       </div>
-      <div style="font-size:12px;color:#888;margin-bottom:6px">Ставка на игру:</div>
+      <div style="font-size:12px;color:#888;margin-bottom:6px">Ставка:</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
-        ${[0,100,500,1000,5000].map(v=>`
-          <button onclick="selectLobbyBet(${v},this)" class="spin-count-btn ${v===0?'active':''}" style="padding:8px 12px;font-size:12px">${v===0?'Без ставки':v.toLocaleString('ru')}</button>`).join('')}
+        <button id="bet-0" onclick="selectLobbyBet(0)" style="padding:8px 12px;background:#1a1035;border:2px solid #7F77DD;border-radius:8px;color:#a78bfa;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">Без ставки</button>
+        <button id="bet-100" onclick="selectLobbyBet(100)" style="padding:8px 12px;background:#0f0f1e;border:2px solid #2a2a4a;border-radius:8px;color:#888;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">100</button>
+        <button id="bet-500" onclick="selectLobbyBet(500)" style="padding:8px 12px;background:#0f0f1e;border:2px solid #2a2a4a;border-radius:8px;color:#888;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">500</button>
+        <button id="bet-1000" onclick="selectLobbyBet(1000)" style="padding:8px 12px;background:#0f0f1e;border:2px solid #2a2a4a;border-radius:8px;color:#888;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">1000</button>
+        <button id="bet-5000" onclick="selectLobbyBet(5000)" style="padding:8px 12px;background:#0f0f1e;border:2px solid #2a2a4a;border-radius:8px;color:#888;font-size:12px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">5000</button>
       </div>
-      <input type="number" id="lobby-bet-custom" placeholder="Своя ставка..." style="width:100%;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:10px;padding:10px;color:#fff;font-size:13px;margin-bottom:14px;font-family:Arial,sans-serif" oninput="selectLobbyBet(parseInt(this.value)||0,null)">
+      <input type="number" id="lobby-bet-custom" placeholder="Своя ставка..." style="width:100%;background:#0f0f1e;border:1px solid #2a2a4a;border-radius:10px;padding:10px;color:#fff;font-size:13px;margin-bottom:14px;font-family:Arial,sans-serif;box-sizing:border-box" oninput="selectLobbyBetCustom(parseInt(this.value)||0)">
       <button onclick="createLobby()" style="width:100%;padding:14px;background:linear-gradient(135deg,#7F77DD,#EF9F27);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif">
         🎮 Создать стол
       </button>
@@ -112,35 +119,51 @@ function openCreateLobby(){
 
 let selectedMaxPlayers=2,selectedLobbyBet=0;
 
-function selectMaxPlayers(n,btn){
+function selectMaxPlayers(n){
   selectedMaxPlayers=n;
-  document.querySelectorAll('#main-modal .spin-count-btn').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
+  [2,3,4].forEach(i=>{
+    const btn=document.getElementById('mp-'+i);
+    if(!btn)return;
+    if(i===n){btn.style.background='#1a1035';btn.style.borderColor='#7F77DD';btn.style.color='#a78bfa';}
+    else{btn.style.background='#0f0f1e';btn.style.borderColor='#2a2a4a';btn.style.color='#888';}
+  });
 }
 
-function selectLobbyBet(amount,btn){
+function selectLobbyBet(amount){
   selectedLobbyBet=amount;
-  if(btn){
-    document.querySelectorAll('#main-modal .spin-count-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-  }
+  [0,100,500,1000,5000].forEach(v=>{
+    const btn=document.getElementById('bet-'+v);
+    if(!btn)return;
+    if(v===amount){btn.style.background='#1a1035';btn.style.borderColor='#7F77DD';btn.style.color='#a78bfa';}
+    else{btn.style.background='#0f0f1e';btn.style.borderColor='#2a2a4a';btn.style.color='#888';}
+  });
+}
+
+function selectLobbyBetCustom(amount){
+  selectedLobbyBet=amount;
+  [0,100,500,1000,5000].forEach(v=>{
+    const btn=document.getElementById('bet-'+v);
+    if(btn){btn.style.background='#0f0f1e';btn.style.borderColor='#2a2a4a';btn.style.color='#888';}
+  });
 }
 
 async function createLobby(){
-  const name=document.getElementById('lobby-name')?.value?.trim()||'Стол '+currentUser.username;
+  const nameEl=document.getElementById('lobby-name');
+  const name=(nameEl?.value?.trim())||'Стол '+currentUser.username;
   if(selectedLobbyBet>bal){alert('Недостаточно 💜');return;}
   const players=[{id:currentUser.user_id,name:currentUser.username,ready:false}];
-  const {data:lobby}=await sb.from('game_lobbies').insert({
-    name,
+  const {data:lobby,error}=await sb.from('game_lobbies').insert({
+    name:name,
     host_id:currentUser.user_id,
     max_players:selectedMaxPlayers,
     bet:selectedLobbyBet,
     status:'waiting',
-    players,
+    players:players,
+    game_state:{},
   }).select().single();
+  if(error){alert('Ошибка: '+error.message);return;}
   closeModal();
   if(lobby)openLobbyRoom(lobby.id);
-  else alert('Ошибка создания!');
 }
 
 async function joinLobby(lobbyId){
